@@ -7,56 +7,71 @@ create table roles
         unique (role_name)
 );
 
+create table statuses
+(
+    status_id int auto_increment
+        primary key,
+    status    char(255) not null
+);
+
 create table users
 (
     user_id      int auto_increment
         primary key,
-    username     varchar(20)  not null,
-    password     varchar(255) not null,
-    first_name   varchar(20)  not null,
-    last_name    varchar(20)  not null,
-    email        varchar(255) not null,
-    phone_number varchar(10)  not null,
+    username     varchar(20)                                                                                                        not null,
+    password     varchar(255)                                                                                                       not null,
+    first_name   varchar(20)                                                                                                        not null,
+    last_name    varchar(20)                                                                                                        not null,
+    email        varchar(255)                                                                                                       not null,
+    phone_number varchar(10)                                                                                                        not null,
+    photo_url    char(255) default 'https://i.ibb.co/3dVFMxL/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg' not null,
+    user_role    int       default 1                                                                                                not null,
     constraint email
         unique (email),
     constraint phone_number
         unique (phone_number),
     constraint username
-        unique (username)
+        unique (username),
+    constraint users_roles_role_id_fk
+        foreign key (user_role) references roles (role_id)
 );
 
 create table travels
 (
     travel_id      int auto_increment
         primary key,
-    organizer_id   int          not null,
-    start_point    varchar(255) not null,
-    end_point      varchar(255) not null,
-    departure_time datetime     not null,
-    free_spots     int          not null,
+    organizer_id   int           not null,
+    start_point    varchar(255)  not null,
+    end_point      varchar(255)  not null,
+    departure_time datetime      not null,
+    free_spots     int           not null,
+    travel_status  int default 1 null,
     constraint travels_ibfk_1
-        foreign key (organizer_id) references users (user_id)
+        foreign key (organizer_id) references users (user_id),
+    constraint travels_travel_statuses_status_id_fk
+        foreign key (travel_status) references statuses (status_id)
 );
 
 create table applications
 (
     application_id int auto_increment
         primary key,
-    travel_id      int                                                   not null,
-    passenger_id   int                                                   not null,
-    status         enum ('pending', 'approved', 'declined', 'cancelled') not null,
+    travel_id      int           not null,
+    passenger_id   int           not null,
+    status         int default 6 not null,
     constraint applications_ibfk_1
         foreign key (travel_id) references travels (travel_id),
     constraint applications_ibfk_2
-        foreign key (passenger_id) references users (user_id)
+        foreign key (passenger_id) references users (user_id),
+    constraint applications_statuses_status_id_fk
+        foreign key (status) references statuses (status_id)
 );
 
 create table application_cancellation
 (
     cancellation_id int auto_increment
         primary key,
-    application_id  int                          not null,
-    cancelled_by    enum ('driver', 'passenger') not null,
+    application_id  int not null,
     constraint application_id
         unique (application_id),
     constraint application_cancellation_ibfk_1
@@ -126,40 +141,11 @@ create index organizer_id
 
 create table trip_cancellations
 (
-    cancellation_id   int auto_increment
+    cancellation_id int auto_increment
         primary key,
-    travel_id         int                                   not null,
-    cancelled_by      enum ('driver', 'passenger')          not null,
-    cancellation_time timestamp default current_timestamp() null,
+    travel_id       int not null,
     constraint travel_id
         unique (travel_id),
     constraint trip_cancellations_ibfk_1
         foreign key (travel_id) references travels (travel_id)
 );
-
-create table trip_status
-(
-    status_id int auto_increment
-        primary key,
-    travel_id int                                        not null,
-    status    enum ('planned', 'completed', 'cancelled') not null,
-    constraint travel_id
-        unique (travel_id),
-    constraint trip_status_ibfk_1
-        foreign key (travel_id) references travels (travel_id)
-);
-
-create table user_roles
-(
-    user_id int not null,
-    role_id int not null,
-    primary key (user_id, role_id),
-    constraint user_roles_ibfk_1
-        foreign key (user_id) references users (user_id),
-    constraint user_roles_ibfk_2
-        foreign key (role_id) references roles (role_id)
-);
-
-create index role_id
-    on user_roles (role_id);
-

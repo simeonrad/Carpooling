@@ -1,7 +1,6 @@
 package com.telerikacademy.web.carpooling.models;
 
 import jakarta.persistence.*;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -16,8 +15,8 @@ public class Role {
 
     @Column(name = "role_name", unique = true, nullable = false)
     private String name;
-
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_role")
     private Set<User> users = new HashSet<>();
 
     public Role() {
