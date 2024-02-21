@@ -22,6 +22,8 @@ public class UserServiceImpl implements UserService {
             "functionality!";
     public static final String ADMIN = "Admin";
     public static final String REGULAR_USER = "Regular user";
+    public static final String DEFAULT_IMAGE_URL = "https://i.ibb.co/3dVFMxL/default-profile-account-unknown-icon" +
+            "-black-silhouette-free-vector.jpg";
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
@@ -71,8 +73,7 @@ public class UserServiceImpl implements UserService {
             throw new DuplicateEmailExists("User", "email", user.getEmail());
         }
         passwordValidator(user.getPassword());
-        user.setPhotoUrl("https://i.ibb.co/3dVFMxL/default-profile-account-unknown-icon" +
-                "-black-silhouette-free-vector.jpg");
+        user.setPhotoUrl(DEFAULT_IMAGE_URL);
         userRepository.create(user);
     }
 
@@ -82,7 +83,7 @@ public class UserServiceImpl implements UserService {
         if (user.isDeleted()) {
             throw new EntityNotFoundException("User", "username", user.getUsername());
         }
-        if (!deletedBy.getRole().getName().equals("Admin") && !user.getUsername().equals(deletedBy.getUsername())) {
+        if (!deletedBy.getRole().getName().equals(ADMIN) && !user.getUsername().equals(deletedBy.getUsername())) {
             throw new UnauthorizedOperationException("Only admins or the same user can delete user profiles!");
         }
         user.setDeleted(true);

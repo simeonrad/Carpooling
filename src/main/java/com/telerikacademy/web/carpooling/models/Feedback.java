@@ -3,6 +3,8 @@ package com.telerikacademy.web.carpooling.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -82,5 +84,18 @@ public class Feedback {
 
     public void setComments(Set<FeedbackComment> comments) {
         this.comments = comments;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Feedback feedback = (Feedback) o;
+        return Objects.equals(author, feedback.author) && Objects.equals(recipient, feedback.recipient);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(author, recipient);
     }
 }
