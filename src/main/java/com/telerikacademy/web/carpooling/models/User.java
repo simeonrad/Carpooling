@@ -29,9 +29,18 @@ public class User {
     @Column(name = "phone_number", unique = true, nullable = false, length = 10)
     private String phoneNumber;
 
+    @Column(name = "photo_url", nullable = false)
+    private String photoUrl;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private Role role;
+
+    @Column(name = "is_blocked")
+    private boolean isBlocked;
+
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
 
     public User() {
     }
@@ -107,6 +116,30 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     @Override
