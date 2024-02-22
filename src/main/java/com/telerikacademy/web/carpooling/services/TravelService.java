@@ -1,7 +1,6 @@
 package com.telerikacademy.web.carpooling.services;
 
 import com.telerikacademy.web.carpooling.models.FilterTravelOptions;
-import com.telerikacademy.web.carpooling.models.FilterUserOptions;
 import com.telerikacademy.web.carpooling.models.Travel;
 import com.telerikacademy.web.carpooling.models.User;
 
@@ -17,6 +16,7 @@ public interface TravelService {
     void applyForTravel(User user, Travel travel);
 
     List<Travel> getAll();
+    Travel getById(int id);
 
     List<User> getApplicants(Travel travel);
 

@@ -33,7 +33,7 @@ public class User {
     private String photoUrl;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_role")
     private Role role;
 
     @Column(name = "is_blocked")

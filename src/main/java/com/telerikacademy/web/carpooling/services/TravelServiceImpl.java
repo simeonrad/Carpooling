@@ -3,9 +3,10 @@ package com.telerikacademy.web.carpooling.services;
 import com.telerikacademy.web.carpooling.models.FilterTravelOptions;
 import com.telerikacademy.web.carpooling.models.Travel;
 import com.telerikacademy.web.carpooling.models.User;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class TravelServiceImpl implements TravelService{
     @Override
     public void create(Travel travel) {
@@ -29,6 +30,11 @@ public class TravelServiceImpl implements TravelService{
 
     @Override
     public List<Travel> getAll() {
+        return null;
+    }
+
+    @Override
+    public Travel getById(int id) {
         return null;
     }
 
