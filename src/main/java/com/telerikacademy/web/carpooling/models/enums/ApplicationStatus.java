@@ -1,7 +1,7 @@
 package com.telerikacademy.web.carpooling.models.enums;
 
 public enum ApplicationStatus {
-PENDING,
+    PENDING,
     APPROVED,
     DECLINED,
     CANCELLED,

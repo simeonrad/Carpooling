@@ -3,41 +3,22 @@ package com.telerikacademy.web.carpooling.models;
 import java.time.LocalDateTime;
 
 public class TravelDto {
-    private int id;
-    private String username;
-    private String driverName;
+    private String driverUsername;
     private String startPoint;
     private String endPoint;
     private LocalDateTime departureTime;
     private int freeSpots;
-    private int statusId;
     private String status;
 
     public TravelDto() {
     }
 
-    public int getId() {
-        return id;
+    public String getDriverUsername() {
+        return driverUsername;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getDriverName() {
-        return driverName;
-    }
-
-    public void setDriverName(String driverName) {
-        this.driverName = driverName;
+    public void setDriverUsername(String driverName) {
+        this.driverUsername = driverName;
     }
 
     public String getStartPoint() {
@@ -72,13 +53,6 @@ public class TravelDto {
         this.freeSpots = freeSpots;
     }
 
-    public int getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(int statusId) {
-        this.statusId = statusId;
-    }
 
     public String getStatus() {
         return status;
@@ -91,14 +65,11 @@ public class TravelDto {
     @Override
     public String toString() {
         return "TravelDto{" +
-                "id=" + id +
-                ", username=" + username +
-                ", driverName='" + driverName + '\'' +
+                ", driverUserName='" + driverUsername + '\'' +
                 ", startPoint='" + startPoint + '\'' +
                 ", endPoint='" + endPoint + '\'' +
                 ", departureTime=" + departureTime +
                 ", freeSpots=" + freeSpots +
-                ", statusId=" + statusId +
                 ", status='" + status + '\'' +
                 '}';
     }

@@ -1,6 +1,7 @@
 package com.telerikacademy.web.carpooling.services;
 
 import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
+import com.telerikacademy.web.carpooling.models.FilterApplicationOptions;
 import com.telerikacademy.web.carpooling.models.TravelApplication;
 import com.telerikacademy.web.carpooling.models.User;
 import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
@@ -72,6 +73,11 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
     @Override
     public List<TravelApplication> getAll() {
         return applicationRepository.getAll();
+    }
+
+    @Override
+    public List<TravelApplication> get(FilterApplicationOptions filterApplicationOptions) {
+        return applicationRepository.get(filterApplicationOptions);
     }
 
     @Override

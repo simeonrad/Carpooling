@@ -1,5 +1,6 @@
 package com.telerikacademy.web.carpooling.repositories;
 
+import com.telerikacademy.web.carpooling.models.FilterApplicationOptions;
 import com.telerikacademy.web.carpooling.models.TravelApplication;
 
 import java.util.List;
@@ -16,4 +17,5 @@ public interface TravelApplicationRepository {
     List<TravelApplication> getByTravelId(int id);
 
     List<TravelApplication> getAll();
+    List<TravelApplication> get(FilterApplicationOptions filterApplicationOptions);
 }

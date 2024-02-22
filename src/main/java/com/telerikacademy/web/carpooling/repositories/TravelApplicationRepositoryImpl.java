@@ -1,14 +1,17 @@
 package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
-import com.telerikacademy.web.carpooling.models.TravelApplication;
+import com.telerikacademy.web.carpooling.models.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class TravelApplicationRepositoryImpl implements TravelApplicationRepository {
@@ -78,4 +81,65 @@ public class TravelApplicationRepositoryImpl implements TravelApplicationReposit
             return query.list();
         }
     }
+
+    @Override
+
+    public List<TravelApplication> get(FilterApplicationOptions filterOptions) {
+        try (Session session = sessionFactory.openSession()) {
+            List<String> filters = new ArrayList<>();
+            Map<String, Object> params = new HashMap<>();
+
+            filterOptions.getUsername().ifPresent(value -> {
+                if (!value.isBlank()) {
+                    filters.add("passenger.username like :username");
+                    params.put("username", String.format("%%%s%%", value));
+                }
+            });
+
+            filterOptions.getStatus().ifPresent(value -> {
+                if (!value.isBlank()) {
+                    filters.add("status.status = :status");
+                    params.put("status", String.format("%s", value));
+                }
+            });
+
+            StringBuilder queryString = new StringBuilder("from TravelApplication");
+            if (!filters.isEmpty()) {
+                queryString
+                        .append(" where ")
+                        .append(String.join(" and ", filters));
+            }
+            queryString.append(generateOrderBy(filterOptions));
+
+            Query<TravelApplication> query = session.createQuery(queryString.toString(), TravelApplication.class);
+            query.setProperties(params);
+            return query.list();
+        }
+    }
+
+    private String generateOrderBy(FilterApplicationOptions filterOptions) {
+        if (filterOptions.getSortBy().isEmpty()) {
+            return "";
+        }
+
+        String orderBy = switch (filterOptions.getSortBy().get()) {
+            case "status" -> "status";
+            case "username" -> "passenger.username";
+            default -> "id";
+        };
+
+        if (orderBy.isEmpty()) {
+            return "";
+        }
+
+        orderBy = String.format(" order by %s", orderBy);
+
+        if (filterOptions.getSortOrder().isPresent() && filterOptions.getSortOrder().get()
+                .equalsIgnoreCase("desc")) {
+            orderBy = String.format("%s desc", orderBy);
+        }
+
+        return orderBy;
+    }
+
 }
