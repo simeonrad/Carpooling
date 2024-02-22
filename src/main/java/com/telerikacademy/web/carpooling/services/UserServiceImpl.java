@@ -2,9 +2,10 @@ package com.telerikacademy.web.carpooling.services;
 
 import com.telerikacademy.web.carpooling.models.FilterUserOptions;
 import com.telerikacademy.web.carpooling.models.User;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class UserServiceImpl implements UserService{
     @Override
     public void create(User user) {

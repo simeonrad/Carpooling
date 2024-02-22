@@ -30,7 +30,7 @@ public class User {
     private String phoneNumber;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_role")
     private Role role;
 
     public User() {
