@@ -23,6 +23,12 @@ public class TravelApplication {
     @JoinColumn(name = "status")
     private Status status;
 
+    @Column(name = "want_to_smoke")
+    private boolean wantToSmoke;
+
+    @Column(name = "has_baggage")
+    private boolean hasBaggage;
+
     public TravelApplication() {
     }
 
@@ -56,6 +62,22 @@ public class TravelApplication {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public boolean isWantToSmoke() {
+        return wantToSmoke;
+    }
+
+    public void setWantToSmoke(boolean wantToSmoke) {
+        this.wantToSmoke = wantToSmoke;
+    }
+
+    public boolean isHasBaggage() {
+        return hasBaggage;
+    }
+
+    public void setHasBaggage(boolean hasBaggage) {
+        this.hasBaggage = hasBaggage;
     }
 
     @Override
