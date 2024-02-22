@@ -26,6 +26,8 @@ create table users
     phone_number varchar(10)                                                                                                        not null,
     photo_url    char(255) default 'https://i.ibb.co/3dVFMxL/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg' not null,
     user_role    int       default 1                                                                                                not null,
+    is_deleted   tinyint(1)                                                                                                         not null,
+    is_blocked   tinyint(1)                                                                                                         not null,
     constraint email
         unique (email),
     constraint phone_number

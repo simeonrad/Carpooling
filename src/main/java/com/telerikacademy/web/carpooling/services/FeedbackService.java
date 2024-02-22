@@ -2,7 +2,6 @@ package com.telerikacademy.web.carpooling.services;
 
 import com.telerikacademy.web.carpooling.models.*;
 
-import javax.xml.stream.events.Comment;
 import java.util.List;
 
 public interface FeedbackService {
