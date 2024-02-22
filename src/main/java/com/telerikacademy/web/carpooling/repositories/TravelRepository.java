@@ -1,6 +1,9 @@
 package com.telerikacademy.web.carpooling.repositories;
 
+import com.telerikacademy.web.carpooling.models.FilterTravelOptions;
+import com.telerikacademy.web.carpooling.models.FilterUserOptions;
 import com.telerikacademy.web.carpooling.models.Travel;
+import com.telerikacademy.web.carpooling.models.User;
 
 import java.util.List;
 
@@ -11,6 +14,8 @@ public interface TravelRepository {
     void update(Travel travel);
 
     void delete(Travel travel);
+
+    List<Travel> get(FilterTravelOptions filterOptions);
 
     List<Travel> getAll();
 

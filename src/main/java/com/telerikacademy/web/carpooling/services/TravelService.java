@@ -7,24 +7,15 @@ import com.telerikacademy.web.carpooling.models.User;
 import java.util.List;
 
 public interface TravelService {
-    void create(Travel travel);
+    void create(Travel travel, User user);
 
-    void update(Travel travel);
+    void update(Travel travel, User user);
 
-    void delete(Travel travel);
-
-    void applyForTravel(User user, Travel travel);
+    void delete(Travel travel, User user);
 
     List<Travel> getAll();
     Travel getById(int id);
-
-    List<User> getApplicants(Travel travel);
-
-    void approveApplicant(User user, Travel travel);
-
-    void rejectApplicant(User user, Travel travel);
-
-    List<Travel> get(FilterTravelOptions filterUserOptions, Travel travel);
+    List<Travel> get(FilterTravelOptions filterTravelOptions);
     void cancel(User user, Travel travel);
     void complete(User user, Travel travel);
 }
