@@ -11,7 +11,7 @@ public interface UserService {
     List<User> get(FilterUserOptions filterUserOptions, User user);
     void blockUser(String username, User admin);
     void unblockUser(String username, User admin);
-    void makeAdmin(String username);
+    void makeAdmin(String username, User admin);
     void unmakeAdmin(String username, User admin);
     void addProfilePhoto(String photoUrl, User user);
     List<User> getAll();

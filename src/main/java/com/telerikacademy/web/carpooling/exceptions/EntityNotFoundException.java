@@ -1,10 +1,11 @@
 package com.telerikacademy.web.carpooling.exceptions;
 
-public class EntityNotFoundException extends RuntimeException {
-    public EntityNotFoundException (String type, int id) {
+
+public class EntityNotFoundException extends RuntimeException{
+    public EntityNotFoundException(String type, int id) {
         this(type, "id", String.valueOf(id));
     }
-    public EntityNotFoundException (String message) {
+    public EntityNotFoundException(String message) {
         super(message);
     }
 

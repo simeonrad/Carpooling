@@ -1,20 +1,26 @@
 package com.telerikacademy.web.carpooling.repositories;
 
-import com.telerikacademy.web.carpooling.models.TravelApplication;
+import com.telerikacademy.web.carpooling.models.FilterUserOptions;
 import com.telerikacademy.web.carpooling.models.User;
-
 import java.util.List;
 
 public interface UserRepository {
-    void create(TravelApplication application);
+    void create(User user);
 
-    void update(TravelApplication application);
+    void delete(User user);
 
-    void delete(TravelApplication application);
+    void update(User user);
 
+    List<User> get(FilterUserOptions filterOptions);
     User getById(int id);
+
+    List<User> getAll();
+
+    List<User> getAllNotDeleted();
 
     User getByUsername(String username);
 
-    List<User> getAll();
+    User getByEmail(String email);
+
+    boolean updateEmail(String email);
 }
