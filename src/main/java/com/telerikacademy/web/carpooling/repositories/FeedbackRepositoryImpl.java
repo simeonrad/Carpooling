@@ -83,6 +83,11 @@ public class FeedbackRepositoryImpl implements FeedbackRepository{
         }
     }
 
+    @Override
+    public Feedback getById() {
+        return null;
+    }
+
     private String generateOrderBy(FilterFeedbackOptions filterOptions) {
         if (filterOptions.getSortBy().isEmpty()) {
             return "";

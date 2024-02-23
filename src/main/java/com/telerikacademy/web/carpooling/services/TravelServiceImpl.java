@@ -1,5 +1,6 @@
 package com.telerikacademy.web.carpooling.services;
 
+import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
 import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.web.carpooling.models.FilterTravelOptions;
 import com.telerikacademy.web.carpooling.models.Travel;
@@ -7,7 +8,6 @@ import com.telerikacademy.web.carpooling.models.User;
 import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
 import com.telerikacademy.web.carpooling.repositories.StatusRepository;
 import com.telerikacademy.web.carpooling.repositories.TravelRepository;
-import com.telerikacademy.web.carpooling.repositories.TravelRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,8 @@ public class TravelServiceImpl implements TravelService {
     @Override
     public void create(Travel travel, User user) {
         if (!user.isBlocked()) {
-            travel.setDriver(user);
+            ApplicationStatus statusValue = ApplicationStatus.valueOf("PLANNED");
+            travel.setStatus(statusRepository.getByValue(statusValue));
             travelRepository.create(travel);
         } else {
             throw new UnauthorizedOperationException("No create permission, user is blocked");
@@ -71,7 +72,7 @@ public class TravelServiceImpl implements TravelService {
     @Override
     public void cancel(User user, Travel travel) {
         if (travel.getDriver().equals(user)) {
-            travel.setStatus(statusRepository.getByValue(ApplicationStatus.CANCELLED.toString()));
+            travel.setStatus(statusRepository.getByValue(ApplicationStatus.CANCELLED));
             travelRepository.update(travel);
         } else {
             throw new UnauthorizedOperationException("No cancel permission, user isn't driver.");
@@ -81,7 +82,10 @@ public class TravelServiceImpl implements TravelService {
     @Override
     public void complete(User user, Travel travel) {
         if (travel.getDriver().equals(user)) {
-            travel.setStatus(statusRepository.getByValue(ApplicationStatus.COMPLETED.toString()));
+            if (travel.getStatus().getStatus().toString().equals("CANCELLED")) {
+                throw new ForbiddenOperationException("Travel that was already cancelled cannot be marked as complete!");
+            }
+            travel.setStatus(statusRepository.getByValue(ApplicationStatus.COMPLETED));
             travelRepository.update(travel);
         } else {
             throw new UnauthorizedOperationException("No complete permission, user isn't driver.");

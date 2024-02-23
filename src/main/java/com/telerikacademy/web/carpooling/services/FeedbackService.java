@@ -5,7 +5,7 @@ import com.telerikacademy.web.carpooling.models.*;
 import java.util.List;
 
 public interface FeedbackService {
-    void create(Feedback feedback);
+    void create(Feedback feedback, User author);
 
     void update(Feedback feedback, User user);
 

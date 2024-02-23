@@ -1,5 +1,6 @@
 package com.telerikacademy.web.carpooling.services;
 
+import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
 import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.web.carpooling.models.FilterApplicationOptions;
 import com.telerikacademy.web.carpooling.models.TravelApplication;
@@ -30,6 +31,10 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
 
     @Override
     public void create(TravelApplication application) {
+        if (application.getPassenger().equals(application.getTravel().getDriver())) {
+            throw new ForbiddenOperationException("Travel organizer cannot apply for his own travel!");
+        }
+        application.setStatus(statusRepository.getByValue(ApplicationStatus.PENDING));
         applicationRepository.create(application);
     }
 
@@ -47,27 +52,29 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
 
     @Override
     public void cancel(User user, TravelApplication application) {
-        if (application.getPassenger().equals(user)){
-            application.setStatus(statusRepository.getByValue(ApplicationStatus.CANCELLED.toString()));
-            applicationRepository.update(application);
+        if (!application.getPassenger().equals(user)) {
+            throw new UnauthorizedOperationException(ONLY_THE_CREATOR_OF_AN_APPLICATION_CAN_CANCEL_IT);
         }
-        throw new UnauthorizedOperationException(ONLY_THE_CREATOR_OF_AN_APPLICATION_CAN_CANCEL_IT);
+        application.setStatus(statusRepository.getByValue(ApplicationStatus.CANCELLED));
+        applicationRepository.update(application);
     }
+
     @Override
     public void approve(User user, TravelApplication application) {
-        if (application.getTravel().getDriver().equals(user)){
-            application.setStatus(statusRepository.getByValue(ApplicationStatus.APPROVED.toString()));
-            applicationRepository.update(application);
+        if (!application.getTravel().getDriver().equals(user)) {
+            throw new UnauthorizedOperationException(ONLY_THE_DRIVER_CAN);
         }
-        throw new UnauthorizedOperationException(ONLY_THE_DRIVER_CAN);
+        application.setStatus(statusRepository.getByValue(ApplicationStatus.APPROVED));
+        applicationRepository.update(application);
     }
-       @Override
+
+    @Override
     public void decline(User user, TravelApplication application) {
-        if (application.getTravel().getDriver().equals(user)){
-            application.setStatus(statusRepository.getByValue(ApplicationStatus.DECLINED.toString()));
-            applicationRepository.update(application);
+        if (!application.getTravel().getDriver().equals(user)) {
+            throw new UnauthorizedOperationException(ONLY_THE_DRIVER_CAN);
         }
-        throw new UnauthorizedOperationException(ONLY_THE_DRIVER_CAN);
+        application.setStatus(statusRepository.getByValue(ApplicationStatus.DECLINED));
+        applicationRepository.update(application);
     }
 
     @Override

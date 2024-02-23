@@ -11,7 +11,7 @@ public class Travel {
     @Column(name = "travel_id")
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "organizer_id")
     private User driver;
 

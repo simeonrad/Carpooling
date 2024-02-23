@@ -1,9 +1,7 @@
 package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.models.FilterTravelOptions;
-import com.telerikacademy.web.carpooling.models.FilterUserOptions;
 import com.telerikacademy.web.carpooling.models.Travel;
-import com.telerikacademy.web.carpooling.models.User;
 
 import java.util.List;
 
@@ -22,4 +20,9 @@ public interface TravelRepository {
     Travel getById(int id);
 
     List<Travel> findByStartAndEndPoint(String startPoint, String endPoint);
+
+    boolean isUserAParticipantInTravel(int userId, int travelId);
+    boolean hasUserAlreadyGiveFeedbackForTheRecipient(int authorId, int recipientId, int travelId);
+    boolean driverHasAlreadyGivenFeedbackForTheRecipient(int driverId, int recipientId, int travelId);
+    boolean isRecipientAParticipantInTravel(int recipientId, int travelId);
 }

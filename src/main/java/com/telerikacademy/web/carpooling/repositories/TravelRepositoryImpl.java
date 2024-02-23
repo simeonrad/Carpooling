@@ -1,8 +1,10 @@
 package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
+import com.telerikacademy.web.carpooling.models.Feedback;
 import com.telerikacademy.web.carpooling.models.FilterTravelOptions;
 import com.telerikacademy.web.carpooling.models.Travel;
+import com.telerikacademy.web.carpooling.models.TravelApplication;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -133,6 +135,66 @@ public class TravelRepositoryImpl implements TravelRepository {
             query.setParameter("startPoint", startPoint);
             query.setParameter("endPoint", endPoint);
             return query.list();
+        }
+    }
+
+    @Override
+    public boolean isUserAParticipantInTravel(int userId, int travelId) {
+        try (Session session = sessionFactory.openSession()) {
+            String hql = "from TravelApplication where travel.id = :travelId and passenger.id = :userId and status.id = :approvedStatus";
+
+            Query<TravelApplication> query = session.createQuery(hql, TravelApplication.class);
+            query.setParameter("userId", userId);
+            query.setParameter("travelId", travelId);
+            query.setParameter("approvedStatus", 4);
+
+            return !query.list().isEmpty();
+        }
+    }
+
+
+
+    @Override
+    public boolean hasUserAlreadyGiveFeedbackForTheRecipient(int authorId, int recipientId, int travelId) {
+        try (Session session = sessionFactory.openSession()) {
+            String hql = "from Feedback where travel.id = :travelId and author.id = :authorId and recipient.id = :recipientId";
+
+            Query<Feedback> query = session.createQuery(hql, Feedback.class);
+            query.setParameter("authorId", authorId);
+            query.setParameter("recipientId", recipientId);
+            query.setParameter("travelId", travelId);
+
+            return query.list().isEmpty();
+        }
+    }
+
+    @Override
+    public boolean driverHasAlreadyGivenFeedbackForTheRecipient(int driverId, int recipientId, int travelId) {
+        try (Session session = sessionFactory.openSession()) {
+            String hql = "from Feedback where travel.id = :travelId and travel.driver.id = :driverId and recipient.id = :recipientId";
+
+            Query<Feedback> query = session.createQuery(hql, Feedback.class);
+            query.setParameter("driverId", driverId);
+            query.setParameter("recipientId", recipientId);
+            query.setParameter("travelId", travelId);
+
+            List<Feedback> feedbacks = query.list();
+
+            return !query.list().isEmpty();
+        }
+    }
+
+    @Override
+    public boolean isRecipientAParticipantInTravel(int recipientId, int travelId) {
+        try (Session session = sessionFactory.openSession()) {
+            String hql = "from TravelApplication where travel.id = :travelId and passenger.id = :recipientId and status.id = :approvedStatus";
+
+            Query<TravelApplication> query = session.createQuery(hql, TravelApplication.class);
+            query.setParameter("recipientId", recipientId);
+            query.setParameter("travelId", travelId);
+            query.setParameter("approvedStatus", 4);
+
+            return query.list().isEmpty();
         }
     }
 }
