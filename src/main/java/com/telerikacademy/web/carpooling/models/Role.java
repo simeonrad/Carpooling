@@ -1,5 +1,6 @@
 package com.telerikacademy.web.carpooling.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
@@ -15,6 +16,7 @@ public class Role {
 
     @Column(name = "role_name", unique = true, nullable = false)
     private String name;
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_role")
     private Set<User> users = new HashSet<>();

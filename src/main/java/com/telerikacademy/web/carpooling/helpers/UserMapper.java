@@ -33,6 +33,7 @@ public class UserMapper {
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
         user.setEmail(userDto.getEmail());
+        user.setPhoneNumber(userDto.getPhoneNumber());
         user.setRole(setUserRole("Regular user"));
         user.setBlocked(false);
         return user;
@@ -56,7 +57,7 @@ public class UserMapper {
     }
 
     public UserShowAdmin toDtoAdmin(User newUser) {
-        UserShowAdmin userShowAdmin = new UserShowAdmin(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.isBlocked(), newUser.getRole());
+        UserShowAdmin userShowAdmin = new UserShowAdmin(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.isBlocked(), newUser.getRole().getName());
         return userShowAdmin;
     }
 
@@ -68,6 +69,7 @@ public class UserMapper {
             user.setEmail(userUpdated.getEmail());
             user.setLastName(userUpdated.getLastName());
             user.setPassword(userUpdated.getPassword());
+            user.setPhoneNumber(user.getPhoneNumber());
             return user;
         } catch (EntityNotFoundException e) {
             throw new UnsupportedOperationException("Username cannot be changed!");

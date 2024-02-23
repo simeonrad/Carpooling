@@ -72,6 +72,10 @@ public class UserServiceImpl implements UserService {
         if (emailExists) {
             throw new DuplicateEmailExists("User", "email", user.getEmail());
         }
+        boolean phoneNumberExists = userRepository.telephoneExists(user.getPhoneNumber());
+        if (phoneNumberExists) {
+            throw new DuplicateExistsException("User", "phone number", user.getPhoneNumber());
+        }
         passwordValidator(user.getPassword());
         user.setPhotoUrl(DEFAULT_IMAGE_URL);
         userRepository.create(user);
@@ -98,7 +102,7 @@ public class UserServiceImpl implements UserService {
         if (!user.getUsername().equals(updatedBy.getUsername())) {
             throw new UnauthorizedOperationException("Username cannot be changed");
         }
-        boolean emailExists = userRepository.updateEmail(user.getEmail());
+        boolean emailExists = userRepository.updateEmail(user.getEmail(), user.getId());
         if (emailExists) {
             throw new DuplicateExistsException("User", "email", user.getEmail());
         }
@@ -120,6 +124,9 @@ public class UserServiceImpl implements UserService {
             throw new UnauthorizedOperationException(REGULAR_USERS_UNAUTHORIZED_OPERATION);
         }
         User userToBlock = userRepository.getByUsername(username);
+        if (userToBlock.isDeleted()) {
+            throw new EntityNotFoundException("User", "username", userToBlock.getUsername());
+        }
         userToBlock.setBlocked(true);
         userRepository.update(userToBlock);
     }
@@ -129,9 +136,12 @@ public class UserServiceImpl implements UserService {
         if (!admin.getRole().getName().equals(ADMIN)) {
             throw new UnauthorizedOperationException(REGULAR_USERS_UNAUTHORIZED_OPERATION);
         }
-        User userToBlock = userRepository.getByUsername(username);
-        userToBlock.setBlocked(false);
-        userRepository.update(userToBlock);
+        User userToUnblock = userRepository.getByUsername(username);
+        if (userToUnblock.isDeleted()) {
+            throw new EntityNotFoundException("User", "username", userToUnblock.getUsername());
+        }
+        userToUnblock.setBlocked(false);
+        userRepository.update(userToUnblock);
     }
 
     @Override
@@ -139,6 +149,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.getByUsername(username);
         if (!admin.getRole().getName().equals(ADMIN)) {
             throw new UnauthorizedOperationException(REGULAR_USERS_UNAUTHORIZED_OPERATION);
+        }
+        if (user.isDeleted()) {
+            throw new EntityNotFoundException("User", "username", user.getUsername());
         }
         user.setRole(roleRepository.findByName(ADMIN));
         userRepository.update(user);
@@ -149,6 +162,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.getByUsername(username);
         if (!admin.getRole().getName().equals(ADMIN)) {
             throw new UnauthorizedOperationException(REGULAR_USERS_UNAUTHORIZED_OPERATION);
+        }
+        if (user.isDeleted()) {
+            throw new EntityNotFoundException("User", "username", user.getUsername());
         }
         user.setRole(roleRepository.findByName(REGULAR_USER));
         userRepository.update(user);
@@ -183,7 +199,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public String passwordValidator(String password) {
-        String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[+\\-*&^]).{8,}$";
+        String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[+\\-*&^._|\\\\]).{8,}$";
         Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEX);
 
         Matcher matcher = PASSWORD_PATTERN.matcher(password);

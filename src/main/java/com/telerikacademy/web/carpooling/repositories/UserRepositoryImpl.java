@@ -170,10 +170,21 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public boolean updateEmail(String email) {
+    public boolean updateEmail(String email, int currentUserId) {
         try (Session session = sessionFactory.openSession()) {
-            Query<User> query = session.createQuery("from User where email = :email", User.class);
+            Query<User> query = session.createQuery("from User where email = :email and id != :currentUserId", User.class);
             query.setParameter("email", email);
+            query.setParameter("currentUserId", currentUserId);
+            List<User> result = query.list();
+            return !result.isEmpty();
+        }
+    }
+
+    @Override
+    public boolean telephoneExists(String phoneNumber) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<User> query = session.createQuery("from User where phoneNumber = :phoneNumber", User.class);
+            query.setParameter("phoneNumber", phoneNumber);
             List<User> result = query.list();
             return !result.isEmpty();
         }
