@@ -1,7 +1,4 @@
 package com.telerikacademy.web.carpooling.helpers;
-
-import com.telerikacademy.web.carpooling.models.Role;
-
 public class UserShowAdmin {
     private String username;
     private String firstName;
@@ -9,12 +6,12 @@ public class UserShowAdmin {
     private String email;
     private boolean isBlocked;
 
-    private Role role;
+    private String role;
 
     public UserShowAdmin() {
     }
 
-    public UserShowAdmin(String username, String firstName, String lastName, String email, boolean isBlocked, Role role) {
+    public UserShowAdmin(String username, String firstName, String lastName, String email, boolean isBlocked, String role) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -63,11 +60,11 @@ public class UserShowAdmin {
         isBlocked = blocked;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 }

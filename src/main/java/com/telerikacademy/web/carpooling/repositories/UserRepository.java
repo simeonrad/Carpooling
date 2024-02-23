@@ -22,5 +22,7 @@ public interface UserRepository {
 
     User getByEmail(String email);
 
-    boolean updateEmail(String email);
+    boolean telephoneExists(String phoneNumber);
+
+    boolean updateEmail(String email, int currentUserId);
 }
