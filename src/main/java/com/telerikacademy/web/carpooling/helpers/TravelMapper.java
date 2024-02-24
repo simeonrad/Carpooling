@@ -34,6 +34,8 @@ public class TravelMapper {
         travelDto.setEndPoint(travel.getEndPoint());
         travelDto.setFreeSpots(travel.getFreeSpots());
         travelDto.setStatus(travel.getStatus().getStatus().toString());
+        travelDto.setDistanceKm(travel.getDistanceKm());
+        travelDto.setDurationMinutes(travel.getDurationMinutes());
        return travelDto;
     }
 }

@@ -19,8 +19,6 @@ public class TravelApplicationMapper {
         TravelApplication travelApplication = new TravelApplication();
         travelApplication.setTravel(travelService.getById(travelApplicationDto.getTravelId()));
         travelApplication.setPassenger(author);
-        travelApplication.setHasBaggage(travelApplicationDto.isHasBaggage());
-        travelApplication.setWantToSmoke(travelApplicationDto.isWantToSmoke());
         return travelApplication;
     }
 
@@ -29,8 +27,6 @@ public class TravelApplicationMapper {
         travelApplicationDto.setTravelId(travelApplication.getId());
         travelApplicationDto.setPassengerUsername(travelApplication.getPassenger().getUsername());
         travelApplicationDto.setStatus(travelApplication.getStatus().getStatus().toString());
-        travelApplicationDto.setHasBaggage(travelApplication.isHasBaggage());
-        travelApplicationDto.setWantToSmoke(travelApplication.isWantToSmoke());
         return travelApplicationDto;
     }
 }

@@ -8,6 +8,8 @@ public class TravelDto {
     private String endPoint;
     private LocalDateTime departureTime;
     private int freeSpots;
+    private int distanceKm;
+    private int durationMinutes;
     private String status;
 
     public TravelDto() {
@@ -60,6 +62,22 @@ public class TravelDto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getDistanceKm() {
+        return distanceKm;
+    }
+
+    public void setDistanceKm(int distanceKm) {
+        this.distanceKm = distanceKm;
+    }
+
+    public int getDurationMinutes() {
+        return durationMinutes;
+    }
+
+    public void setDurationMinutes(int durationMinutes) {
+        this.durationMinutes = durationMinutes;
     }
 
     @Override

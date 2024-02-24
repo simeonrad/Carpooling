@@ -33,7 +33,7 @@ public class Travel {
     @Column(name = "duration_minutes", nullable = false)
     private int durationMinutes;
     @Column(name = "distance_km", nullable = false)
-    private int distance_km;
+    private int distanceKm;
 
     public Travel() {
     }
@@ -46,12 +46,12 @@ public class Travel {
         this.durationMinutes = durationMinutes;
     }
 
-    public int getDistance_km() {
-        return distance_km;
+    public int getDistanceKm() {
+        return distanceKm;
     }
 
-    public void setDistance_km(int distance_km) {
-        this.distance_km = distance_km;
+    public void setDistanceKm(int distance_km) {
+        this.distanceKm = distance_km;
     }
 
     public int getId() {

@@ -40,16 +40,19 @@ create table users
 
 create table travels
 (
-    travel_id      int auto_increment
+    travel_id        int auto_increment
         primary key,
-    organizer_id   int           not null,
-    start_point    varchar(255)  not null,
-    end_point      varchar(255)  not null,
-    departure_time datetime      not null,
-    free_spots     int           not null,
-    travel_status  int default 1 null,
+    organizer_id     int           not null,
+    start_point      varchar(255)  not null,
+    end_point        varchar(255)  not null,
+    departure_time   datetime      not null,
+    free_spots       int           not null,
+    travel_status    int default 1 null,
+    distance_km      int           not null,
+    duration_minutes int           not null,
     constraint travels_ibfk_1
-        foreign key (organizer_id) references users (user_id),
+        foreign key (organizer_id) references users (user_id)
+            on update cascade on delete cascade,
     constraint travels_travel_statuses_status_id_fk
         foreign key (travel_status) references statuses (status_id)
 );

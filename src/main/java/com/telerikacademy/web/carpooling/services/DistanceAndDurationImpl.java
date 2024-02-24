@@ -39,7 +39,7 @@ import org.springframework.stereotype.Service;
 
             int[] result = new int[2];
             result[0] = travelDistance;
-            result[1] = travelDuration;
+            result[1] = travelDuration / 60;
             return result;
         } catch (IOException | InterruptedException e) {
             throw new InvalidCityException(startPoint, endPoint);
