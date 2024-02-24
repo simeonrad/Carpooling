@@ -4,7 +4,6 @@ import com.telerikacademy.web.carpooling.models.Feedback;
 import com.telerikacademy.web.carpooling.models.FeedbackComment;
 import com.telerikacademy.web.carpooling.models.FeedbackDto;
 import com.telerikacademy.web.carpooling.models.User;
-import com.telerikacademy.web.carpooling.repositories.FeedbackRepository;
 import com.telerikacademy.web.carpooling.repositories.TravelRepository;
 import com.telerikacademy.web.carpooling.repositories.UserRepository;
 import org.springframework.stereotype.Component;
@@ -15,11 +14,9 @@ import java.util.HashSet;
 public class FeedbackMapper {
     private final TravelRepository travelRepository;
     private final UserRepository userRepository;
-    private final FeedbackRepository feedbackRepository;
-    public FeedbackMapper(TravelRepository travelRepository, UserRepository userRepository, FeedbackRepository feedbackRepository){
+    public FeedbackMapper(TravelRepository travelRepository, UserRepository userRepository){
         this.travelRepository = travelRepository;
         this.userRepository = userRepository;
-        this.feedbackRepository = feedbackRepository;
     }
 
     public Feedback fromDto(FeedbackDto feedbackDto, User author) {

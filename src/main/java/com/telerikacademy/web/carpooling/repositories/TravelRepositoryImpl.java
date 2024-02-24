@@ -164,8 +164,6 @@ public class TravelRepositoryImpl implements TravelRepository {
             query.setParameter("recipientId", recipientId);
             query.setParameter("travelId", travelId);
 
-            List<Feedback> list = query.list();
-
             return query.list().isEmpty();
         }
     }
@@ -179,8 +177,6 @@ public class TravelRepositoryImpl implements TravelRepository {
             query.setParameter("driverId", driverId);
             query.setParameter("recipientId", recipientId);
             query.setParameter("travelId", travelId);
-
-            List<Feedback> feedbacks = query.list();
 
             return !query.list().isEmpty();
         }
