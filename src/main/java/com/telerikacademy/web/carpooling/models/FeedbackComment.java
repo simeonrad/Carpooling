@@ -1,5 +1,6 @@
 package com.telerikacademy.web.carpooling.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,6 +12,7 @@ public class FeedbackComment {
     private int id;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "feedback_id", nullable = false, foreignKey = @ForeignKey(name = "feedback_comments_ibfk_1"))
     private Feedback feedback;
 

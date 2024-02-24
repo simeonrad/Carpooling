@@ -18,9 +18,13 @@ public interface TravelApplicationService {
     void approve(User user, TravelApplication application);
 
     void decline(User user, TravelApplication application);
-     List<TravelApplication> getAll();
-     List<TravelApplication> get(FilterApplicationOptions filterApplicationOptions);
-     TravelApplication getById(int id);
-     List<TravelApplication> getByTravelId(int id);
+
+    List<TravelApplication> getAll();
+
+    List<TravelApplication> get(FilterApplicationOptions filterApplicationOptions);
+
+    TravelApplication getById(int id);
+
+    List<TravelApplication> getByTravelId(int id);
 
 }

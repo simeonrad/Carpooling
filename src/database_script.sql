@@ -69,24 +69,13 @@ create table applications
         foreign key (status) references statuses (status_id)
 );
 
-create table application_cancellation
-(
-    cancellation_id int auto_increment
-        primary key,
-    application_id  int not null,
-    constraint application_id
-        unique (application_id),
-    constraint application_cancellation_ibfk_1
-        foreign key (application_id) references applications (application_id)
-);
-
 create index passenger_id
     on applications (passenger_id);
 
 create index travel_id
     on applications (travel_id);
 
-create table feedback
+create table feedbacks
 (
     feedback_id  int auto_increment
         primary key,
@@ -95,22 +84,13 @@ create table feedback
     recipient_id int not null,
     rating       int not null
         check (`rating` between 0 and 5),
-    constraint feedback_ibfk_1
+    constraint feedbacks_ibfk_1
         foreign key (travel_id) references travels (travel_id),
-    constraint feedback_ibfk_2
+    constraint feedbacks_ibfk_2
         foreign key (author_id) references users (user_id),
-    constraint feedback_ibfk_3
+    constraint feedbacks_ibfk_3
         foreign key (recipient_id) references users (user_id)
 );
-
-create index author_id
-    on feedback (author_id);
-
-create index recipient_id
-    on feedback (recipient_id);
-
-create index travel_id
-    on feedback (travel_id);
 
 create table feedback_comments
 (
@@ -119,11 +99,20 @@ create table feedback_comments
     feedback_id int  not null,
     comment     text not null,
     constraint feedback_comments_ibfk_1
-        foreign key (feedback_id) references feedback (feedback_id)
+        foreign key (feedback_id) references feedbacks (feedback_id)
 );
 
 create index feedback_id
     on feedback_comments (feedback_id);
+
+create index author_id
+    on feedbacks (author_id);
+
+create index recipient_id
+    on feedbacks (recipient_id);
+
+create index travel_id
+    on feedbacks (travel_id);
 
 create table travel_comments
 (
@@ -141,13 +130,3 @@ create index travel_id
 create index organizer_id
     on travels (organizer_id);
 
-create table trip_cancellations
-(
-    cancellation_id int auto_increment
-        primary key,
-    travel_id       int not null,
-    constraint travel_id
-        unique (travel_id),
-    constraint trip_cancellations_ibfk_1
-        foreign key (travel_id) references travels (travel_id)
-);

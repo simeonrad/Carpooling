@@ -56,15 +56,15 @@ public class FeedbackRepositoryImpl implements FeedbackRepository{
 
             filterFeedbackOptions.getAuthor().ifPresent(value -> {
                 if (!value.isBlank()) {
-                    filters.add("author like :author");
-                    params.put("author", String.format("%%%s%%", value));
+                    filters.add("author.username like :authorUsername"); // Assuming `username` is a string field in `User`
+                    params.put("authorUsername", "%" + value + "%");
                 }
             });
 
             filterFeedbackOptions.getRecipient().ifPresent(value -> {
                 if (!value.isBlank()) {
-                    filters.add("recipient like :recipient");
-                    params.put("recipient", String.format("%%%s%%", value));
+                    filters.add("recipient.username like :recipientUsername"); // Assuming `username` is a string field in `User`
+                    params.put("recipientUsername", "%" + value + "%");
                 }
             });
 
@@ -106,5 +106,17 @@ public class FeedbackRepositoryImpl implements FeedbackRepository{
         }
 
         return orderBy;
+    }
+
+    @Override
+    public Feedback getByTravelId(int travelId, int authorId, int recipientId) {
+        try (Session session = sessionFactory.openSession()) {
+            String hql = "from Feedback where travel.id = :travelId and author.id = :authorId and recipient.id = :recipientId";
+            Query<Feedback> query = session.createQuery(hql, Feedback.class);
+            query.setParameter("travelId", travelId);
+            query.setParameter("authorId", authorId);
+            query.setParameter("recipientId", recipientId);
+            return query.uniqueResult();
+        }
     }
 }
