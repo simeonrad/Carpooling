@@ -45,7 +45,7 @@ public class TravelRepositoryImpl implements TravelRepository {
     public void delete(Travel travel) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            session.delete(travel);
+            session.remove(travel);
             session.getTransaction().commit();
         }
     }
@@ -141,12 +141,12 @@ public class TravelRepositoryImpl implements TravelRepository {
     @Override
     public boolean isUserAParticipantInTravel(int userId, int travelId) {
         try (Session session = sessionFactory.openSession()) {
-            String hql = "from TravelApplication where travel.id = :travelId and passenger.id = :userId and status.id = :approvedStatus";
+            String hql = "from TravelApplication where travel.id = :travelId and passenger.id = :userId and status.id = :completedStatus";
 
             Query<TravelApplication> query = session.createQuery(hql, TravelApplication.class);
             query.setParameter("userId", userId);
             query.setParameter("travelId", travelId);
-            query.setParameter("approvedStatus", 4);
+            query.setParameter("completedStatus", 2);
 
             return !query.list().isEmpty();
         }
@@ -163,6 +163,8 @@ public class TravelRepositoryImpl implements TravelRepository {
             query.setParameter("authorId", authorId);
             query.setParameter("recipientId", recipientId);
             query.setParameter("travelId", travelId);
+
+            List<Feedback> list = query.list();
 
             return query.list().isEmpty();
         }

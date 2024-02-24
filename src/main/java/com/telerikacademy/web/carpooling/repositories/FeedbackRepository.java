@@ -10,5 +10,5 @@ public interface FeedbackRepository {
     void update (Feedback feedback);
     void delete (Feedback feedback);
     List<Feedback>getFeedbacksForUser(FilterFeedbackOptions filterFeedbackOptions);
-    Feedback getById();
+    Feedback getByTravelId(int travelId, int authorId, int recipientId);
 }

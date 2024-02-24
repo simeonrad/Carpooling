@@ -1,5 +1,6 @@
 package com.telerikacademy.web.carpooling.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -32,7 +33,8 @@ public class Feedback {
     @Max(5)
     private int rating;
 
-    @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<FeedbackComment> comments;
 
     public Feedback() {

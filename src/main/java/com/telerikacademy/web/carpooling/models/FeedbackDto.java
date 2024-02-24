@@ -19,6 +19,13 @@ public class FeedbackDto {
     public FeedbackDto() {
     }
 
+    public FeedbackDto(int travelId, String recipient, int rating, String comment) {
+        this.travelId = travelId;
+        this.recipient = recipient;
+        this.rating = rating;
+        this.comment = comment;
+    }
+
     public int getTravelId() {
         return travelId;
     }

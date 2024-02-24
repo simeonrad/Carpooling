@@ -5,6 +5,7 @@ import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
 import com.telerikacademy.web.carpooling.helpers.UserMapper;
 import com.telerikacademy.web.carpooling.helpers.UserShow;
 import com.telerikacademy.web.carpooling.helpers.UserShowAdmin;
+import com.telerikacademy.web.carpooling.models.FilterUserOptions;
 import com.telerikacademy.web.carpooling.models.User;
 import com.telerikacademy.web.carpooling.models.UserDto;
 import com.telerikacademy.web.carpooling.repositories.UserRepository;
@@ -14,6 +15,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.security.InvalidParameterException;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/users")
@@ -28,6 +32,27 @@ public class UserController {
         this.userRepository = userRepository;
         this.authenticationHelper = authenticationHelper;
         this.userMapper = userMapper;
+    }
+
+    @GetMapping
+    public List<User> get(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String phoneNumber,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String sortOrder,
+            @RequestHeader HttpHeaders headers) {
+        try {
+            User currentUser = authenticationHelper.tryGetUser(headers);
+            FilterUserOptions filterOptions = new FilterUserOptions(username, email, phoneNumber, sortBy, sortOrder);
+            return userService.get(filterOptions, currentUser);
+        } catch (UnauthorizedOperationException uo) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, uo.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (InvalidParameterException ip) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ip.getMessage());
+        }
     }
 
     @PostMapping()

@@ -34,7 +34,7 @@ public class FeedbackServiceImpl implements FeedbackService{
         if (feedback.getRecipient().equals(author)) {
             throw new ForbiddenOperationException("You cannot give feedback to yourself!");
         }
-        if (userHasAlreadyGivenFeedbackForTheRecipient(feedback.getAuthor().getId(), feedback.getRecipient().getId(), feedback.getTravel().getId())) {
+        if (!userHasAlreadyGivenFeedbackForTheRecipient(feedback.getAuthor().getId(), feedback.getRecipient().getId(), feedback.getTravel().getId())) {
             throw new UnauthorizedOperationException("The participant cannot give feedback " +
                     "again to the same recipient!");
         }
