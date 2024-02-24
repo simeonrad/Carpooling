@@ -16,4 +16,6 @@ public interface UserService {
     void addProfilePhoto(String photoUrl, User user);
     List<User> getAll();
     List<User> getAllNotDeleted();
-}
+
+    void verifyUser(String username);
+    }

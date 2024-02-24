@@ -3,12 +3,18 @@ package com.telerikacademy.web.carpooling.services;
 import com.telerikacademy.web.carpooling.exceptions.*;
 import com.telerikacademy.web.carpooling.helpers.UserMapper;
 import com.telerikacademy.web.carpooling.models.FilterUserOptions;
+import com.telerikacademy.web.carpooling.models.NonVerifiedUser;
 import com.telerikacademy.web.carpooling.models.User;
 import com.telerikacademy.web.carpooling.repositories.RoleRepository;
 import com.telerikacademy.web.carpooling.repositories.UserRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.validation.Valid;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,11 +33,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
+    private final JavaMailSender mailSender;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository) {
+
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository, JavaMailSender mailSender) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
+        this.mailSender = mailSender;
     }
 
     @Override
@@ -79,6 +88,12 @@ public class UserServiceImpl implements UserService {
         passwordValidator(user.getPassword());
         user.setPhotoUrl(DEFAULT_IMAGE_URL);
         userRepository.create(user);
+
+        User savedUser = userRepository.getByUsername(user.getUsername());
+        NonVerifiedUser nonVerified = new NonVerifiedUser();
+        nonVerified.setUserId(savedUser.getId());
+        userRepository.create(nonVerified);
+        sendVerificationEmail(user, "http://localhost:8080");
     }
 
     @Override
@@ -171,6 +186,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void verifyUser(String username) {
+        User user = userRepository.getByUsername(username);
+        NonVerifiedUser nonVerifiedUser = userRepository.getNonVerifiedById(user.getId());
+        nonVerifiedUser.setVerified(true);
+        userRepository.verify(nonVerifiedUser);
+    }
+
+    @Override
     public void addProfilePhoto(String photoUrl, User user) {
         user.setPhotoUrl(photoUrl);
         userRepository.update(user);
@@ -208,5 +231,34 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new InvalidPasswordException(PASSWORD_VALIDATION_ERROR_MESSAGE);
         }
+    }
+
+    public void sendVerificationEmail(User user, String siteURL) {
+        String subject = "Please verify your registration";
+        String senderName = "Carpooling A56";
+
+        String senderEmail = "car.pooling.a56@gmail.com\n";
+
+        String mailContent = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>";
+        mailContent += "<p>Please click the link below to verify your registration:</p>";
+
+        String verifyURL = siteURL + "/verify?code=" + user.getUsername();
+
+        mailContent += "<h3><a href=\"" + verifyURL + "\">VERIFY</a></h3>";
+        mailContent += "<p>Thank you<br>The Carpooling A56 Team</p>";
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        try {
+            helper.setFrom(senderEmail, senderName);
+            helper.setTo(user.getEmail());
+            helper.setSubject(subject);
+            helper.setText(mailContent, true);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        mailSender.send(message);
     }
 }

@@ -2,6 +2,7 @@ package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.carpooling.models.FilterUserOptions;
+import com.telerikacademy.web.carpooling.models.NonVerifiedUser;
 import com.telerikacademy.web.carpooling.models.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -27,6 +28,15 @@ public class UserRepositoryImpl implements UserRepository {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.persist(user);
+            session.getTransaction().commit();
+        }
+    }
+
+    @Override
+    public void create(NonVerifiedUser nonVerifiedUser) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.persist(nonVerifiedUser);
             session.getTransaction().commit();
         }
     }
@@ -187,6 +197,25 @@ public class UserRepositoryImpl implements UserRepository {
             query.setParameter("phoneNumber", phoneNumber);
             List<User> result = query.list();
             return !result.isEmpty();
+        }
+    }
+
+    @Override
+    public NonVerifiedUser getNonVerifiedById(int userId) {
+        try (Session session = sessionFactory.openSession()) {
+            String queryString = "FROM NonVerifiedUser nv WHERE nv.id = :userId";
+            Query<NonVerifiedUser> query = session.createQuery(queryString, NonVerifiedUser.class);
+            query.setParameter("userId", userId);
+            return query.uniqueResult();
+        }
+    }
+
+    @Override
+    public void verify(NonVerifiedUser nonVerifiedUser) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.merge(nonVerifiedUser);
+            session.getTransaction().commit();
         }
     }
 }

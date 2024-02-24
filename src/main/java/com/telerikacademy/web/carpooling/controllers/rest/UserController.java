@@ -72,6 +72,12 @@ public class UserController {
         }
     }
 
+    @GetMapping("/verify-email")
+    public String verifyEmail(@RequestParam("username") String username) {
+        userService.verifyUser(username);
+        return "Email successfully verified!";
+    }
+
     @PutMapping
     public UserShow updateUser(@RequestHeader HttpHeaders headers, @Valid @RequestBody User user) {
         try {
