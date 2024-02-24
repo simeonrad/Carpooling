@@ -16,11 +16,13 @@ import java.util.List;
 public class TravelServiceImpl implements TravelService {
     private final TravelRepository travelRepository;
     private final StatusRepository statusRepository;
+    private final DistanceAndDuration distanceAndDuration;
 
     @Autowired
-    public TravelServiceImpl(TravelRepository travelRepository, StatusRepository statusRepository) {
+    public TravelServiceImpl(TravelRepository travelRepository, StatusRepository statusRepository, DistanceAndDuration distanceAndDuration) {
         this.travelRepository = travelRepository;
         this.statusRepository = statusRepository;
+        this.distanceAndDuration = distanceAndDuration;
     }
 
     @Override
@@ -28,6 +30,10 @@ public class TravelServiceImpl implements TravelService {
         if (!user.isBlocked()) {
             ApplicationStatus statusValue = ApplicationStatus.valueOf("PLANNED");
             travel.setStatus(statusRepository.getByValue(statusValue));
+            travel.setStatus(statusRepository.getByValue(ApplicationStatus.PLANNED));
+            int[] travelDetails = distanceAndDuration.getRouteDetails(travel.getStartPoint(), travel.getEndPoint());
+            travel.setDistanceKm(travelDetails[0]);
+            travel.setDurationMinutes(travelDetails[1]);
             travelRepository.create(travel);
         } else {
             throw new UnauthorizedOperationException("No create permission, user is blocked");

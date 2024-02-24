@@ -11,7 +11,7 @@ public class Travel {
     @Column(name = "travel_id")
     private int id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "organizer_id")
     private User driver;
 
@@ -30,8 +30,28 @@ public class Travel {
     @ManyToOne
     @JoinColumn(name = "travel_status")
     private Status status;
+    @Column(name = "duration_minutes", nullable = false)
+    private int durationMinutes;
+    @Column(name = "distance_km", nullable = false)
+    private int distanceKm;
 
     public Travel() {
+    }
+
+    public int getDurationMinutes() {
+        return durationMinutes;
+    }
+
+    public void setDurationMinutes(int durationMinutes) {
+        this.durationMinutes = durationMinutes;
+    }
+
+    public int getDistanceKm() {
+        return distanceKm;
+    }
+
+    public void setDistanceKm(int distance_km) {
+        this.distanceKm = distance_km;
     }
 
     public int getId() {
