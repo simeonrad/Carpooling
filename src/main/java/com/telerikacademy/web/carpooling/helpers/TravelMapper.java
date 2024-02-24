@@ -17,6 +17,14 @@ public class TravelMapper {
         travel.setFreeSpots(travelDto.getFreeSpots());
         return travel;
     }
+    public Travel fromDto(TravelDto travelDto) {
+        Travel travel = new Travel();
+        travel.setStartPoint(travelDto.getStartPoint());
+        travel.setEndPoint(travelDto.getEndPoint());
+        travel.setDepartureTime(travelDto.getDepartureTime());
+        travel.setFreeSpots(travelDto.getFreeSpots());
+        return travel;
+    }
 
     public TravelDto toDto(Travel travel) {
         TravelDto travelDto = new TravelDto();

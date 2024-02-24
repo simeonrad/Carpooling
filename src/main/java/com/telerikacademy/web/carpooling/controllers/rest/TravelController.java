@@ -6,7 +6,7 @@ import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
 import com.telerikacademy.web.carpooling.helpers.TravelMapper;
 import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.services.TravelService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -50,11 +50,11 @@ public class TravelController {
     }
 
     @PostMapping()
-    public TravelDto create(@RequestBody TravelDto travelDto,
+    public TravelDto create(@Valid @RequestBody TravelDto travelDto,
                                        @RequestHeader HttpHeaders headers){
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            Travel travel = travelMapper.fromDto(travelDto,user);
+            Travel travel = travelMapper.fromDto(travelDto);
             travelService.create(travel, user);
             return travelMapper.toDto(travel);
         } catch (AuthenticationFailureException e){

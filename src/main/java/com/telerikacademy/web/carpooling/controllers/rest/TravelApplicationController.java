@@ -8,7 +8,6 @@ import com.telerikacademy.web.carpooling.models.TravelApplication;
 import com.telerikacademy.web.carpooling.models.TravelApplicationDto;
 import com.telerikacademy.web.carpooling.models.User;
 import com.telerikacademy.web.carpooling.services.TravelApplicationService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
