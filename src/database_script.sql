@@ -133,3 +133,10 @@ create index travel_id
 create index organizer_id
     on travels (organizer_id);
 
+create table non_verified
+(
+    user_id     int        null,
+    is_verified tinyint(1) null,
+    constraint non_verified_users_user_id_fk
+        foreign key (user_id) references users (user_id)
+);
