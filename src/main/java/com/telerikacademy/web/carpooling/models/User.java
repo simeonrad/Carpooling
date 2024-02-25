@@ -43,8 +43,6 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private IsDeleted isDeletedRecord;
 
-    
-
     public User() {
     }
 
