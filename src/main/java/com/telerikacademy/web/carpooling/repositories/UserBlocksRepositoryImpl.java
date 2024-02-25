@@ -8,10 +8,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import java.time.LocalDateTime;
-import java.time.Instant;
-import java.time.ZoneId;
 
+import java.time.LocalDateTime;
 
 @Repository
 public class UserBlocksRepositoryImpl implements UserBlocksRepository {
@@ -50,11 +48,12 @@ public class UserBlocksRepositoryImpl implements UserBlocksRepository {
 
     @Override
     public boolean isUserBlocked(int userId) {
-        LocalDateTime currentDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneId.systemDefault());
-        String query = "SELECT count(*) > 0 FROM UserBlock WHERE user.id = :userId AND blockExpireTimestamp > :currentTimestamp";
+        LocalDateTime currentTimestamp = LocalDateTime.now();
+        String query = "SELECT count(u) > 0 FROM UserBlock u WHERE u.user.id = :userId AND u.blockExpireTimestamp > :currentTimestamp";
+
         boolean isBlocked = entityManager.createQuery(query, Boolean.class)
                 .setParameter("userId", userId)
-                .setParameter("currentTimestamp", currentDateTime)
+                .setParameter("currentTimestamp", currentTimestamp)
                 .getSingleResult();
         return isBlocked;
     }
