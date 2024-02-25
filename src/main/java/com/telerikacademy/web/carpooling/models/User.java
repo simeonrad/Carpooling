@@ -1,9 +1,7 @@
 package com.telerikacademy.web.carpooling.models;
 
-import com.telerikacademy.web.carpooling.services.UserBlockService;
 import jakarta.persistence.*;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")

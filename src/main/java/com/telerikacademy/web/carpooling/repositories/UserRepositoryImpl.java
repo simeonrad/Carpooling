@@ -73,8 +73,6 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
-
-
     @Override
     public void update(User user) {
         try (Session session = sessionFactory.openSession()) {

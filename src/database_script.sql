@@ -148,3 +148,14 @@ create table is_deleted
     constraint is_deleted_users_user_id_fk
         foreign key (user_id) references users (user_id)
 );
+
+create table user_blocks
+(
+    block_id               int auto_increment
+        primary key,
+    user_id                int      not null,
+    block_expire_timestamp datetime null,
+    constraint user_blocks_users_user_id_fk
+        foreign key (user_id) references users (user_id)
+            on delete cascade
+);
