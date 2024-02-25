@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,9 +32,19 @@ public class TravelController {
     }
 
     @GetMapping()
-    public List<TravelDto> getAll(){
+    public List<TravelDto> getAll(
+            @RequestParam(required = false) String startPoint,
+            @RequestParam(required = false) String endPoint,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) int freeSpots,
+            @RequestParam(required = false) String driverUsername,
+            @RequestParam(required = false) LocalDateTime departureTime,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String sortOrder
+    ){
         try{
-            return travelService.getAll().stream()
+            FilterTravelOptions filterTravelOptions = new FilterTravelOptions(driverUsername,startPoint,endPoint,departureTime,freeSpots,status,sortBy,sortOrder);
+            return travelService.get(filterTravelOptions).stream()
                     .map(travelMapper::toDto)
                     .collect(Collectors.toList());
         }catch (EntityNotFoundException e){

@@ -13,17 +13,17 @@ public class FilterTravelOptions {
     private Optional<String> sortBy;
     private Optional<String> sortOrder;
 
-    public FilterTravelOptions(Optional<String> author, Optional<String> startPoint, Optional<String> endPoint,
-                               Optional<LocalDateTime> departureTime, Optional<Integer> freeSpots, Optional<String> travelStatus,
-                               Optional<String> sortBy, Optional<String> sortOrder) {
-        this.author = author;
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
-        this.departureTime = departureTime;
-        this.freeSpots = freeSpots;
-        this.travelStatus = travelStatus;
-        this.sortBy = sortBy;
-        this.sortOrder = sortOrder;
+    public FilterTravelOptions(String author, String startPoint, String endPoint,
+                               LocalDateTime departureTime, Integer freeSpots, String travelStatus,
+                               String sortBy, String sortOrder) {
+        this.author = Optional.ofNullable(author);
+        this.startPoint = Optional.ofNullable(startPoint);
+        this.endPoint = Optional.ofNullable(endPoint);
+        this.departureTime = Optional.ofNullable(departureTime);
+        this.freeSpots = Optional.ofNullable(freeSpots);
+        this.travelStatus = Optional.ofNullable(travelStatus);
+        this.sortBy = Optional.ofNullable(sortBy);
+        this.sortOrder = Optional.ofNullable(sortOrder);
     }
 
     public Optional<String> getAuthor() {
