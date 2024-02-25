@@ -11,23 +11,26 @@ import com.telerikacademy.web.carpooling.repositories.TravelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 @Service
 public class TravelServiceImpl implements TravelService {
     private final TravelRepository travelRepository;
     private final StatusRepository statusRepository;
     private final DistanceAndDuration distanceAndDuration;
+    private final UserBlockService userBlockService;
 
     @Autowired
-    public TravelServiceImpl(TravelRepository travelRepository, StatusRepository statusRepository, DistanceAndDuration distanceAndDuration) {
+    public TravelServiceImpl(TravelRepository travelRepository, StatusRepository statusRepository, DistanceAndDuration distanceAndDuration, UserBlockService userBlockService) {
         this.travelRepository = travelRepository;
         this.statusRepository = statusRepository;
         this.distanceAndDuration = distanceAndDuration;
+        this.userBlockService = userBlockService;
     }
 
     @Override
     public void create(Travel travel, User user) {
-        if (!user.isBlocked()) {
+        if (!userBlockService.isUserBlocked(user)) {
             ApplicationStatus statusValue = ApplicationStatus.valueOf("PLANNED");
             travel.setStatus(statusRepository.getByValue(statusValue));
             travel.setStatus(statusRepository.getByValue(ApplicationStatus.PLANNED));
@@ -80,6 +83,9 @@ public class TravelServiceImpl implements TravelService {
         if (travel.getDriver().equals(user)) {
             travel.setStatus(statusRepository.getByValue(ApplicationStatus.CANCELLED));
             travelRepository.update(travel);
+            if (travel.getDepartureTime().isBefore(LocalDateTime.now())){
+                throw new ForbiddenOperationException("You cannot cancel a travel after the departure time");
+            }
         } else {
             throw new UnauthorizedOperationException("No cancel permission, user isn't driver.");
         }
@@ -90,6 +96,9 @@ public class TravelServiceImpl implements TravelService {
         if (travel.getDriver().equals(user)) {
             if (travel.getStatus().getStatus().toString().equals("CANCELLED")) {
                 throw new ForbiddenOperationException("Travel that was already cancelled cannot be marked as complete!");
+            }
+            if (travel.getDepartureTime().isAfter(LocalDateTime.now())){
+                throw new ForbiddenOperationException("You cannot complete a travel before the departure time");
             }
             travel.setStatus(statusRepository.getByValue(ApplicationStatus.COMPLETED));
             travelRepository.update(travel);

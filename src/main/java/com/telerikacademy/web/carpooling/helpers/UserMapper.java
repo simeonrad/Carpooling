@@ -6,7 +6,9 @@ import com.telerikacademy.web.carpooling.models.Role;
 import com.telerikacademy.web.carpooling.models.User;
 import com.telerikacademy.web.carpooling.models.UserDto;
 import com.telerikacademy.web.carpooling.repositories.RoleRepository;
+import com.telerikacademy.web.carpooling.repositories.UserBlocksRepository;
 import com.telerikacademy.web.carpooling.repositories.UserRepository;
+import com.telerikacademy.web.carpooling.services.UserBlockService;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,10 +16,12 @@ public class UserMapper {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final UserBlockService userBlockService;
 
-    public UserMapper(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserMapper(UserRepository userRepository, RoleRepository roleRepository, UserBlockService userBlockService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.userBlockService = userBlockService;
     }
 
     public User fromDto(int id, UserDto userDto) {
@@ -35,7 +39,6 @@ public class UserMapper {
         user.setEmail(userDto.getEmail());
         user.setPhoneNumber(userDto.getPhoneNumber());
         user.setRole(setUserRole("Regular user"));
-        user.setBlocked(false);
         return user;
     }
 
@@ -57,7 +60,7 @@ public class UserMapper {
     }
 
     public UserShowAdmin toDtoAdmin(User newUser) {
-        UserShowAdmin userShowAdmin = new UserShowAdmin(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), newUser.isBlocked(), newUser.getRole().getName());
+        UserShowAdmin userShowAdmin = new UserShowAdmin(newUser.getUsername(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmail(), userBlockService.isUserBlocked(newUser), newUser.getRole().getName());
         return userShowAdmin;
     }
 

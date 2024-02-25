@@ -1,7 +1,9 @@
 package com.telerikacademy.web.carpooling.models;
 
+import com.telerikacademy.web.carpooling.services.UserBlockService;
 import jakarta.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -35,9 +37,8 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "user_role")
     private Role role;
-
-    @Column(name = "is_blocked")
-    private boolean isBlocked;
+    @OneToOne(mappedBy = "user")
+    private UserBlock userBlocks;
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
@@ -118,12 +119,12 @@ public class User {
         this.role = role;
     }
 
-    public boolean isBlocked() {
-        return isBlocked;
+    public UserBlock getUserBlocks() {
+        return userBlocks;
     }
 
-    public void setBlocked(boolean blocked) {
-        isBlocked = blocked;
+    public void setUserBlocks(UserBlock userBlocks) {
+        this.userBlocks = userBlocks;
     }
 
     public boolean isDeleted() {

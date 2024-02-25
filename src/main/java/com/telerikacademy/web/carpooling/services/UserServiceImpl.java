@@ -27,18 +27,19 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
+    private final UserBlockService userBlockService;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository, UserBlockService userBlockService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
+        this.userBlockService = userBlockService;
     }
 
     @Override
     public void create(@Valid User user) {
         boolean usernameExists = true;
-        try {
-            User userCreated = userRepository.getByUsername(user.getUsername());
+        try {User userCreated = userRepository.getByUsername(user.getUsername());
             if (userCreated.isDeleted()) {
                 user = userMapper.fromDtoUpdate(user);
                 user.setDeleted(false);
@@ -120,15 +121,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void blockUser(String username, User admin) {
-        if (!admin.getRole().getName().equals(ADMIN)) {
-            throw new UnauthorizedOperationException(REGULAR_USERS_UNAUTHORIZED_OPERATION);
-        }
+//        if (!admin.getRole().getName().equals(ADMIN)) {
+//            throw new UnauthorizedOperationException(REGULAR_USERS_UNAUTHORIZED_OPERATION);
+//        }
         User userToBlock = userRepository.getByUsername(username);
         if (userToBlock.isDeleted()) {
             throw new EntityNotFoundException("User", "username", userToBlock.getUsername());
         }
-        userToBlock.setBlocked(true);
-        userRepository.update(userToBlock);
+        userBlockService.create(userToBlock);
     }
 
     @Override
@@ -140,8 +140,9 @@ public class UserServiceImpl implements UserService {
         if (userToUnblock.isDeleted()) {
             throw new EntityNotFoundException("User", "username", userToUnblock.getUsername());
         }
-        userToUnblock.setBlocked(false);
-        userRepository.update(userToUnblock);
+        userBlockService.delete(userToUnblock);
+        get(userToUnblock.getId());
+
     }
 
     @Override
@@ -179,6 +180,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAll() {
         return userRepository.getAll();
+    }
+
+    @Override
+    public User get(int id) {
+        return userRepository.getById(id);
     }
 
     @Override

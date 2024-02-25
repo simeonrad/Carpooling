@@ -15,5 +15,6 @@ public interface UserService {
     void unmakeAdmin(String username, User admin);
     void addProfilePhoto(String photoUrl, User user);
     List<User> getAll();
+    User get(int id);
     List<User> getAllNotDeleted();
 }

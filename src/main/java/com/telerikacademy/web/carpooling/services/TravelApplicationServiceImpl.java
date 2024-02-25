@@ -11,6 +11,7 @@ import com.telerikacademy.web.carpooling.repositories.TravelApplicationRepositor
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -55,6 +56,9 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
         if (!application.getPassenger().equals(user)) {
             throw new UnauthorizedOperationException(ONLY_THE_CREATOR_OF_AN_APPLICATION_CAN_CANCEL_IT);
         }
+        if (application.getTravel().getDepartureTime().isBefore(LocalDateTime.now())){
+            throw new ForbiddenOperationException("You cannot cancel an application after the departure time");
+        }
         application.setStatus(statusRepository.getByValue(ApplicationStatus.CANCELLED));
         applicationRepository.update(application);
     }
@@ -64,6 +68,9 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
         if (!application.getTravel().getDriver().equals(user)) {
             throw new UnauthorizedOperationException(ONLY_THE_DRIVER_CAN);
         }
+        if (application.getTravel().getDepartureTime().isBefore(LocalDateTime.now())){
+            throw new ForbiddenOperationException("You cannot approve an application after the departure time");
+        }
         application.setStatus(statusRepository.getByValue(ApplicationStatus.APPROVED));
         applicationRepository.update(application);
     }
@@ -72,6 +79,9 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
     public void decline(User user, TravelApplication application) {
         if (!application.getTravel().getDriver().equals(user)) {
             throw new UnauthorizedOperationException(ONLY_THE_DRIVER_CAN);
+        }
+        if (application.getTravel().getDepartureTime().isBefore(LocalDateTime.now())){
+            throw new ForbiddenOperationException("You cannot decline an application after the departure time");
         }
         application.setStatus(statusRepository.getByValue(ApplicationStatus.DECLINED));
         applicationRepository.update(application);

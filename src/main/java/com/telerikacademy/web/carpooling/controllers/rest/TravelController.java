@@ -3,6 +3,7 @@ package com.telerikacademy.web.carpooling.controllers.rest;
 import com.telerikacademy.web.carpooling.exceptions.AuthenticationFailureException;
 import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
+import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
 import com.telerikacademy.web.carpooling.helpers.TravelMapper;
 import com.telerikacademy.web.carpooling.models.*;
@@ -70,9 +71,13 @@ public class TravelController {
             Travel travel = travelService.getById(id);
             travelService.cancel(user, travel);
             return travelMapper.toDto(travel);
-        } catch (AuthenticationFailureException e){
+        } catch (AuthenticationFailureException | UnauthorizedOperationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
+     catch (ForbiddenOperationException e){
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+    }
+
     }
     @PutMapping("/complete/{id}")
     public TravelDto complete(@PathVariable int id,
@@ -82,7 +87,7 @@ public class TravelController {
             Travel travel = travelService.getById(id);
             travelService.complete(user, travel);
             return travelMapper.toDto(travel);
-        } catch (AuthenticationFailureException e){
+        } catch (AuthenticationFailureException | UnauthorizedOperationException e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (ForbiddenOperationException e) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());

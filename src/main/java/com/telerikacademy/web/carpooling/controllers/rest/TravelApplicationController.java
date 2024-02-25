@@ -3,6 +3,7 @@ package com.telerikacademy.web.carpooling.controllers.rest;
 import com.telerikacademy.web.carpooling.exceptions.AuthenticationFailureException;
 import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
+import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
 import com.telerikacademy.web.carpooling.helpers.TravelApplicationMapper;
 import com.telerikacademy.web.carpooling.models.TravelApplication;
@@ -78,8 +79,10 @@ public class TravelApplicationController {
             TravelApplication application = applicationService.getById(id);
             applicationService.cancel(user, application);
             return travelApplicationMapper.toDto(application);
-        } catch (AuthenticationFailureException e) {
+        } catch (AuthenticationFailureException | UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (ForbiddenOperationException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
 
@@ -91,8 +94,10 @@ public class TravelApplicationController {
             TravelApplication application = applicationService.getById(id);
             applicationService.approve(user, application);
             return travelApplicationMapper.toDto(application);
-        } catch (AuthenticationFailureException e) {
+        } catch (AuthenticationFailureException | UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (ForbiddenOperationException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
 
@@ -104,8 +109,10 @@ public class TravelApplicationController {
             TravelApplication application = applicationService.getById(id);
             applicationService.decline(user, application);
             return travelApplicationMapper.toDto(application);
-        } catch (AuthenticationFailureException e) {
+        }catch (AuthenticationFailureException | UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (ForbiddenOperationException e){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
         }
     }
 
