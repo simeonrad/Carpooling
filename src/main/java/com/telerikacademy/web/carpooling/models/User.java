@@ -39,8 +39,8 @@ public class User {
     @Column(name = "is_blocked")
     private boolean isBlocked;
 
-    @Column(name = "is_deleted")
-    private boolean isDeleted;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private IsDeleted isDeletedRecord;
 
     
 
@@ -128,12 +128,12 @@ public class User {
         isBlocked = blocked;
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
+    public IsDeleted getIsDeletedRecord() {
+        return isDeletedRecord;
     }
 
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+    public void setIsDeletedRecord(IsDeleted isDeletedRecord) {
+        this.isDeletedRecord = isDeletedRecord;
     }
 
     public String getPhotoUrl() {

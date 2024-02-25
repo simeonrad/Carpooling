@@ -69,6 +69,8 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, ie.getMessage());
         } catch (InvalidPasswordException epe) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, epe.getMessage());
+        } catch (UnsupportedOperationException uoe) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, uoe.getMessage());
         }
     }
 
@@ -100,7 +102,6 @@ public class UserController {
             User currentUser = authenticationHelper.tryGetUser(headers);
             User user = userRepository.getByUsername(username);
             userService.delete(user, currentUser);
-            user = userRepository.getByUsername(user.getUsername());
             return String.format("User with username %s successfully deleted.", user.getUsername());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
