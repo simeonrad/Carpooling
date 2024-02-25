@@ -10,6 +10,7 @@ import com.telerikacademy.web.carpooling.repositories.StatusRepository;
 import com.telerikacademy.web.carpooling.repositories.TravelRepository;
 import com.telerikacademy.web.carpooling.services.DistanceAndDuration;
 import com.telerikacademy.web.carpooling.services.TravelServiceImpl;
+import com.telerikacademy.web.carpooling.services.UserBlockService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,7 +60,6 @@ public class TravelServiceTests {
 
     @Test
     void createTravel_WithValidUser_CreatesTravelSuccessfully() {
-        user.setBlocked(false);
         travel.setStartPoint("Start");
         travel.setEndPoint("End");
 
@@ -111,6 +112,7 @@ public class TravelServiceTests {
     @Test
     void cancelTravel_ByDriver_CancelsTravelSuccessfully() {
         travel.setDriver(user);
+        travel.setDepartureTime(LocalDateTime.now().plusMinutes(20));
         Status cancelledStatus = new Status();
         cancelledStatus.setStatus(ApplicationStatus.CANCELLED);
         when(statusRepository.getByValue(ApplicationStatus.CANCELLED)).thenReturn(cancelledStatus);
@@ -124,6 +126,7 @@ public class TravelServiceTests {
     @Test
     void completeTravel_ByDriver_CompletesTravelSuccessfully() {
         travel.setDriver(user);
+        travel.setDepartureTime(LocalDateTime.now().minusDays(2));
 
         Status initialStatus = new Status();
         initialStatus.setStatus(ApplicationStatus.PLANNED);
