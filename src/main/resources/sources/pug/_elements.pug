@@ -1,0 +1,101 @@
+//- Image
+	@param {string} name
+mixin img(name)
+	- var size = getImageSize(name);
+	img(src= setImagePath(setImageExtension(name)), alt='', width= size[0], height= size[1], loading='lazy')&attributes(attributes)
+
+
+//- Jpg image
+	@param {string} name
+mixin jpg(name)
+	- var size = getImageSize(name);
+	img(src= setImagePath(name +'.jpg'), alt='', width= size[0], height= size[1], loading='lazy')&attributes(attributes)
+
+
+//- Png image
+	@param {string} name
+mixin png(name)
+	- var size = getImageSize(name);
+	img(src= setImagePath(name +'.png'), alt='', width= size[0], height= size[1], loading='lazy')&attributes(attributes)
+
+
+//- Loop without indexing mixin
+	@param {number} iterations - number of iterations
+mixin loop(iterations)
+	- for (var i = 0; i < iterations; i++)
+		block
+
+
+//- Parallax Section
+	@param {object} obj - parameters storage
+	@param {string} obj.img - image path
+	@param {string} obj.innerClass - content wrapper class
+mixin parallax(obj)
+	section.section.parallax-container(data-parallax-img= setImagePath(setImageExtension(obj.img)))&attributes(attributes)
+		.parallax-content(class= obj.innerClass)
+			block
+
+
+//- Parallax element
+	@param {object} obj - parameters storage
+	@param {string} obj.img - image path
+	@param {string} obj.innerClass - content wrapper class
+mixin parallax-element(obj)
+	.parallax-container(data-parallax-img= setImagePath(setImageExtension(obj.img)))&attributes(attributes)
+		.parallax-content(class= obj.innerClass)
+			block
+				
+
+//- Breadcrumbs
+	@param {object} obj - parameters storage
+	@param {string} obj.category - required menu category
+	@param {string} obj.bgImage - section background image
+	@param {array}  obj.path - other navigation path
+mixin breadcrumbs(obj)
+	- var activeItemName= obj.path.pop();
+	- var category = getMenuCategory(obj.category);
+
+	if (typeof(obj.title) !== 'undefined')
+		- var title= obj.title;
+	else
+		- var title = activeItemName;
+
+	section.breadcrumbs-custom
+		.breadcrumbs-custom-main.context-dark
+			.container: .row.justify-content-center: .col-xl-9
+				if(obj.customContent)
+					h3.breadcrumbs-custom-title!=title
+					block
+				else
+					h2.breadcrumbs-custom-title!=title
+				
+		.breadcrumbs-custom-aside
+			.container
+				ul.breadcrumbs-custom-path
+					li: a(href='index.html') Home
+					if (typeof(category) !== 'undefined' && (category.title !== activeItemName))
+						li: a(href=category.link ? category.link : genLink(category.title))= category.title
+						-for(var i = 0; i < obj.path.length; i++)
+							li: a(href=obj.path[i].link ? obj.path[i].link : genLink(obj.path[i].title))= obj.path[i].title
+	
+					li.active=activeItemName
+
+
+//- Logo
+mixin logo
+	a.brand(href='index.html')&attributes(attributes)
+		+png(brand.default.normal)(srcset='images/'+ brand.default.retina +'.png 2x').brand-logo-dark
+
+//- Copyright
+mixin rights
+	p.rights&attributes(attributes)
+		span &copy;&nbsp; 
+		span.copyright-year
+		span . All Rights Reserved
+		span .
+		span  Design&nbsp;by&nbsp;#[a(href="https://zemez.io/") Zemez]
+
+
+mixin svg-faq()
+	svg(xmlns='http://www.w3.org/2000/svg', width='156px', height='156px')&attributes(attributes)
+		path(fill-rule='evenodd', d='M78.000,156.000 C65.274,156.000 53.271,152.933 42.659,147.527 L13.013,151.003 L18.232,128.101 C6.859,114.547 -0.000,97.078 -0.000,78.000 C-0.000,34.922 34.922,-0.000 78.000,-0.000 C121.078,-0.000 156.000,34.922 156.000,78.000 C156.000,121.078 121.078,156.000 78.000,156.000 Z')

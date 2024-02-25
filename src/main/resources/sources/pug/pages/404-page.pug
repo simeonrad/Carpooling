@@ -1,0 +1,26 @@
+extends  ../_skeleton
+
+
+block variables
+	- var activeCategory = 'pages'
+	- var pageName = '404 Page'
+
+block page 
+	section.section.section-layout-2
+		.section-layout-2-inner
+			.section-layout-2-header
+				+logo
+
+			.section-layout-2-main
+				.section-layout-2-figure
+					+jpg('404-image-828x593').section-layout-2-image
+				.section-layout-2-content.container
+					p.text-extra-large 404
+					h3.text-transform-none Sorry, but the page was not found
+					p.big You may have mistyped the address or the page may have moved.
+					.group-1.group-middle
+						a.button.button-secondary(href='index.html') Back to Home Page
+						a.button.button-default-outline(href='contact-us.html') Contact Us
+
+			.section-layout-2-footer
+				+rights

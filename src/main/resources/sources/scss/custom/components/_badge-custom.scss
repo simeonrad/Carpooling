@@ -1,0 +1,44 @@
+/** @section Badge */
+
+.badge {
+	font-weight: 700;
+	color: $primary;
+	background: $color-1;
+	text-transform: uppercase;
+	letter-spacing: .075em;
+}
+
+%context-dark {
+	.badge {
+		color: $white;
+		background: rgba($white, .2);
+	}
+}
+
+// Variants
+.badge-1 {
+	padding: 10px 12px;
+	font-weight: 600;
+	letter-spacing: .025em;
+	text-transform: none;
+	border-radius: 0;
+}
+
+
+// Sizes
+.badge-sm {
+	padding: 5px 10px;
+	font-size: 12px;
+	letter-spacing: .025em;
+}
+
+// Styles
+.badge.badge-secondary {
+	color: $white;
+	background: $secondary;
+}
+
+.badge.badge-color-1 {
+	color: $primary;
+	background: $color-1;
+}
