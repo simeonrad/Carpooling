@@ -1,6 +1,7 @@
 package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.models.FilterUserOptions;
+import com.telerikacademy.web.carpooling.models.IsDeleted;
 import com.telerikacademy.web.carpooling.models.NonVerifiedUser;
 import com.telerikacademy.web.carpooling.models.User;
 import java.util.List;
@@ -10,14 +11,20 @@ public interface UserRepository {
 
     void create(NonVerifiedUser nonVerifiedUser);
 
-    void delete(User user);
+    void delete(IsDeleted isDeleted);
+
+    void unmarkAsDeleted(IsDeleted isDeleted);
 
     void update(User user);
 
     List<User> get(FilterUserOptions filterOptions);
     User getById(int id);
 
+    IsDeleted getDeletedById(int userId);
+
     List<User> getAll();
+
+    boolean isDeleted (int userId);
 
     List<User> getAllNotDeleted();
 

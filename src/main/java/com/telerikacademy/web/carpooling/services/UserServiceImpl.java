@@ -3,6 +3,7 @@ package com.telerikacademy.web.carpooling.services;
 import com.telerikacademy.web.carpooling.exceptions.*;
 import com.telerikacademy.web.carpooling.helpers.UserMapper;
 import com.telerikacademy.web.carpooling.models.FilterUserOptions;
+import com.telerikacademy.web.carpooling.models.IsDeleted;
 import com.telerikacademy.web.carpooling.models.NonVerifiedUser;
 import com.telerikacademy.web.carpooling.models.User;
 import com.telerikacademy.web.carpooling.repositories.RoleRepository;
@@ -10,6 +11,7 @@ import com.telerikacademy.web.carpooling.repositories.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.validation.Valid;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -45,32 +47,41 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void create(@Valid User user) {
-        boolean usernameExists = true;
         try {
-            User userCreated = userRepository.getByUsername(user.getUsername());
-            if (userCreated.isDeleted()) {
-                user = userMapper.fromDtoUpdate(user);
-                user.setDeleted(false);
-                emailValidator(user.getEmail());
-                boolean emailExists = true;
-                try {
-                    user = userRepository.getByEmail(user.getEmail());
-                } catch (EntityNotFoundException e) {
-                    emailExists = false;
-                }
-                if (emailExists) {
-                    throw new DuplicateEmailExists("User", "email", user.getEmail());
-                }
-                passwordValidator(user.getPassword());
-                userRepository.update(user);
-                return;
-            }
+            User newUser = userRepository.getByUsername(user.getUsername());
+            IsDeleted isDeleted = userRepository.getDeletedById(newUser.getId());
+            userRepository.unmarkAsDeleted(isDeleted);
+            user = userMapper.fromDtoUpdate(user);
+            update(user, user);
+            sendVerificationEmail(user);
         } catch (EntityNotFoundException e) {
-            usernameExists = false;
+            boolean usernameExists = true;
+            try {
+                userRepository.getByUsername(user.getUsername());
+            } catch (EntityNotFoundException en) {
+                usernameExists = false;
+            }
+            if (usernameExists) {
+                throw new DuplicateExistsException("User", "username", user.getUsername());
+            }
+            user = checkIfEmailExists(user);
+            checkIfPhoneNumberExists(user);
+            user.setPhotoUrl(DEFAULT_IMAGE_URL);
+            passwordValidator(user.getPassword());
+            userRepository.create(user);
+            sendVerificationEmail(user);
         }
-        if (usernameExists && !user.isDeleted()) {
-            throw new DuplicateExistsException("User", "username", user.getUsername());
+    }
+
+    private void checkIfPhoneNumberExists(User user) {
+        boolean phoneNumberExists = userRepository.telephoneExists(user.getPhoneNumber());
+        if (phoneNumberExists) {
+            throw new DuplicateExistsException("User", "phone number", user.getPhoneNumber());
         }
+    }
+
+    @NotNull
+    private User checkIfEmailExists(User user) {
         emailValidator(user.getEmail());
         boolean emailExists = true;
         try {
@@ -81,14 +92,10 @@ public class UserServiceImpl implements UserService {
         if (emailExists) {
             throw new DuplicateEmailExists("User", "email", user.getEmail());
         }
-        boolean phoneNumberExists = userRepository.telephoneExists(user.getPhoneNumber());
-        if (phoneNumberExists) {
-            throw new DuplicateExistsException("User", "phone number", user.getPhoneNumber());
-        }
-        passwordValidator(user.getPassword());
-        user.setPhotoUrl(DEFAULT_IMAGE_URL);
-        userRepository.create(user);
+        return user;
+    }
 
+    private void sendVerificationEmail(User user) {
         User savedUser = userRepository.getByUsername(user.getUsername());
         NonVerifiedUser nonVerified = new NonVerifiedUser();
         nonVerified.setUserId(savedUser.getId());
@@ -99,14 +106,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(User user, User deletedBy) {
         user = userRepository.getByUsername(user.getUsername());
-        if (user.isDeleted()) {
-            throw new EntityNotFoundException("User", "username", user.getUsername());
-        }
         if (!deletedBy.getRole().getName().equals(ADMIN) && !user.getUsername().equals(deletedBy.getUsername())) {
             throw new UnauthorizedOperationException("Only admins or the same user can delete user profiles!");
         }
-        user.setDeleted(true);
-        userRepository.delete(user);
+        try {
+            userRepository.getDeletedById(user.getId());
+            throw new UserIsAlreadyDeletedException("User", "username", user.getUsername());
+        } catch (EntityNotFoundException e) {
+            markUserAsDeleted(user.getId());
+        }
     }
 
     @Override
@@ -125,6 +133,20 @@ public class UserServiceImpl implements UserService {
         userRepository.update(user);
     }
 
+    public void markUserAsDeleted(int userId) {
+        User user = userRepository.getById(userId);
+        IsDeleted isDeleted = new IsDeleted();
+        isDeleted.setUser(user);
+        userRepository.delete(isDeleted);
+    }
+
+    public void unmarkUserAsDeleted(int userId) {
+        IsDeleted isDeleted = userRepository.getDeletedById(userId);
+        if (isDeleted != null) {
+            userRepository.unmarkAsDeleted(isDeleted);
+        }
+    }
+
     @Override
     public List<User> get(FilterUserOptions filterUserOptions, User user) {
         if (!user.getRole().getName().equals(ADMIN)) {
@@ -139,7 +161,7 @@ public class UserServiceImpl implements UserService {
             throw new UnauthorizedOperationException(REGULAR_USERS_UNAUTHORIZED_OPERATION);
         }
         User userToBlock = userRepository.getByUsername(username);
-        if (userToBlock.isDeleted()) {
+        if (userRepository.isDeleted(userToBlock.getId())) {
             throw new EntityNotFoundException("User", "username", userToBlock.getUsername());
         }
         userToBlock.setBlocked(true);
@@ -152,7 +174,7 @@ public class UserServiceImpl implements UserService {
             throw new UnauthorizedOperationException(REGULAR_USERS_UNAUTHORIZED_OPERATION);
         }
         User userToUnblock = userRepository.getByUsername(username);
-        if (userToUnblock.isDeleted()) {
+        if (userRepository.isDeleted(userToUnblock.getId())) {
             throw new EntityNotFoundException("User", "username", userToUnblock.getUsername());
         }
         userToUnblock.setBlocked(false);
@@ -161,28 +183,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void makeAdmin(String username, User admin) {
-        User user = userRepository.getByUsername(username);
-        if (!admin.getRole().getName().equals(ADMIN)) {
-            throw new UnauthorizedOperationException(REGULAR_USERS_UNAUTHORIZED_OPERATION);
-        }
-        if (user.isDeleted()) {
-            throw new EntityNotFoundException("User", "username", user.getUsername());
-        }
+        User user = checkUserRole(username, admin);
         user.setRole(roleRepository.findByName(ADMIN));
         userRepository.update(user);
     }
 
     @Override
     public void unmakeAdmin(String username, User admin) {
+        User user = checkUserRole(username, admin);
+        user.setRole(roleRepository.findByName(REGULAR_USER));
+        userRepository.update(user);
+    }
+
+    @NotNull
+    private User checkUserRole(String username, User admin) {
         User user = userRepository.getByUsername(username);
         if (!admin.getRole().getName().equals(ADMIN)) {
             throw new UnauthorizedOperationException(REGULAR_USERS_UNAUTHORIZED_OPERATION);
         }
-        if (user.isDeleted()) {
+        if (userRepository.isDeleted(user.getId())) {
             throw new EntityNotFoundException("User", "username", user.getUsername());
         }
-        user.setRole(roleRepository.findByName(REGULAR_USER));
-        userRepository.update(user);
+        return user;
     }
 
     @Override
@@ -237,7 +259,7 @@ public class UserServiceImpl implements UserService {
         String subject = "Please verify your registration";
         String senderName = "Carpooling A56";
 
-        String senderEmail = "car.pooling.a56@gmail.com\n";
+        String senderEmail = "car.pooling.a56@gmail.com";
 
         String mailContent = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>";
         mailContent += "<p>Please click the link below to verify your registration:</p>";
@@ -256,7 +278,7 @@ public class UserServiceImpl implements UserService {
             helper.setSubject(subject);
             helper.setText(mailContent, true);
         } catch (MessagingException | UnsupportedEncodingException e) {
-            e.printStackTrace();
+            throw new UnsupportedOperationException("Sending verification email was not possible! Please try again!");
         }
 
         mailSender.send(message);

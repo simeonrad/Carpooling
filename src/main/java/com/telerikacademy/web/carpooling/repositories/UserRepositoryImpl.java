@@ -2,6 +2,7 @@ package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.carpooling.models.FilterUserOptions;
+import com.telerikacademy.web.carpooling.models.IsDeleted;
 import com.telerikacademy.web.carpooling.models.NonVerifiedUser;
 import com.telerikacademy.web.carpooling.models.User;
 import org.hibernate.Session;
@@ -42,7 +43,40 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void delete(User user) {
+    public void delete(IsDeleted isDeleted) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.persist(isDeleted);
+            session.getTransaction().commit();
+        }
+    }
+
+    @Override
+    public void unmarkAsDeleted(IsDeleted isDeleted) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.remove(isDeleted);
+            session.getTransaction().commit();
+        }
+    }
+
+    @Override
+    public IsDeleted getDeletedById(int userId) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<IsDeleted> query = session.createQuery("FROM IsDeleted WHERE user.id = :userId", IsDeleted.class);
+            query.setParameter("userId", userId);
+            IsDeleted isDeleted = query.uniqueResult();
+            if (isDeleted == null) {
+                throw new EntityNotFoundException("User", userId);
+            }
+            return isDeleted;
+        }
+    }
+
+
+
+    @Override
+    public void update(User user) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.merge(user);
@@ -51,11 +85,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void update(User user) {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            session.merge(user);
-            session.getTransaction().commit();
+    public boolean isDeleted(int userId) {
+        try(Session session = sessionFactory.openSession()) {
+            Query<Integer> query = session.createQuery("SELECT count(*) FROM IsDeleted id WHERE id.user.id = :userId", Integer.class);
+            query.setParameter("userId", userId);
+            int count = query.uniqueResult();
+            return count > 0;
         }
     }
 
@@ -148,7 +183,8 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<User> getAllNotDeleted() {
         try (Session session = sessionFactory.openSession()) {
-            Query<User> query = session.createQuery("from User u where u.isDeleted = false", User.class);
+            String hql = "SELECT u FROM User u LEFT JOIN IsDeleted d ON u.id = d.user.id WHERE d.user.id IS NULL";
+            Query<User> query = session.createQuery(hql, User.class);
             return query.list();
         }
     }
