@@ -17,4 +17,6 @@ public interface UserService {
     List<User> getAll();
     User get(int id);
     List<User> getAllNotDeleted();
-}
+
+    void verifyUser(String username);
+    }

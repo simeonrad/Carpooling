@@ -17,7 +17,6 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
 
@@ -25,6 +24,9 @@ dependencies {
     implementation 'org.mariadb.jdbc:mariadb-java-client'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.3.0'
     implementation 'org.json:json:20210307'
+    implementation 'org.springframework.boot:spring-boot-starter-mail:3.2.3'
+    implementation 'com.mailjet:mailjet-client:5.2.5'
+
 
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 

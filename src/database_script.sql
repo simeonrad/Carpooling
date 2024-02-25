@@ -26,7 +26,6 @@ create table users
     phone_number varchar(10)                                                                                                        not null,
     photo_url    char(255) default 'https://i.ibb.co/3dVFMxL/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg' not null,
     user_role    int       default 1                                                                                                not null,
-    is_deleted   tinyint(1)                                                                                                         not null,
     is_blocked   tinyint(1)                                                                                                         not null,
     constraint email
         unique (email),
@@ -133,3 +132,19 @@ create index travel_id
 create index organizer_id
     on travels (organizer_id);
 
+create table non_verified
+(
+    user_id     int        null,
+    is_verified tinyint(1) null,
+    constraint non_verified_users_user_id_fk
+        foreign key (user_id) references users (user_id)
+);
+
+create table is_deleted
+(
+    user_id int null,
+    id      int auto_increment
+        primary key,
+    constraint is_deleted_users_user_id_fk
+        foreign key (user_id) references users (user_id)
+);
