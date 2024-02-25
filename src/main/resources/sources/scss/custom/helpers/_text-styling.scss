@@ -1,0 +1,70 @@
+/** @section Text Styling */
+
+// Text styles
+.text-italic {
+	font-style: italic;
+}
+
+.text-normal {
+	font-style: normal;
+}
+
+// Text decoration
+.text-underline {
+	text-decoration: underline;
+}
+
+.text-strike {
+	text-decoration: line-through;
+}
+
+// Text weight
+.fw-thin {
+	font-weight: 100;
+}
+
+.fw-regular {
+	font-weight: 400;
+}
+
+.fw-medium {
+	font-weight: 500;
+}
+
+.fw-sbold {
+	font-weight: 600;
+}
+
+.fw-extra-black {
+	font-weight: 800;
+}
+
+.fw-ubold {
+	font-weight: 900;
+}
+
+// Text spacing
+.ls-001 {
+	letter-spacing: .01em;
+}
+
+// Text Colors
+.text-default { color: $body-color; }
+.text-primary { color: $primary; }
+.text-secondary { color: $secondary; }
+.text-color-2 { color: $color-2; }
+.text-color-3 { color: $color-3; }
+.text-color-6 { color: $color-6; }
+.text-color-7 { color: $color-7; }
+
+a.text-primary {
+	&:hover {
+		color: $secondary;
+	}
+}
+
+.text-gray-900 { color: $gray-900; }
+
+%context-dark {
+	.text-primary { color: $tertiary; }
+}

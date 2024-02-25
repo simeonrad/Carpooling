@@ -1,0 +1,16 @@
+mixin quote-modern(obj)
+	// Quote Modern
+	blockquote.quote-modern&attributes(attributes)
+		.quote-modern-header
+			.quote-modern-info
+				+jpg(obj.avatar).quote-modern-avatar
+				.quote-modern-info-main
+					cite.quote-modern-cite=obj.cite
+					p.quote-modern-position=obj.position
+					
+		.quote-modern-main
+			.quote-modern-text
+				block
+			.quote-modern-meta
+				a.quote-modern-link.icon.mdi.mdi-facebook(href=obj.facebookLink ? obj.facebookLink : '#')
+				time.quote-modern-time(datetime='2023')=obj.time

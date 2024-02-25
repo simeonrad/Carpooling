@@ -1,0 +1,7 @@
+mixin toggle-modern(obj)
+	.toggle-modern(aria-label='Pricing Switch Monthly/Yearly')&attributes(attributes)
+		.toggle-modern-text.toggle-modern-text_default Monthly
+		button.toggle-modern-switch.content-toggle(data-multitoggle=(typeof obj !== 'undefined' ? (typeof obj.toggle !== 'undefined' ? obj.toggle : '') : ''))
+			span.toggle-modern-switch-element
+		.toggle-modern-text.toggle-modern-text_alternate Yearly
+	

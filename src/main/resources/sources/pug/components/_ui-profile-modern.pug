@@ -1,0 +1,16 @@
+mixin profile-modern(obj)
+	// Profile Modern
+	article.profile-modern
+		figure.profile-modern-figure
+			+jpg(obj.img).profile-modern-image
+		.profile-modern-main
+			.profile-modern-main-item.profile-modern-main-item_primary
+				h4.profile-modern-name=obj.name
+				p.profile-modern-position=obj.position
+			.profile-modern-main-item.profile-modern-main-item_secondary
+				h4.profile-modern-main-title Get in Touch
+				ul.list-inline.list-inline-xs
+					li: a.icon.icon-md.mdi.mdi-facebook(href='#')
+					li: a.icon.icon-md.mdi.mdi-twitter(href='#')
+					li: a.icon.icon-md.mdi.mdi-instagram(href='#')
+				.profile-modern-toggle.mdi.mdi-arrow-top-right

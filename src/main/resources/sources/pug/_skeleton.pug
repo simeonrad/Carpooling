@@ -1,0 +1,41 @@
+include _config
+include _functions
+include _elements 
+
+block variables
+
+doctype html
+html(lang='en' class=htmlClass) 
+	head
+		block title
+			title= pageName
+
+		meta(name='viewport' content='width=device-width height=device-height initial-scale=1.0')
+		meta(charset='utf-8')
+		meta(http-equiv='X-UA-Compatible' content='IE=edge')
+
+		link(rel='icon' href='images/favicon.ico' type='image/x-icon')
+		link(rel='stylesheet' type='text/css' href=fonts)
+		link(rel='stylesheet' href='css/bootstrap.css')
+		link(rel='stylesheet' href='css/fonts.css')
+		link(rel='stylesheet' href='css/style.css')
+
+	body
+		#loading.preloader
+			.preloader-body
+				#loading-center-object
+					#object_four.object
+					#object_three.object
+					#object_two.object
+					#object_one.object
+
+		.page
+			block page
+
+		#form-output-global.snackbars
+
+		script(src='js/core.min.js')
+		script(src='js/script.js')
+
+		if(pageName === 'Privacy Policy')
+			// coded by Ragnar
