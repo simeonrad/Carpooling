@@ -1,9 +1,7 @@
 package com.telerikacademy.web.carpooling.models;
 
-import com.telerikacademy.web.carpooling.services.UserBlockService;
 import jakarta.persistence.*;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -42,8 +40,6 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private IsDeleted isDeletedRecord;
-
-    
 
     public User() {
     }

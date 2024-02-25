@@ -73,8 +73,6 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
-
-
     @Override
     public void update(User user) {
         try (Session session = sessionFactory.openSession()) {
@@ -87,9 +85,9 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public boolean isDeleted(int userId) {
         try(Session session = sessionFactory.openSession()) {
-            Query<Integer> query = session.createQuery("SELECT count(*) FROM IsDeleted id WHERE id.user.id = :userId", Integer.class);
+            Query<Long> query = session.createQuery("SELECT count(*) FROM IsDeleted id WHERE id.user.id = :userId", Long.class);
             query.setParameter("userId", userId);
-            int count = query.uniqueResult();
+            long count = query.uniqueResult();
             return count > 0;
         }
     }
