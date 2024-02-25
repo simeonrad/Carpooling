@@ -36,13 +36,15 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
     private final JavaMailSender mailSender;
+    private final UserBlockService userBlockService;
 
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository, JavaMailSender mailSender) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository, JavaMailSender mailSender, UserBlockService userBlockService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
         this.mailSender = mailSender;
+        this.userBlockService = userBlockService;
     }
 
     @Override
@@ -164,8 +166,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.isDeleted(userToBlock.getId())) {
             throw new EntityNotFoundException("User", "username", userToBlock.getUsername());
         }
-        userToBlock.setBlocked(true);
-        userRepository.update(userToBlock);
+        userBlockService.create(userToBlock);
     }
 
     @Override
@@ -177,8 +178,8 @@ public class UserServiceImpl implements UserService {
         if (userRepository.isDeleted(userToUnblock.getId())) {
             throw new EntityNotFoundException("User", "username", userToUnblock.getUsername());
         }
-        userToUnblock.setBlocked(false);
-        userRepository.update(userToUnblock);
+
+        userBlockService.delete(userToUnblock);
     }
 
     @Override
@@ -224,6 +225,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAll() {
         return userRepository.getAll();
+    }
+
+    @Override
+    public User get(int id) {
+        return userRepository.getById(id);
     }
 
     @Override

@@ -1,9 +1,6 @@
 package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
-import com.telerikacademy.web.carpooling.models.Feedback;
-import com.telerikacademy.web.carpooling.models.Travel;
-import com.telerikacademy.web.carpooling.models.User;
 import com.telerikacademy.web.carpooling.models.UserBlock;
 import jakarta.persistence.EntityManager;
 import org.hibernate.Session;
@@ -11,8 +8,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZoneId;
+
 
 @Repository
 public class UserBlocksRepositoryImpl implements UserBlocksRepository {
@@ -51,10 +50,11 @@ public class UserBlocksRepositoryImpl implements UserBlocksRepository {
 
     @Override
     public boolean isUserBlocked(int userId) {
+        LocalDateTime currentDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneId.systemDefault());
         String query = "SELECT count(*) > 0 FROM UserBlock WHERE user.id = :userId AND blockExpireTimestamp > :currentTimestamp";
         boolean isBlocked = entityManager.createQuery(query, Boolean.class)
                 .setParameter("userId", userId)
-                .setParameter("currentTimestamp", new java.sql.(System.currentTimeMillis()))
+                .setParameter("currentTimestamp", currentDateTime)
                 .getSingleResult();
         return isBlocked;
     }
