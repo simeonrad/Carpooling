@@ -1,0 +1,260 @@
+/** @section RD Navbar */
+
+//
+// RD Navbar variables
+//
+$rd-navbar-static-width: map-get($container-max-widths, xl) - $grid-gutter-width;
+$navbar-static-nav-indent: 32px;
+
+$rd-navbar-min-font-size: 24px;
+$rd-navbar-min-line-height: 48px;
+$rd-navbar-min-height: 56px;
+
+$rd-navbar-color: $gray-900;
+$rd-navbar-background: $white;
+$rd-navbar-shadow: 0 0 22px -4px rgba(0, 0, 0, 0.17);
+$rd-navbar-border: 1px solid $gray-200;
+$rd-navbar-width: 1170px; 
+
+// RD Navbar Panel
+$rd-navbar-panel-color: $rd-navbar-color;
+$rd-navbar-panel-background: $rd-navbar-background;
+
+// RD Navbar Nav
+$rd-navbar-nav-min-width: 270px;
+$rd-navbar-nav-color: $rd-navbar-color;
+$rd-navbar-nav-background: transparent;
+$rd-navbar-nav-hover-color: $primary;
+$rd-navbar-nav-hover-background: transparent;
+$rd-navbar-nav-active-color: $rd-navbar-nav-hover-color;
+$rd-navbar-nav-active-background: $rd-navbar-nav-hover-background;
+
+// RD Navbar Dropdown
+$rd-navbar-dropdown-width: 230px;
+$rd-navbar-dropdown-background: $white;
+$rd-navbar-dropdown-item-color: $gray-800;
+$rd-navbar-dropdown-item-background: transparent;
+$rd-navbar-dropdown-item-hover-color: $primary;
+$rd-navbar-dropdown-item-hover-background: transparent;
+$rd-navbar-dropdown-item-active-color: $rd-navbar-dropdown-item-hover-color;
+$rd-navbar-dropdown-item-active-background: $rd-navbar-dropdown-item-hover-background;
+
+// RD Navbar Megamenu
+$rd-navbar-megamenu-gutter: 30px;
+$rd-navbar-megamenu-background: $white;
+$rd-navbar-megamenu-item-color: $rd-navbar-dropdown-item-color;
+$rd-navbar-megamenu-item-background: $rd-navbar-dropdown-item-background;
+$rd-navbar-megamenu-item-hover-color: $rd-navbar-dropdown-item-hover-color;
+$rd-navbar-dropdown-item-hover-background: $rd-navbar-dropdown-item-hover-background;
+
+// RD Navbar toggles
+$rd-navbar-toggle-preset: "button-lines-cross-2";
+$rd-navbar-toggle-border-radius: 0;
+$rd-navbar-collapse-toggle-preset: "collapse-preset-1";
+$rd-navbar-toggle-color: $gray-800;
+
+@import "rd-navbar_includes/_rd-navbar-mixins";
+
+// RD Navbar Basics
+%rd-navbar-transition {
+	transition: 0.3s all ease-in-out;
+}
+
+.rd-navbar--no-transition {
+	&, * {
+		transition: none !important;
+	}
+}
+
+.rd-navbar-wrap {
+	@extend %rd-navbar-transition;
+}
+
+.rd-navbar,
+.rd-navbar.rd-navbar--is-clone {
+	display: none;
+}
+
+.rd-navbar,
+.rd-menu,
+.rd-navbar-nav,
+.rd-navbar-panel {
+	@extend %rd-navbar-transition;
+}
+
+.rd-navbar.rd-navbar-fixed + .rd-navbar.rd-navbar--is-clone,
+.rd-navbar.rd-navbar-sidebar + .rd-navbar.rd-navbar--is-clone {
+	display: none;
+}
+
+// RD Navbar
+.rd-navbar {
+	display: none;
+	background: $rd-navbar-background;
+}
+
+// RD Navbar Toggle
+.rd-navbar-toggle {
+	@include make-toggle(
+			$rd-navbar-toggle-preset,
+			$rd-navbar-min-line-height,
+			$rd-navbar-min-font-size,
+			$border-radius,
+			$rd-navbar-toggle-color
+	);
+	background-color: transparent;
+	border: none;
+	display: none;
+}
+
+%context-dark {
+	.rd-navbar-toggle {
+		@include make-toggle(
+				$rd-navbar-toggle-preset,
+				$rd-navbar-min-line-height,
+				$rd-navbar-min-font-size,
+				$border-radius,
+				$tertiary
+		);
+		display: none;
+	}
+}
+
+// RD Navbar Collapse
+.rd-navbar-collapse-toggle {
+	@include make-toggle(
+			$rd-navbar-collapse-toggle-preset,
+			$rd-navbar-min-line-height,
+			$rd-navbar-min-font-size,
+			$rd-navbar-toggle-border-radius,
+			$rd-navbar-panel-color
+	);
+	display: none;
+}
+
+// RD Navbar Brand
+.rd-navbar-brand {
+	a {
+		display: block;
+	}
+}
+
+// RD Navbar Search
+.rd-navbar-search {
+	position: relative;
+	display: inline-flex;
+
+	.form-input {
+		padding-right: 50px;
+	}
+
+	.rd-search-form-submit {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		width: 50px;
+		padding: 0;
+		margin: 0;
+		border: none;
+		cursor: pointer;
+		background-color: transparent;
+		color: $gray-300;
+		transition: .33s;
+
+		&:hover {
+			color: $primary;
+		}
+	}
+}
+
+.rd-navbar-search-toggle {
+	@include reset-button;
+}
+
+// RD Navbar Dropdown
+.rd-navbar-dropdown {
+	display: none;
+} 
+
+.rd-navbar-link {
+	padding: 10px 25px;
+	font-size: 15px;
+	line-height: 1.25;
+	letter-spacing: .02em;
+	color: $headings-color;
+	text-align: center;
+	
+	&:hover {
+		color: $white;
+		background: $primary;
+		border-color: $primary;
+	}
+}
+
+.rd-navbar-link-1 {
+	background: $gray-100;
+
+	&:hover {
+		background: $secondary;
+		border-color: $secondary;
+	}
+}
+
+.rd-navbar-slogan {
+	line-height: 1.3;
+}
+
+.rd-navbar-dummy {
+	display: none;
+}
+
+.rd-navbar-aside-open-toggle {
+	position: relative;
+	width: 30px;
+	height: 20px;
+	padding: 0;
+	border: 0;
+	margin: 0;
+	font-size: 0;
+	line-height: 0;
+	background-color: transparent;
+	cursor: pointer;
+	
+	span {
+		position: relative;
+		display: block;
+		height: 2px;
+		background: $gray-800;
+	}
+	
+	span + span {
+		margin-top: 7px;
+	}
+	
+	span:nth-child(1),
+	span:nth-child(3) {
+		width: 100%;
+	}
+	
+	span:nth-child(2) {
+		left: 0;
+		width: 66%;
+		transition: .33s;
+	}
+	
+	&:hover {
+		span:nth-child(2) {
+			left: 33%;
+		}
+	}
+}
+
+@import "rd-navbar_includes/rd-navbar-static";
+@import "rd-navbar_includes/rd-navbar-fixed";
+
+// Themes
+@import "rd-navbar_includes/rd-navbar_themes/rd-navbar-classic";
+@import "rd-navbar_includes/rd-navbar_themes/rd-navbar-modern";
+
+

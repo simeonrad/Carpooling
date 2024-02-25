@@ -1,0 +1,81 @@
+/** @section Progress Bar */
+
+//
+// Linear Progress Bars
+//
+
+.progress-linear {
+	position: relative;
+	text-align: left;
+
+	.progress-linear-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		@include spacing(10px);
+		font-family: $font-family-sec;
+		letter-spacing: .34em;
+		font-size: 11px;
+		font-weight: 600;
+		line-height: 1.2;
+		text-transform: uppercase;
+		color: $body-color;
+	}
+
+	.progress-linear-body,
+	.progress-linear-bar {
+		border-radius: 5px;
+	}
+
+	.progress-linear-body {
+		height: 9px;
+		background: darken($gray-100, 2%);
+	}
+
+	.progress-linear-bar {
+		width: 0;
+		height: inherit;
+		background: $primary;
+		transition: .5s all ease-in-out;
+	}
+
+	.progress-linear-counter {
+		font-weight: 800;
+		color: $headings-color;
+		letter-spacing: .15em;
+		&::after {
+			content: '\0025';
+		}
+	}
+}
+
+.progress-linear-secondary {
+	.progress-linear-bar {
+		background: $secondary;
+	}
+}
+
+.progress-linear-gradient-1 {
+	.progress-linear-bar {
+		background: $gradient-1;
+	}
+}
+
+.progress-linear-gradient-2 {
+	.progress-linear-bar {
+		background: $gradient-2;
+	}
+}
+
+.progress-linear-gradient-3 {
+	.progress-linear-bar {
+		background: $gradient-3;
+	}
+}
+
+* + .progress-linear-body { margin-top: 8px; }
+.progress-linear + .progress-linear { margin-top: 20px; }
+
+@include media-breakpoint-up(lg) {
+	.progress-linear + .progress-linear { margin-top: 40px; }
+}

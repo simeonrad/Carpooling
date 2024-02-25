@@ -1,0 +1,173 @@
+/**
+*
+* RD Navbar Classic
+*/
+.rd-navbar-classic {
+	// Static
+	&.rd-navbar-static {
+		border-bottom: 1px solid transparent;
+		
+		.rd-navbar-main {
+			position: relative;
+			display: flex;
+		}
+
+		// RD Navbar Panel
+		.rd-navbar-panel {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 15px 20px;
+			border-right: 1px solid $gray-200;
+		}
+		
+		// RD Navbar Brand
+		.rd-navbar-brand {
+			img {
+				width: auto;
+				height: auto;
+				max-width: 200px;
+				max-height: 200px;
+			}
+		}
+
+		.rd-navbar-nav-wrap {
+			display: flex;
+			flex-grow: 1;
+			min-height: 75px;
+			
+			> * { 
+				display: flex;
+				align-items: center;
+			}
+			
+			> *:first-child {
+				padding-left: 25px;
+			}
+		}
+		
+		.rd-navbar-nav {
+			flex-grow: 1;
+			justify-content: flex-end;
+			padding: 20px 40px;
+		}
+
+		.rd-navbar-link,
+		.rd-navbar-element {
+			flex-shrink: 0;
+		}
+
+		.rd-navbar-link {
+			padding: 15px 20px;
+		}
+
+		.rd-navbar-element {
+			display: flex;
+			align-items: center;
+		}
+		
+		.rd-navbar-element_centered {
+			padding: 10px 20px;
+			text-align: center;
+		}
+		
+		.rd-navbar-element_right {
+			padding: 0 15px;
+		}
+		
+		* + .rd-navbar-link,
+		* + .rd-navbar-element {
+			border-left: 1px solid $gray-200;
+		}
+		
+		* + .rd-navbar-element {
+			margin-left: 0;
+		}
+		
+		@include media-breakpoint-between(lg, xl) {
+			.rd-navbar-nav {
+				> li + li {
+					margin-left: 25px;
+				}
+			}
+		  .rd-nav-link,
+			.rd-dropdown-link,
+			.rd-megamenu-list-link {
+				font-size: 14px;
+			} 
+			
+			.rd-navbar-submenu-toggle {
+				position: relative;
+				top: 1px;
+				font-size: 15px;
+			}
+		}
+		
+		@include media-breakpoint-between(lg, xl) {
+			.rd-menu {
+				margin-top: 25px;
+			}
+		}
+		
+		@include media-breakpoint-up(xl) {
+			
+			.rd-navbar-element_right {
+				padding: 0 25px;
+			}
+		} 
+		
+		@media (min-width: 1400px) {
+			.rd-navbar-link {
+				padding: 15px 30px;
+			}
+
+			.rd-navbar-element_centered {
+				padding: 10px 30px;
+			}
+		}
+		
+		@include media-breakpoint-up(xxl) {
+			.rd-navbar-nav {
+				padding: 15px 120px 20px;
+			}
+
+			.rd-navbar-element_centered {
+				padding: 10px 25px;
+			}
+
+			.rd-navbar-element_right {
+				padding: 0 35px;
+			}
+
+			.rd-navbar-link { 
+				padding: 15px 40px;
+			}
+		} 
+
+		&.rd-navbar--is-stuck,
+		&.rd-navbar--is-clone {
+			border-bottom-color: nth($rd-navbar-border, 3);
+			.rd-navbar-aside-outer { 
+				display: none;
+			}
+			.rd-navbar-nav-item {
+				> .rd-navbar-submenu {
+					margin-top: 17px;
+				}
+			}
+		} 
+	}
+
+	// Fixed 
+	&.rd-navbar-fixed {
+		.list-localization {
+			position: fixed;
+			right: 8px;
+			top: $rd-navbar-fixed-height / 2;
+			display: flex;
+			align-items: center;
+			z-index: $zindex-rd-navbar + 1;
+			transform: translateY(-50%);
+		}
+	}
+}

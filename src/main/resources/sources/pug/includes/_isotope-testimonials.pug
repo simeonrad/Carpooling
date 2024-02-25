@@ -1,0 +1,87 @@
+include ../components/_ui-quote-modern
+
+// Isotope
+.isotope-outer.isotope-wrap: .row.row-30.row-xl-40.isotope(data-isotope-layout='masonry')
+	.col-md-6.col-lg-4.isotope-item.wow.fadeInUpSmall
+		+quote-modern({
+			avatar: 'testimonials-1-74x74',
+			cite: 'Lisa Williams',
+			position: 'Regular Client',
+			time: 'Mar 24, 2023'
+		})
+			p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Aenean et tortor at risus viverra.
+
+	.col-md-6.col-lg-4.isotope-item.wow.fadeInUpSmall(data-wow-delay='.1s')
+		+quote-modern({
+			avatar: 'testimonials-2-74x74',
+			cite: 'James Hall',
+			position: 'Regular Client',
+			time: 'Mar 24, 2023'
+		})
+			p Amet volutpat consequat mauris nunc congue nisi vitae suscipit. Augue ut lectus arcu bibendum.
+
+	.col-md-6.col-lg-4.isotope-item.wow.fadeInUpSmall(data-wow-delay='.3s')
+		+quote-modern({
+			avatar: 'testimonials-3-74x74',
+			cite: 'Alice Campbell',
+			position: 'Regular Client',
+			time: 'Mar 24, 2023'
+		})
+			p Cursus in hac habitasse platea dictumst quisque sagittis purus. Mattis nunc sed blandit libero volutpat. Aliquet lectus proin nibh nisl condimentum id.
+
+	.col-md-6.col-lg-4.isotope-item.wow.fadeInUpSmall(data-wow-delay='.1s')
+		+quote-modern({
+			avatar: 'testimonials-5-74x74',
+			cite: 'Timothy Jones',
+			position: 'Regular Client',
+			time: 'Mar 24, 2023'
+		})
+			p Faucibus et molestie ac feugiat sed lectus. Mus mauris vitae ultricies leo integer malesuada nunc.
+
+	.col-md-6.col-lg-4.isotope-item.wow.fadeInUpSmall(data-wow-delay='.2s')
+		+quote-modern({
+			avatar: 'testimonials-4-74x74',
+			cite: 'Marilyn Torres',
+			position: 'Regular Client',
+			time: 'Mar 24, 2023'
+		})
+			p Duis at tellus at urna. Mi proin sed libero enim sed faucibus. Non tellus orci ac auctor augue mauris. Elit scelerisque mauris pellentesque.
+
+	.col-md-6.col-lg-4.isotope-item.wow.fadeInUpSmall(data-wow-delay='.1s')
+		+quote-modern({
+			avatar: 'testimonials-6-74x74',
+			cite: 'Bruce Cox',
+			position: 'Regular Client',
+			time: 'Mar 24, 2023'
+		})
+			p Augue neque gravida in fermentum et sollicitudin ac. Fusce ut placerat orci nulla. Viverra nibh cras mattis. sed blandit libero volutpat.
+
+	.col-md-6.col-lg-4.isotope-item(data-load-trigger='#button-load')
+		+quote-modern({
+			avatar: 'testimonials-3-74x74',
+			cite: 'Lisa Butler',
+			position: 'Regular Client',
+			time: 'Mar 24, 2023'
+		})
+			p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Aenean et tortor at risus viverra.
+
+	.col-md-6.col-lg-4.isotope-item(data-load-trigger='#button-load')
+		+quote-modern({
+			avatar: 'testimonials-2-74x74',
+			cite: 'Dennis Flores',
+			position: 'Regular Client',
+			time: 'Mar 24, 2023'
+		})
+			p Amet volutpat consequat mauris nunc congue nisi vitae suscipit. Augue ut lectus arcu bibendum.
+
+
+	.col-md-6.col-lg-4.isotope-item(data-load-trigger='#button-load')
+		+quote-modern({
+			avatar: 'testimonials-1-74x74',
+			cite: 'Mary Cook',
+			position: 'Regular Client',
+			time: 'Mar 24, 2023'
+		})
+			p Cursus in hac habitasse platea dictumst quisque sagittis purus. Mattis nunc sed blandit libero volutpat. Aliquet lectus proin nibh nisl condimentum id.
+
+button.button-load.button-load-icon.linearicons-sync#button-load

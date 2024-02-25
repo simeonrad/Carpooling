@@ -1,0 +1,189 @@
+/** @section Posts */
+
+// 
+// Table of Contents:
+// 
+// Post Vacancy
+// Post Info
+// Post Lina
+// 
+
+//
+// Post Vacancy
+//
+.post-vacancy {
+	position: relative;
+	display: block;
+	width: 100%;
+	padding: 35px 25px 35px;
+	border-radius: 6px;
+	background: $white;
+	box-shadow: 1px 2px 5px 0 rgba(68, 73, 83, 0.12);
+	backface-visibility: hidden;
+
+	&,
+	&:active,
+	&:focus,
+	&:hover {
+		color: $body-color;
+	}
+
+	&:hover {
+		box-shadow: 1px 2px 15px 0px rgba(68, 73, 83, 0.25);
+	}
+}
+
+.post-vacancy-title {
+	font-family: $font-family-sec;
+	font-weight: 300;
+	font-size: 18px;
+	line-height: 1.3;
+	letter-spacing: 0;
+	color: $headings-color;
+}
+
+* + .post-vacancy-meta {
+	margin-top: 14px;
+}
+
+@include media-breakpoint-up(md) {
+	.post-vacancy {
+		padding: 35px 9% 45px;
+	}
+	.post-vacancy-title {
+		font-size: 20px;
+	}
+}
+
+@include media-breakpoint-up(xl) {
+	.post-vacancy-title {
+		font-size: 26px;
+	}
+	* + .post-vacancy-meta {
+		margin-top: 5px;
+	}
+}
+
+
+//
+//  Post Info
+//
+.post-info {
+	padding: 25px 15px;
+	border-radius: 8px;
+	background: $white;
+	box-shadow: 0 0 24px 0 rgba(75, 81, 91, 0.12);
+	text-align: left;
+}
+
+.post-info-header {
+	display: flex;
+	align-items: flex-start;
+	
+	> * + * {
+		margin-left: 10px;
+	}
+}
+
+.post-info-icon {
+	font-size: 20px;
+	line-height: 1.4;
+	color: $primary;
+}
+
+* + .post-info-title { margin-top: 0; }
+* + .post-info-main { margin-top: 14px; }
+
+@include media-breakpoint-down(md) {
+  .post-info {
+		max-width: 370px;
+		margin-left: auto;
+		margin-right: auto;
+	} 
+}
+
+@include media-breakpoint-between(sm, lg) {
+  .post-info {
+		padding: 40px 30px;
+	}
+}
+
+@include media-breakpoint-up(md) {
+  .post-info {
+		padding: 30px 20px;
+	} 
+	
+	@include media-breakpoint-down(lg) {
+	   
+	}
+}
+
+@include media-breakpoint-up(xl) {
+  .post-info {
+		padding: 45px 15px 25px 40px;
+	} 
+	
+	.post-info-header {
+		max-width: 97%;
+	}
+
+	* + .post-info-main { margin-top: 20px; }
+} 
+
+//
+// Post Lina
+//
+.post-lina {
+	max-width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+.post-lina-icon {
+	font-size: 32px;
+	line-height: 1;
+	color: $primary;
+}
+
+.post-lina-title {
+	font-family: $headings-font-family;
+	font-weight: $headings-font-weight;
+	color: $headings-color;
+	font-size: 18px;
+	line-height: 1.3;
+	letter-spacing: .025em;
+}
+
+* + .post-lina-title { margin-top: 10px; }
+* + .post-lina-text { margin-top: 12px; }
+
+@include media-breakpoint-up(md) {
+	.post-lina-icon {
+		font-size: 60px;	
+	}
+	
+	.post-lina-title {
+		font-size: 22px;
+	}
+
+	.post-lina-text {
+		font-size: $font-size-lg;
+		line-height: $line-height-lg;
+	}
+
+	* + .post-lina-title { margin-top: 16px; }
+}
+
+@include media-breakpoint-up(lg) {
+	.post-lina-icon {
+		font-size: 68px;
+	}
+	
+	.post-lina-title {
+		font-size: 26px;
+	}
+
+	* + .post-lina-title { margin-top: 24px; }
+	* + .post-lina-text { margin-top: 20px; }
+}

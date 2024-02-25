@@ -1,0 +1,174 @@
+/** @section Isotope */
+
+$isotope-default-color: $gray-300;
+$isotope-default-color-active: $primary;
+$isotope-default-border: $isotope-default-color-active;
+$isotope-nav-spacing: 5px;
+
+$isotope-inverse-color: $white;
+$isotope-inverse-color-active: $primary;
+$isotope-inverse-border: $isotope-inverse-color-active;
+
+//
+// Isotope animations
+//
+@keyframes sprite-animation {
+	from {
+		background-position: 0 0;
+	}
+}
+
+[data-isotope-layout] {
+	z-index: 0;
+	display: block;
+	min-height: 160px;
+	margin-left: -15px;
+	margin-right: -15px;
+	transition: .4s all ease;
+
+	.row {
+		margin-bottom: -30px;
+
+		> [class*="col-"] {
+			margin-top: 30px;
+		}
+	}
+
+	.row-narrow {
+		margin-bottom: -$grid-gutter-width-narrow;
+
+		> [class*="col-"] {
+			margin-top: $grid-gutter-width-narrow;
+		}
+	}
+
+	.row-condensed {
+		margin-bottom: 0;
+
+		> [class*="col-"] {
+			margin-top: 0;
+		}
+	}
+
+	[class*="col-"] {
+		display: block;
+		opacity: 1;
+		will-change: transform;
+		transition: .1s opacity ease-in;
+
+		@include media-breakpoint-down(sm) {
+			max-width: 100%;
+		}
+	}
+
+}
+
+// Isotope defaults
+.isotope-filters {
+	$value: 10px;
+
+	> * {
+		margin-top: 0;
+		vertical-align: middle;
+	}
+
+	.inline-list {
+		position: relative;
+		word-spacing: 0;
+
+		li {
+			display: inline-block;
+		}
+
+		a {
+			position: relative;
+			transition: .3s;
+			color: $isotope-default-color;
+		}
+
+		.isotope-filters-trigger {
+			display: none;
+		}
+	}
+}
+
+.isotope-filters-modern {
+	.inline-list {
+		@include spacing(20px, 10px);
+
+		> li {
+			font-family: $font-family-sec;
+			font-size: 18px;
+		}
+
+		a {
+			position: relative;
+			padding-bottom: 10px;
+
+			&::after {
+				content: '';
+				position: absolute;
+				left: 0;
+				bottom: 0;
+				width: 0;
+				height: 2px;
+				transition: .4s;
+				background: $primary;
+			}
+		}
+
+		a:hover {
+			color: $isotope-default-color-active;
+		}
+
+		a.active {
+			&::after {
+				width: 100%;
+			}
+		}
+
+		@include media-breakpoint-up(lg) {
+			@include spacing(45px, 10px);
+		}
+	}
+}
+
+.isotope-modern-wrap {
+	[class*='col'] {
+		margin-top: 30px;
+	}
+
+	@include media-breakpoint-down(md) {
+		[class*='col'] {
+			width: 100%;
+			max-width: 100%;
+		}
+	}
+
+	html:not(.tablet):not(.mobile) & {
+		@include media-breakpoint-up(lg) {
+			[class*='col'] {
+				margin-top: 0;
+			}
+		}
+	}
+}
+
+.isotope-condensed {
+	margin-left: 0;
+	margin-right: 0;
+	.row > * {
+		margin-top: -1px;
+		margin-bottom: -1px;
+	}
+}
+
+* + .isotope-outer {
+	margin-top: 30px;
+}
+
+@include media-breakpoint-up(md) {
+	* + .isotope-outer {
+		margin-top: 45px;
+	}
+}
