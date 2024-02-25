@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html class="wide wow-animation" lang="en"> 
+  <head>
+    <title>Register</title>
+    <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div class="preloader" id="loading">
+      <div class="preloader-body">
+        <div id="loading-center-object">
+          <div class="object" id="object_four"></div>
+          <div class="object" id="object_three"></div>
+          <div class="object" id="object_two"></div>
+          <div class="object" id="object_one"></div>
+        </div>
+      </div>
+    </div>
+    <div class="page">
+      <section class="section section-layout-3-outer">
+        <div class="section-layout-3">
+          <div class="layout-2 section-layout-3-header">
+            <div class="layout-2-inner">
+              <div class="layout-2-item"><a class="link link-icon link-icon-left" href="index.html"><span class="icon mdi mdi-arrow-left"></span><span>Back to Home</span></a></div>
+              <div class="layout-2-item">
+                <p class="text-1"><span>Already have an account?</span><a class="text-primary" href="login.html">Log in</a></p>
+              </div>
+            </div>
+          </div>
+          <div class="section-layout-3-main">
+            <div class="section-1 text-center">
+              <div class="container">
+                <div class="box-shadow-1"><a class="brand" href="index.html"><img class="brand-logo-dark" src="images/logo-111x33.png" alt="" width="111" height="33" loading="lazy" srcset="images/logo-222x66.png 2x"/></a>
+                  <p class="text-gray-900"><span style="max-width: 400px">Register a free account on our website to experience the benefits of our services.</span></p>
+                  <div class="box-shadow-1-main">
+                    <!-- RD Mailform -->
+                    <form class="rd-form rd-mailform">
+                      <div class="form-wrap">
+                        <input class="form-input" id="register-name" type="text" name="text" data-constraints="@Required">
+                        <label class="form-label" for="register-name">Name</label>
+                      </div>
+                      <div class="form-wrap">
+                        <input class="form-input" id="register-email" type="email" name="email" data-constraints="@Email @Required">
+                        <label class="form-label" for="register-email">E-mail</label>
+                      </div>
+                      <div class="form-wrap">
+                        <input class="form-input" id="register-password" type="password" name="password" data-constraints="@Required">
+                        <label class="form-label" for="register-password">Password</label>
+                      </div>
+                      <div class="form-wrap">
+                        <button class="button button-block button-secondary button-shadow button-winona" type="submit">Create My Free Account </button>
+                      </div>
+                      <div class="form-wrap text-center"><a class="link link-underline small" href="privacy-policy.html">Privacy Policy</a></div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="snackbars" id="form-output-global"></div>
+    <script src="js/core.min.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>
