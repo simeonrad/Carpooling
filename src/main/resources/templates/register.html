@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html class="wide wow-animation" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+    <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="preloader" id="loading">
+    <div class="preloader-body">
+        <div id="loading-center-object">
+            <div class="object" id="object_four"></div>
+            <div class="object" id="object_three"></div>
+            <div class="object" id="object_two"></div>
+            <div class="object" id="object_one"></div>
+        </div>
+    </div>
+</div>
+<div class="page">
+    <section class="section section-layout-3-outer">
+        <div class="section-layout-3">
+            <div class="layout-2 section-layout-3-header">
+                <div class="layout-2-inner">
+                    <div class="layout-2-item"><a class="link link-icon link-icon-left" href="index.html"><span
+                            class="icon mdi mdi-arrow-left"></span><span>Back to Home</span></a></div>
+                    <div class="layout-2-item">
+                        <p class="text-1"><span>Already have an account?</span><a class="text-primary"
+                                                                                  href="login.html">Log in</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="section-layout-3-main">
+                <div class="section-1 text-center">
+                    <div class="container">
+                        <div class="box-shadow-1"><a class="brand" href="index.html"><img
+                                class="brand-logo-dark" src="/images/logo-111x33.png" alt="" width="111"
+                                height="33" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a>
+                            <p class="text-gray-900"><span style="max-width: 400px">Register a free account on our website to experience the benefits of our services.</span>
+                            </p>
+                            <div class="box-shadow-1-main">
+                                <!-- RD Mailform -->
+                                <form class="rd-form rd-mailform" action="#" th:action="@{/auth/register}" th:object="${register}" method="post">
+                                    <div class="form-wrap">
+                                        <input class="form-input" id="register-username" type="text" name="username" th:field="*{username}" data-constraints="@Required">
+                                        <label class="form-label" for="register-username">Username</label>
+                                        <label class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">User error label.</label>
+                                    </div>
+                                    <div class="form-wrap">
+                                        <input class="form-input" id="register-password" type="password" name="password" th:field="*{password}"
+                                               minlength="8"
+                                               th:attr="placeholder=${#fields.hasErrors('password')} ? 'Password must be at least 8 symbols long' : ''"
+                                               data-constraints="@Required">
+                                        <label class="form-label" for="register-password">Password</label>
+                                    </div>
+                                    <div class="form-wrap">
+                                        <input class="form-input" id="register-confirmPassword" type="password" name="passwordConfirm"
+                                               th:field="*{passwordConfirm}"
+                                               th:attr="placeholder=${#fields.hasErrors('passwordConfirm')} ? 'Passwords must match' : ''"
+                                               data-constraints="@Required">
+                                        <label class="form-label" for="register-confirmPassword">Confirm Password</label>
+                                    </div>
+                                    <div class="form-wrap">
+                                        <input class="form-input" id="register-firstName" type="text" name="firstName" th:field="*{firstName}"
+                                               minlength="2" maxlength="20"
+                                               th:classappend="${#fields.hasErrors('firstName')} ? 'First name should be between 2 and 20 symbols' : ''"
+                                               data-constraints="@Required">
+                                        <label class="form-label" for="register-firstName">First Name</label>
+                                    </div>
+                                    <div class="form-wrap">
+                                        <input class="form-input" id="register-lastName" type="text" name="lastName" th:field="*{lastName}"
+                                               th:classappend="${#fields.hasErrors('lastName')} ? 'Last name should be between 2 and 20 symbols' : ''"
+                                               minlength="2" maxlength="20" data-constraints="@Required">
+                                        <label class="form-label" for="register-lastName">Last Name</label>
+                                    </div>
+                                    <div class="form-wrap">
+                                        <input class="form-input" id="register-email" type="email" name="email" th:field="*{email}"
+                                               th:classappend="${#fields.hasErrors('email')}" data-constraints="@Email @Required">
+                                        <label class="form-label" for="register-email">E-mail</label>
+                                    </div>
+                                    <div class="form-wrap">
+                                        <input class="form-input" id="register-phoneNumber" type="text" name="phoneNumber"
+                                               th:field="*{phoneNumber}"
+                                               th:attr="placeholder=${#fields.hasErrors('phoneNumber')} ? 'Phone number is already used' : ''"
+                                               data-constraints="@Required">
+                                        <label class="form-label" for="register-phoneNumber">Phone Number</label>
+                                    </div>
+                                    <div class="form-wrap">
+                                        <button class="button button-block button-secondary button-shadow button-winona"
+                                                type="submit">Create Account
+                                        </button>
+                                    </div>
+                                    <div class="form-wrap text-center"><a class="link link-underline small"
+                                                                          href="privacy-policy.html">Privacy
+                                        Policy</a></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div class="snackbars" id="form-output-global"></div>
+<script src="/js/core.min.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>
