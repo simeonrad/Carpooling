@@ -48,6 +48,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public void update(Feedback feedback, User user) {
+        if (!user.equals(feedback.getAuthor()) && !user.getRole().getName().equals("Admin")) {
+            throw new UnauthorizedOperationException(UPDATE_UNAUTHORIZED_MESSAGE);
+        }
         if (isRecipientAParticipantInTravel(feedback.getRecipient().getId(), feedback.getTravel().getId()) &&
                 !feedback.getRecipient().equals(feedback.getTravel().getDriver())) {
             throw new UnauthorizedOperationException("This recipient was not part of the travel!");

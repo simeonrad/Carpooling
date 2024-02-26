@@ -3,7 +3,7 @@ package com.telerikacademy.web.carpooling.models;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "non_verified")
+@Table(name = "is_verified")
 public class NonVerifiedUser {
 
     @Id

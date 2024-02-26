@@ -6,7 +6,6 @@ import com.telerikacademy.web.carpooling.models.Role;
 import com.telerikacademy.web.carpooling.models.User;
 import com.telerikacademy.web.carpooling.models.UserDto;
 import com.telerikacademy.web.carpooling.repositories.RoleRepository;
-import com.telerikacademy.web.carpooling.repositories.UserBlocksRepository;
 import com.telerikacademy.web.carpooling.repositories.UserRepository;
 import com.telerikacademy.web.carpooling.services.UserBlockService;
 import org.springframework.stereotype.Component;
@@ -22,12 +21,6 @@ public class UserMapper {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userBlockService = userBlockService;
-    }
-
-    public User fromDto(int id, UserDto userDto) {
-        User user = fromDto(userDto);
-        user.setId(id);
-        return user;
     }
 
     public User fromDto(UserDto userDto) {

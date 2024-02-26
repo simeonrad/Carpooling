@@ -11,10 +11,8 @@ import com.telerikacademy.web.carpooling.models.UserDto;
 import com.telerikacademy.web.carpooling.repositories.UserRepository;
 import com.telerikacademy.web.carpooling.services.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.MethodInvocationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
