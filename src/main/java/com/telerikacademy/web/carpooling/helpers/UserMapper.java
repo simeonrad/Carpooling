@@ -72,7 +72,7 @@ public class UserMapper {
             user.setEmail(userUpdated.getEmail());
             user.setLastName(userUpdated.getLastName());
             user.setPassword(userUpdated.getPassword());
-            user.setPhoneNumber(user.getPhoneNumber());
+            user.setPhoneNumber(userUpdated.getPhoneNumber());
             return user;
         } catch (EntityNotFoundException e) {
             throw new UnsupportedOperationException("Username cannot be changed!");

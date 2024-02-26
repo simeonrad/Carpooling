@@ -84,8 +84,18 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean isDeleted(int userId) {
-        try(Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             Query<Long> query = session.createQuery("SELECT count(*) FROM IsDeleted id WHERE id.user.id = :userId", Long.class);
+            query.setParameter("userId", userId);
+            long count = query.uniqueResult();
+            return count > 0;
+        }
+    }
+
+    @Override
+    public boolean isBlocked(int userId) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<Long> query = session.createQuery("SELECT count(*) FROM UserBlock id WHERE id.user.id = :userId", Long.class);
             query.setParameter("userId", userId);
             long count = query.uniqueResult();
             return count > 0;

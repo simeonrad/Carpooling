@@ -11,8 +11,10 @@ import com.telerikacademy.web.carpooling.models.UserDto;
 import com.telerikacademy.web.carpooling.repositories.UserRepository;
 import com.telerikacademy.web.carpooling.services.UserService;
 import jakarta.validation.Valid;
+import org.springframework.beans.MethodInvocationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -55,6 +57,16 @@ public class UserController {
         }
     }
 
+    @GetMapping("/{id}")
+    public UserShow getById(@PathVariable int id) {
+        try {
+            return userMapper.toDto(userService.get(id));
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+
     @PostMapping()
     public UserShow createUser(@Valid @RequestBody UserDto userDto) {
         try {
@@ -71,6 +83,8 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, epe.getMessage());
         } catch (UnsupportedOperationException uoe) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, uoe.getMessage());
+        } catch (InvalidPhoneNumberException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
@@ -107,6 +121,8 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (UnauthorizedOperationException uo) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, uo.getMessage());
+        } catch (UserIsAlreadyDeletedException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
@@ -121,6 +137,8 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, uo.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (UserIsAlreadyBlockedException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 

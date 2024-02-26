@@ -116,6 +116,7 @@ public class FeedbackRepositoryImpl implements FeedbackRepository{
             query.setParameter("travelId", travelId);
             query.setParameter("authorId", authorId);
             query.setParameter("recipientId", recipientId);
+            List<Feedback> feedbacks = query.list();
             return query.uniqueResult();
         }
     }

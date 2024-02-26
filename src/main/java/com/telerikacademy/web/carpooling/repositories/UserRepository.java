@@ -26,6 +26,8 @@ public interface UserRepository {
 
     boolean isDeleted (int userId);
 
+    boolean isBlocked(int userId);
+
     List<User> getAllNotDeleted();
 
     User getByUsername(String username);

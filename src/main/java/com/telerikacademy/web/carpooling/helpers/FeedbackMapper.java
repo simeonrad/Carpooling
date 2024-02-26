@@ -50,7 +50,6 @@ public class FeedbackMapper {
 
     public Feedback fromDtoUpdate(FeedbackDto feedbackDto, Feedback feedback) {
         feedback.setRating(feedbackDto.getRating());
-
         if (feedbackDto.getComment() != null && !feedbackDto.getComment().isEmpty()) {
             if (!feedback.getComments().isEmpty()) {
                 FeedbackComment existingComment = feedback.getComments().iterator().next();

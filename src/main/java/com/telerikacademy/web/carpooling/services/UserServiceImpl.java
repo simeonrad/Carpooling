@@ -52,9 +52,10 @@ public class UserServiceImpl implements UserService {
         try {
             User newUser = userRepository.getByUsername(user.getUsername());
             IsDeleted isDeleted = userRepository.getDeletedById(newUser.getId());
-            userRepository.unmarkAsDeleted(isDeleted);
+            checkIfPhoneNumberExists(user);
             user = userMapper.fromDtoUpdate(user);
             update(user, user);
+            userRepository.unmarkAsDeleted(isDeleted);
             sendVerificationEmail(user);
         } catch (EntityNotFoundException e) {
             boolean usernameExists = true;
@@ -76,6 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkIfPhoneNumberExists(User user) {
+        phoneNumberValidator(user.getPhoneNumber());
         boolean phoneNumberExists = userRepository.telephoneExists(user.getPhoneNumber());
         if (phoneNumberExists) {
             throw new DuplicateExistsException("User", "phone number", user.getPhoneNumber());
@@ -131,6 +133,7 @@ public class UserServiceImpl implements UserService {
         if (emailExists) {
             throw new DuplicateExistsException("User", "email", user.getEmail());
         }
+        emailValidator(user.getEmail());
         passwordValidator(user.getPassword());
         userRepository.update(user);
     }
@@ -166,6 +169,9 @@ public class UserServiceImpl implements UserService {
         if (userRepository.isDeleted(userToBlock.getId())) {
             throw new EntityNotFoundException("User", "username", userToBlock.getUsername());
         }
+        if (userRepository.isBlocked(userToBlock.getId())) {
+            throw new UserIsAlreadyBlockedException(userToBlock.getId());
+        }
         userBlockService.create(userToBlock);
     }
 
@@ -178,7 +184,6 @@ public class UserServiceImpl implements UserService {
         if (userRepository.isDeleted(userToUnblock.getId())) {
             throw new EntityNotFoundException("User", "username", userToUnblock.getUsername());
         }
-
         userBlockService.delete(userToUnblock);
     }
 
@@ -249,6 +254,19 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    public String phoneNumberValidator(String phoneNumber) {
+        String PHONE_REGEX = "^0[0-9]{9}$";
+        Pattern PHONE_PATTERN = Pattern.compile(PHONE_REGEX);
+
+        Matcher matcher = PHONE_PATTERN.matcher(phoneNumber);
+        if (matcher.matches()) {
+            return phoneNumber;
+        } else {
+            throw new InvalidPhoneNumberException(phoneNumber);
+        }
+    }
+
+
     public String passwordValidator(String password) {
         String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[+\\-*&^._|\\\\]).{8,}$";
         Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEX);
@@ -270,7 +288,7 @@ public class UserServiceImpl implements UserService {
         String mailContent = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>";
         mailContent += "<p>Please click the link below to verify your registration:</p>";
 
-        String verifyURL = siteURL + "/verify?code=" + user.getUsername();
+        String verifyURL = siteURL + "/api/users/verify-email?username=" + user.getUsername();
 
         mailContent += "<h3><a href=\"" + verifyURL + "\">VERIFY</a></h3>";
         mailContent += "<p>Thank you<br>The Carpooling A56 Team</p>";

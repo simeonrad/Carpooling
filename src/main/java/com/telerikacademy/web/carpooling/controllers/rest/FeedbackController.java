@@ -67,6 +67,8 @@ public class FeedbackController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (ForbiddenOperationException e) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
@@ -74,7 +76,14 @@ public class FeedbackController {
     public FeedbackDto update(@RequestBody FeedbackDto feedbackDto, @RequestHeader HttpHeaders headers) {
         User author = authenticationHelper.tryGetUser(headers);
         int recipientId = userRepository.getByUsername(feedbackDto.getRecipient()).getId();
-        Feedback feedback = feedbackRepository.getByTravelId(feedbackDto.getTravelId(), author.getId(), recipientId);
+        try {
+            if(feedbackService.isRecipientAParticipantInTravel(recipientId, feedbackDto.getTravelId())) {
+                throw new UnauthorizedOperationException("This recipient was not part of the travel!");
+            }
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
+        Feedback feedback = feedbackService.getByTravelId(feedbackDto.getTravelId(), author.getId(), recipientId);
         Feedback updatedFeedback = feedbackMapper.fromDtoUpdate(feedbackDto, feedback);
         feedbackService.update(feedback, author);
         return feedbackMapper.toDto(updatedFeedback, feedbackDto);
@@ -84,6 +93,13 @@ public class FeedbackController {
     public String delete(@RequestBody FeedbackDto feedbackDto, @RequestHeader HttpHeaders headers) {
         User author = authenticationHelper.tryGetUser(headers);
         int recipientId = userRepository.getByUsername(feedbackDto.getRecipient()).getId();
+        try {
+            if(feedbackService.isRecipientAParticipantInTravel(recipientId, feedbackDto.getTravelId())) {
+                throw new UnauthorizedOperationException("This recipient was not part of the travel!");
+            }
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        }
         Feedback feedback = feedbackRepository.getByTravelId(feedbackDto.getTravelId(), author.getId(), recipientId);
         feedbackService.delete(feedback, author);
         return String.format(FEEDBACK_DELETED_SUCCESS_MESSAGE, feedback.getId());
