@@ -39,12 +39,13 @@
 <!--                        <label class="form-label" for="login-username">Username</label>-->
                         <label class="error" th:errors="*{username}">Username error placeholder</label>
                       </div>
+
                       <div class="form-wrap">
                         <input class="form-input" id="login-password" type="password" name="password" th:field="*{password}" minlength="8" data-constraints="@Required" placeholder="Password">
 <!--                        <label class="form-label" for="login-password">Password</label>-->
                       </div>
 
-                      <div th:if="${loginError}" class="form-wrap"
+                      <div th:if="${loginError}" style="color: red"
                            th:text="${loginError}">
                       </div>
 
@@ -64,7 +65,7 @@
       </section>
     </div>
     <div class="snackbars" id="form-output-global"></div>
-    <script src="/js/core.min.js"></script>
-    <script src="/js/script.js"></script>
+<!--    <script src="/js/core.min.js"></script>-->
+<!--    <script src="/js/script.js"></script>-->
   </body>
 </html>
