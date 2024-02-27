@@ -34,7 +34,7 @@ public interface UserRepository {
 
     User getByEmail(String email);
 
-    boolean telephoneExists(String phoneNumber);
+    boolean telephoneExists(String phoneNumber, int currentUserId);
 
     boolean updateEmail(String email, int currentUserId);
 

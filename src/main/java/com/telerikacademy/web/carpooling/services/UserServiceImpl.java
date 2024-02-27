@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
 
     private void checkIfPhoneNumberExists(User user) {
         phoneNumberValidator(user.getPhoneNumber());
-        boolean phoneNumberExists = userRepository.telephoneExists(user.getPhoneNumber());
+        boolean phoneNumberExists = userRepository.telephoneExists(user.getPhoneNumber(), user.getId());
         if (phoneNumberExists) {
             throw new DuplicateExistsException("User", "phone number", user.getPhoneNumber());
         }
@@ -122,6 +122,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void delete(User user) {
+        if (user.getIsDeletedRecord().getUser().equals(user)) {
+            throw new EntityNotFoundException("User", "username", user.getUsername());
+        }
+        markUserAsDeleted(user.getId());
+    }
+
+    @Override
     public void update(User user, User updatedBy) {
         if (!user.equals(updatedBy)) {
             throw new UnauthorizedOperationException("Only the user can modify it's data!");
@@ -134,6 +142,18 @@ public class UserServiceImpl implements UserService {
             throw new DuplicateExistsException("User", "email", user.getEmail());
         }
         emailValidator(user.getEmail());
+        passwordValidator(user.getPassword());
+        userRepository.update(user);
+    }
+
+    @Override
+    public void update(User user) {
+        boolean emailExists = userRepository.updateEmail(user.getEmail(), user.getId());
+        emailValidator(user.getEmail());
+        if (emailExists) {
+            throw new DuplicateExistsException("User", "email", user.getEmail());
+        }
+        checkIfPhoneNumberExists(user);
         passwordValidator(user.getPassword());
         userRepository.update(user);
     }
@@ -224,6 +244,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addProfilePhoto(String photoUrl, User user) {
         user.setPhotoUrl(photoUrl);
+        userRepository.update(user);
+    }
+
+    @Override
+    public void addPhoneNumber(String phoneNumber, User user) {
+        user.setPhoneNumber(phoneNumber);
         userRepository.update(user);
     }
 

@@ -46,17 +46,16 @@
                       <div class="form-wrap">
                         <input class="form-input" id="login-username" type="text" name="username" th:field="*{username}" data-constraints="@Required">
                         <label class="form-label" for="login-username">Username</label>
-                        <label class="has-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">User error label.</label>
-                        <th:block th:if="${#fields.hasErrors('username')}">
-                          <br/>
-                          <label class="has-error" th:errors="*{username}">Username error placeholder</label>
-                        </th:block>
+                        <div th:if="${#fields.hasErrors('username')}" class="has-error" th:errors="*{username}"></div>
                       </div>
                       <div class="form-wrap">
-                        <input class="form-input" id="login-password" type="password" name="password" th:field="*{password}" minlength="8"
-                               th:attr="placeholder=${#fields.hasErrors('password')} ? 'Password must be at least 8 symbols long' : ''"
-                               data-constraints="@Required">
+                        <input class="form-input" id="login-password" type="password" name="password" th:field="*{password}" minlength="8" data-constraints="@Required">
                         <label class="form-label" for="login-password">Password</label>
+                        <div th:if="${#fields.hasErrors('password')}" class="has-error" th:errors="*{password}"></div>
+                      </div>
+
+                      <div th:if="${loginError}">
+                        <p th:text="${loginError}"></p>
                       </div>
                       <div class="form-wrap"><a class="link link-underline small" href="#">I forgot my password</a></div>
                       <div class="form-wrap">

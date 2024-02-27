@@ -50,7 +50,8 @@
                                     <div class="form-wrap">
                                         <input class="form-input" id="register-username" type="text" name="username" th:field="*{username}" data-constraints="@Required">
                                         <label class="form-label" for="register-username">Username</label>
-                                        <label class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">User error label.</label>
+<!--                                        <label class="form-output error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">User error label.</label>-->
+                                        <label class="error" th:errors="*{username}">Username error placeholder</label>
                                     </div>
                                     <div class="form-wrap">
                                         <input class="form-input" id="register-password" type="password" name="password" th:field="*{password}"

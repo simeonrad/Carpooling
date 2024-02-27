@@ -235,10 +235,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public boolean telephoneExists(String phoneNumber) {
+    public boolean telephoneExists(String phoneNumber, int currentUserId) {
         try (Session session = sessionFactory.openSession()) {
-            Query<User> query = session.createQuery("from User where phoneNumber = :phoneNumber", User.class);
+            Query<User> query = session.createQuery("from User where phoneNumber = :phoneNumber and id != :currentUserId", User.class);
             query.setParameter("phoneNumber", phoneNumber);
+            query.setParameter("currentUserId", currentUserId);
             List<User> result = query.list();
             return !result.isEmpty();
         }
