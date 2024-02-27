@@ -36,12 +36,10 @@
                     <form class="rd-form rd-mailform" action="#" th:action="@{/auth/login}" th:object="${login}" method="post">
                       <div class="form-wrap">
                         <input class="form-input" id="login-username" type="text" name="username" th:field="*{username}" data-constraints="@Required" placeholder="Username">
-<!--                        <label class="form-label" for="login-username">Username</label>-->
                         <label class="error" th:errors="*{username}">Username error placeholder</label>
                       </div>
                       <div class="form-wrap">
                         <input class="form-input" id="login-password" type="password" name="password" th:field="*{password}" minlength="8" data-constraints="@Required" placeholder="Password">
-<!--                        <label class="form-label" for="login-password">Password</label>-->
                       </div>
 
                       <div th:if="${loginError}" class="form-wrap"
@@ -64,7 +62,5 @@
       </section>
     </div>
     <div class="snackbars" id="form-output-global"></div>
-    <script src="/js/core.min.js"></script>
-    <script src="/js/script.js"></script>
   </body>
 </html>
