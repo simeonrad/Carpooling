@@ -1,0 +1,307 @@
+/** @group Helpers */
+/** @section Page Layout */
+.pageLogin {
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    opacity: 1;
+}
+
+
+.pageLogin.fadeIn {
+    animation-timing-function: ease-out;
+}
+
+
+.pageLogin.fadeOut {
+    animation-timing-function: ease-in;
+}
+
+
+[data-x-mode] .pageLogin {
+    opacity: 1;
+}
+
+
+.pageLogin-header-1 {
+    position: relative;
+    overflow: hidden;
+}
+
+
+.pageLogin-header-1 .rd-navbar-modern.rd-navbar-static {
+    z-index: 1080;
+}
+
+
+.pageLogin-header-1 .rd-navbar-modern.rd-navbar-static .rd-navbar-element::after {
+    opacity: 1;
+    visibility: visible;
+    transition: .22s;
+}
+
+
+.pageLogin-header-1 .rd-navbar-modern.rd-navbar-static:not(.rd-navbar--is-stuck) .rd-navbar-element::after {
+    opacity: 0;
+    visibility: hidden;
+}
+
+
+.pageLogin-header-2 {
+    position: relative;
+    z-index: 100;
+}
+
+
+.pageLogin-header-2 .rd-navbar-modern.rd-navbar-static {
+    background-color: transparent;
+}
+
+
+.pageLogin-header-2 .rd-navbar-modern.rd-navbar-static::after {
+    bottom: 0;
+}
+
+
+.pageLogin-header-2 .rd-navbar-modern.rd-navbar-static .rd-navbar-element::after {
+    display: none;
+}
+
+
+.pageLogin-header-2 .rd-navbar-modern.rd-navbar-static .rd-navbar-nav {
+    text-align: center;
+}
+
+
+.pageLogin-header-2 .rd-navbar-modern.rd-navbar-static .rd-nav-link {
+    color: #ffffff;
+}
+
+
+.pageLogin-header-2 .rd-navbar-modern.rd-navbar-static .rd-nav-link:hover {
+    color: #ffe65b;
+}
+
+
+.pageLogin-header-2 .rd-navbar-modern.rd-navbar-static .rd-nav-item.focus .rd-nav-link,
+.pageLogin-header-2 .rd-navbar-modern.rd-navbar-static .rd-nav-item.focus > .rd-navbar-submenu-toggle, .pageLogin-header-2 .rd-navbar-modern.rd-navbar-static .rd-nav-item.active .rd-nav-link,
+.pageLogin-header-2 .rd-navbar-modern.rd-navbar-static .rd-nav-item.active > .rd-navbar-submenu-toggle, .pageLogin-header-2 .rd-navbar-modern.rd-navbar-static .rd-nav-item.opened .rd-nav-link,
+.pageLogin-header-2 .rd-navbar-modern.rd-navbar-static .rd-nav-item.opened > .rd-navbar-submenu-toggle {
+    color: #ffe65b;
+}
+
+
+.pageLogin-header-2 .rd-navbar-modern.rd-navbar-static.rd-navbar--is-stuck {
+    background: #2c343b;
+    border-bottom-color: #151515;
+}
+
+
+.pageLogin-header-2 .rd-navbar-modern.rd-navbar-static.rd-navbar--is-stuck::after {
+    border-bottom-color: #151515;
+}
+
+
+.pageLogin-header-2 .rd-navbar-modern.rd-navbar-fixed .rd-navbar-panel {
+    background: #2c343b;
+    border-bottom-color: #000000;
+}
+
+
+.pageLogin-header-2 .rd-navbar-modern.rd-navbar-fixed .rd-navbar-element {
+    background-color: transparent;
+}
+
+
+.pageLogin-header-2 .rd-navbar-modern.rd-navbar-fixed .rd-navbar-aside-open-toggle {
+    opacity: .7;
+}
+
+
+.pageLogin-header-2-inner {
+    padding: 40px 0;
+}
+
+
+.pageLogin-header-2-inner-aside {
+    padding: 20px 0 0;
+}
+
+
+.pageLogin-header-2-inner-aside + h4,
+.pageLogin-header-2-inner-aside + .heading-4 {
+    margin-top: 20px;
+}
+
+
+@media (max-width: 767.98px) {
+    .pageLogin-header-2-inner {
+        max-width: 420px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+
+@media (min-width: 768px) {
+    .pageLogin-header-2-inner {
+        padding-bottom: 60px;
+    }
+    .pageLogin-header-2-inner-aside + h4,
+    .pageLogin-header-2-inner-aside + .heading-4 {
+        margin-top: 35px;
+    }
+}
+
+
+@media (min-width: 1200px) {
+    .pageLogin-header-2-inner {
+        padding: 40px 0 100px;
+    }
+}
+
+
+.pageLogin-header-3 {
+    position: relative;
+    z-index: 1080;
+}
+
+
+.pageLogin-header-3 .rd-navbar-wrap {
+    position: relative;
+    z-index: 10;
+}
+
+
+.pageLogin-header-3 .rd-navbar-classic.rd-navbar-static {
+    border-bottom-color: #ebebeb;
+}
+
+
+.pageLogin-header-3 .rd-navbar-classic.rd-navbar-static .rd-navbar-panel {
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+    width: 190px;
+    justify-content: flex-start;
+    border: 0;
+    background: #2a4696;
+}
+
+
+.pageLogin-header-3 .rd-navbar-classic.rd-navbar-static .rd-navbar-panel::before, .pageLogin-header-3 .rd-navbar-classic.rd-navbar-static .rd-navbar-panel::after {
+    content: '';
+    position: absolute;
+    left: -10%;
+    right: -8px;
+    height: 50.2%;
+    z-index: 0;
+    background: #3657a1;
+}
+
+
+.pageLogin-header-3 .rd-navbar-classic.rd-navbar-static .rd-navbar-panel::before {
+    top: 0;
+    transform: skew(-44deg);
+}
+
+
+.pageLogin-header-3 .rd-navbar-classic.rd-navbar-static .rd-navbar-panel::after {
+    bottom: 0;
+    transform: skew(44deg);
+}
+
+
+.pageLogin-header-3 .rd-navbar-classic.rd-navbar-static .rd-navbar-panel > * {
+    position: relative;
+    z-index: 1;
+}
+
+
+.pageLogin-header-3 .rd-navbar-classic.rd-navbar-static .brand-logo-dark {
+    display: none;
+}
+
+
+.pageLogin-header-3 .rd-navbar-classic.rd-navbar-static .brand-logo-light {
+    display: block;
+}
+
+
+.pageLogin-header-3 .rd-navbar-classic.rd-navbar-static .rd-navbar-slogan {
+    position: relative;
+    z-index: 1;
+    width: calc(190px + 15.1vw);
+    margin-left: -190px;
+    color: #ffffff;
+    background-color: transparent;
+}
+
+
+.pageLogin-header-3 .rd-navbar-classic.rd-navbar-static .rd-navbar-slogan::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #2a4696;
+}
+
+
+.pageLogin-header-3 .rd-navbar-classic.rd-navbar-static .rd-navbar-slogan::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    width: 100vw;
+    border-bottom: 1px solid #3b559b;
+}
+
+
+@media (min-width: 1920px) {
+    .pageLogin-header-3 .rd-navbar-classic.rd-navbar-static .rd-navbar-slogan {
+        width: calc(58vw - 480px);
+    }
+}
+
+
+.pageLogin-header-3 .rd-navbar-classic.rd-navbar-static p.rd-navbar-slogan {
+    padding-left: 215px;
+}
+
+
+.pageLogin-header-3 .rd-navbar-classic.rd-navbar-static .rd-navbar-link-1:not(:hover) {
+    background-color: transparent;
+}
+
+
+.pageLogin-header-3 .rd-navbar-classic.rd-navbar-static.rd-navbar--is-stuck .rd-navbar-slogan {
+    visibility: visible !important;
+}
+
+
+.rd-navbar-static-linked .pageLogin-header-3 .box-custom-4-aside-decoration {
+    top: -100px;
+}
+
+
+.pageLogin-header-4 .rd-navbar-modern.rd-navbar-static .rd-navbar-nav {
+    justify-content: center;
+}
+
+
+@media (min-width: 1600px) {
+    .pageLogin-header-4 .rd-navbar-modern.rd-navbar-static .rd-navbar-nav {
+        padding-left: 150px;
+    }
+}
+
+
+.pageLogin-header-4 .rd-navbar-modern.rd-navbar-static .rd-navbar-element::after {
+    display: none;
+}
+
+
+
