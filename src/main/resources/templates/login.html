@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="wide wow-animation" lang="en"> 
+<html class="wide wow-animation" lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>Login</title>
     <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
@@ -46,17 +46,16 @@
                       <div class="form-wrap">
                         <input class="form-input" id="login-username" type="text" name="username" th:field="*{username}" data-constraints="@Required">
                         <label class="form-label" for="login-username">Username</label>
-                        <div th:if="${#fields.hasErrors('username')}" class="has-error" th:errors="*{username}"></div>
                       </div>
                       <div class="form-wrap">
                         <input class="form-input" id="login-password" type="password" name="password" th:field="*{password}" minlength="8" data-constraints="@Required">
                         <label class="form-label" for="login-password">Password</label>
-                        <div th:if="${#fields.hasErrors('password')}" class="has-error" th:errors="*{password}"></div>
                       </div>
 
-                      <div th:if="${loginError}">
-                        <p th:text="${loginError}"></p>
+                      <div th:if="${loginError}" class="form-wrap"
+                        th:text="${loginError}">
                       </div>
+
                       <div class="form-wrap"><a class="link link-underline small" href="#">I forgot my password</a></div>
                       <div class="form-wrap">
                         <button class="button button-block button-secondary button-shadow button-winona" type="submit">Sign In</button>
