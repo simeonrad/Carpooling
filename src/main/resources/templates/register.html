@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html class="wide wow-animation" lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--<html class="wide wow-animation" lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Register</title>
     <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
@@ -10,24 +11,15 @@
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/fonts.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
-<div class="preloader" id="loading">
-    <div class="preloader-body">
-        <div id="loading-center-object">
-            <div class="object" id="object_four"></div>
-            <div class="object" id="object_three"></div>
-            <div class="object" id="object_two"></div>
-            <div class="object" id="object_one"></div>
-        </div>
-    </div>
-</div>
-<div class="page">
+<div class="pageLogin">
     <section class="section section-layout-3-outer">
         <div class="section-layout-3">
             <div class="layout-2 section-layout-3-header">
                 <div class="layout-2-inner">
-                    <div class="layout-2-item"><a class="link link-icon link-icon-left" href="index.html"><span
+                    <div class="layout-2-item"><a class="link link-icon link-icon-left" href="/"><span
                             class="icon mdi mdi-arrow-left"></span><span>Back to Home</span></a></div>
                     <div class="layout-2-item">
                         <p class="text-1"><span>Already have an account?</span><a class="text-primary"
@@ -48,49 +40,44 @@
                                 <!-- RD Mailform -->
                                 <form class="rd-form rd-mailform" action="#" th:action="@{/auth/register}" th:object="${register}" method="post">
                                     <div class="form-wrap">
-                                        <input class="form-input" id="register-username" type="text" name="username" th:field="*{username}" data-constraints="@Required">
-                                        <label class="form-label" for="register-username">Username</label>
-<!--                                        <label class="form-output error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">User error label.</label>-->
+                                        <input class="form-input" id="register-username" type="text" name="username" th:field="*{username}" data-constraints="@Required" placeholder="Username">
                                         <label class="error" th:errors="*{username}">Username error placeholder</label>
                                     </div>
                                     <div class="form-wrap">
                                         <input class="form-input" id="register-password" type="password" name="password" th:field="*{password}"
                                                minlength="8"
-                                               th:attr="placeholder=${#fields.hasErrors('password')} ? 'Password must be at least 8 symbols long' : ''"
-                                               data-constraints="@Required">
-                                        <label class="form-label" for="register-password">Password</label>
+                                               data-constraints="@Required" placeholder="Password">
+                                        <label class="error" th:errors="*{password}">Password error placeholder</label>
                                     </div>
                                     <div class="form-wrap">
                                         <input class="form-input" id="register-confirmPassword" type="password" name="passwordConfirm"
                                                th:field="*{passwordConfirm}"
-                                               th:attr="placeholder=${#fields.hasErrors('passwordConfirm')} ? 'Passwords must match' : ''"
-                                               data-constraints="@Required">
-                                        <label class="form-label" for="register-confirmPassword">Confirm Password</label>
+                                               data-constraints="@Required" placeholder="Confirm Password">
+                                        <label class="error" th:errors="*{passwordConfirm}">Pword Confirm error placeholder</label>
                                     </div>
                                     <div class="form-wrap">
                                         <input class="form-input" id="register-firstName" type="text" name="firstName" th:field="*{firstName}"
                                                minlength="2" maxlength="20"
                                                th:classappend="${#fields.hasErrors('firstName')} ? 'First name should be between 2 and 20 symbols' : ''"
-                                               data-constraints="@Required">
-                                        <label class="form-label" for="register-firstName">First Name</label>
+                                               data-constraints="@Required" placeholder="First Name">
+                                        <label class="error" th:errors="*{firstName}">Pword Confirm error placeholder</label>
                                     </div>
                                     <div class="form-wrap">
                                         <input class="form-input" id="register-lastName" type="text" name="lastName" th:field="*{lastName}"
                                                th:classappend="${#fields.hasErrors('lastName')} ? 'Last name should be between 2 and 20 symbols' : ''"
-                                               minlength="2" maxlength="20" data-constraints="@Required">
-                                        <label class="form-label" for="register-lastName">Last Name</label>
+                                               minlength="2" maxlength="20" data-constraints="@Required" placeholder="Last Name">
+                                        <label class="error" th:errors="*{lastName}">Pword Confirm error placeholder</label>
                                     </div>
                                     <div class="form-wrap">
                                         <input class="form-input" id="register-email" type="email" name="email" th:field="*{email}"
-                                               th:classappend="${#fields.hasErrors('email')}" data-constraints="@Email @Required">
-                                        <label class="form-label" for="register-email">E-mail</label>
+                                               th:classappend="${#fields.hasErrors('email')}" data-constraints="@Email @Required" placeholder="E-mail">
+                                        <label class="error" th:errors="*{email}">Pword Confirm error placeholder</label>
                                     </div>
                                     <div class="form-wrap">
                                         <input class="form-input" id="register-phoneNumber" type="text" name="phoneNumber"
                                                th:field="*{phoneNumber}"
-                                               th:attr="placeholder=${#fields.hasErrors('phoneNumber')} ? 'Phone number is already used' : ''"
-                                               data-constraints="@Required">
-                                        <label class="form-label" for="register-phoneNumber">Phone Number</label>
+                                               data-constraints="@Required" placeholder="Phone Number">
+                                        <label class="error" th:errors="*{phoneNumber}">Pword Confirm error placeholder</label>
                                     </div>
                                     <div class="form-wrap">
                                         <button class="button button-block button-secondary button-shadow button-winona"
@@ -110,7 +97,5 @@
     </section>
 </div>
 <div class="snackbars" id="form-output-global"></div>
-<!--<script src="/js/core.min.js"></script>-->
-<!--<script src="/js/script.js"></script>-->
 </body>
 </html>

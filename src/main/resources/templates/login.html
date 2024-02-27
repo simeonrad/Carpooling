@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="wide wow-animation" lang="en"> 
+<html class="wide wow-animation" lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>Login</title>
     <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
@@ -10,24 +10,15 @@
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/fonts.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/login.css">
   </head>
   <body>
-    <div class="preloader" id="loading">
-      <div class="preloader-body">
-        <div id="loading-center-object">
-          <div class="object" id="object_four"></div>
-          <div class="object" id="object_three"></div>
-          <div class="object" id="object_two"></div>
-          <div class="object" id="object_one"></div>
-        </div>
-      </div>
-    </div>
-    <div class="page">
+    <div class="pageLogin">
       <section class="section section-layout-3-outer">
         <div class="section-layout-3">
           <div class="layout-2 section-layout-3-header">
             <div class="layout-2-inner">
-              <div class="layout-2-item"><a class="link link-icon link-icon-left" href="index.html"><span class="icon mdi mdi-arrow-left"></span><span>Back to Home</span></a></div>
+              <div class="layout-2-item"><a class="link link-icon link-icon-left" href="/"><span class="icon mdi mdi-arrow-left"></span><span>Back to Home</span></a></div>
               <div class="layout-2-item"> 
                 <div class="layout-2-group">
                   <p class="text-gray-900 ls-001">Don’t have an account?</p><a class="button button-sm button-primary-outline button-winona" href="../templates/register.html">Register</a><a class="link link-underline" href="faq.html">Need help? </a>
@@ -44,19 +35,19 @@
                     <!-- RD Mailform -->
                     <form class="rd-form rd-mailform" action="#" th:action="@{/auth/login}" th:object="${login}" method="post">
                       <div class="form-wrap">
-                        <input class="form-input" id="login-username" type="text" name="username" th:field="*{username}" data-constraints="@Required">
-                        <label class="form-label" for="login-username">Username</label>
-                        <div th:if="${#fields.hasErrors('username')}" class="has-error" th:errors="*{username}"></div>
+                        <input class="form-input" id="login-username" type="text" name="username" th:field="*{username}" data-constraints="@Required" placeholder="Username">
+<!--                        <label class="form-label" for="login-username">Username</label>-->
+                        <label class="error" th:errors="*{username}">Username error placeholder</label>
                       </div>
                       <div class="form-wrap">
-                        <input class="form-input" id="login-password" type="password" name="password" th:field="*{password}" minlength="8" data-constraints="@Required">
-                        <label class="form-label" for="login-password">Password</label>
-                        <div th:if="${#fields.hasErrors('password')}" class="has-error" th:errors="*{password}"></div>
+                        <input class="form-input" id="login-password" type="password" name="password" th:field="*{password}" minlength="8" data-constraints="@Required" placeholder="Password">
+<!--                        <label class="form-label" for="login-password">Password</label>-->
                       </div>
 
-                      <div th:if="${loginError}">
-                        <p th:text="${loginError}"></p>
+                      <div th:if="${loginError}" class="form-wrap"
+                           th:text="${loginError}">
                       </div>
+
                       <div class="form-wrap"><a class="link link-underline small" href="#">I forgot my password</a></div>
                       <div class="form-wrap">
                         <button class="button button-block button-secondary button-shadow button-winona" type="submit">Sign In</button>

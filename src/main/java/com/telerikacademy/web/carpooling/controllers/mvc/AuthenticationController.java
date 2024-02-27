@@ -40,7 +40,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public String handleLogin(@Valid @ModelAttribute("login") LoginDto dto, BindingResult bindingResult, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String handleLogin(@Valid @ModelAttribute("login") LoginDto dto, BindingResult bindingResult, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
         if (bindingResult.hasErrors()) {
             return "login";
         }
@@ -52,8 +52,13 @@ public class AuthenticationController {
             }
             return "redirect:/";
         } catch (AuthenticationFailureException e) {
-            redirectAttributes.addFlashAttribute("loginError", "Login was not possible due to wrong username or password or non-existent user.");
-            return "redirect:/auth/login";
+//            redirectAttributes.addFlashAttribute("loginError", "Login was not possible due to wrong username or password or non-existent user.");
+//            bindingResult.rejectValue("username", "login_error", "Invalid user");
+//            System.out.println(bindingResult.getAllErrors());
+
+            model.addAttribute("loginError", "Invalid username or password.");
+
+            return "login";
         }
     }
 
@@ -77,6 +82,7 @@ public class AuthenticationController {
         }
         if (!register.getPassword().equals(register.getPasswordConfirm())) {
             bindingResult.rejectValue("passwordConfirm", "password_error", "Password confirmation should match password");
+            System.out.println(bindingResult.getAllErrors());
             return "register";
         }
         try {
@@ -85,12 +91,15 @@ public class AuthenticationController {
             return "redirect:/auth/login";
         } catch (DuplicateExistsException e) {
             bindingResult.rejectValue("username", "username-error", e.getMessage());
+            System.out.println(bindingResult.getAllErrors());
             return "register";
         } catch (InvalidEmailException e) {
             bindingResult.rejectValue("email", "email-error", e.getMessage());
+            System.out.println(bindingResult.getAllErrors());
             return "register";
         } catch (DuplicateEmailExists e) {
             bindingResult.rejectValue("email", "email-error", e.getMessage());
+            System.out.println(bindingResult.getAllErrors());
             return "register";
         }
     }

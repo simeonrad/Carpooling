@@ -26,7 +26,6 @@ create table users
     phone_number varchar(10)                                                                                                        not null,
     photo_url    char(255) default 'https://i.ibb.co/3dVFMxL/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg' not null,
     user_role    int       default 1                                                                                                not null,
-    is_blocked   tinyint(1)                                                                                                         not null,
     constraint email
         unique (email),
     constraint phone_number
@@ -35,6 +34,23 @@ create table users
         unique (username),
     constraint users_roles_role_id_fk
         foreign key (user_role) references roles (role_id)
+);
+
+create table is_deleted
+(
+    user_id int null,
+    id      int auto_increment
+        primary key,
+    constraint is_deleted_users_user_id_fk
+        foreign key (user_id) references users (user_id)
+);
+
+create table is_verified
+(
+    user_id     int        null,
+    is_verified tinyint(1) null,
+    constraint non_verified_users_user_id_fk
+        foreign key (user_id) references users (user_id)
 );
 
 create table travels
@@ -47,11 +63,10 @@ create table travels
     departure_time   datetime      not null,
     free_spots       int           not null,
     travel_status    int default 1 null,
-    distance_km      int           not null,
     duration_minutes int           not null,
+    distance_km      int           not null,
     constraint travels_ibfk_1
-        foreign key (organizer_id) references users (user_id)
-            on update cascade on delete cascade,
+        foreign key (organizer_id) references users (user_id),
     constraint travels_travel_statuses_status_id_fk
         foreign key (travel_status) references statuses (status_id)
 );
@@ -132,23 +147,6 @@ create index travel_id
 create index organizer_id
     on travels (organizer_id);
 
-create table non_verified
-(
-    user_id     int        null,
-    is_verified tinyint(1) null,
-    constraint non_verified_users_user_id_fk
-        foreign key (user_id) references users (user_id)
-);
-
-create table is_deleted
-(
-    user_id int null,
-    id      int auto_increment
-        primary key,
-    constraint is_deleted_users_user_id_fk
-        foreign key (user_id) references users (user_id)
-);
-
 create table user_blocks
 (
     block_id               int auto_increment
@@ -159,3 +157,4 @@ create table user_blocks
         foreign key (user_id) references users (user_id)
             on delete cascade
 );
+
