@@ -123,7 +123,7 @@
           <div class="container">
             <div class="row justify-content-center">
               <div class="col-xl-9">
-                <h2 class="breadcrumbs-custom-title">Search Results</h2>
+                <h2 class="breadcrumbs-custom-title">Find Your Travel</h2>
               </div>
             </div>
           </div>
@@ -133,7 +133,7 @@
             <ul class="breadcrumbs-custom-path">
               <li><a href="/templates/index.html">Home</a></li>
               <li><a href="#">Pages</a></li>
-              <li class="active">Search Results</li>
+              <li class="active">Find Your Travel</li>
             </ul>
           </div>
         </div>
@@ -142,7 +142,7 @@
       <section class="section section-md">
         <div class="container">
           <!-- RD Search-->
-          <form class="rd-form rd-search"  action="#" th:action="@{/search-travel}" method="get" th:object="${filterOptions}">
+          <form class="rd-form rd-search"  action="#" th:action="@{/travels/search-travels}" method="get" th:object="${filterOptions}">
             <div class="flex-container">
               <div class="form-wrap" id="first-input-field"></div>
               <div class="form-wrap">
@@ -150,21 +150,25 @@
                 <input type="text" th:field="*{author}" class="form-input" id="rd-search-form-input-username" name="username" autocomplete="off">
               </div>
               <div class="form-wrap">
-                <label class="form-label" for="rd-search-form-input-phone-number">Phone number</label>
-                <input th:field="*{startPoint}" class="form-input" id="rd-search-form-input-phone-number" type="text" name="phoneNumber" autocomplete="off">
+                <label class="form-label" for="rd-search-form-input-phone-number">Start point</label>
+                <input th:field="*{startPoint}" class="form-input" id="rd-search-form-input-phone-number" type="text" name="start-point" autocomplete="off">
               </div>
               <div class="form-wrap">
-                <label class="form-label" for="rd-search-form-input-email">Email</label>
+                <label class="form-label" for="rd-search-form-input-email">End point</label>
                 <input th:field="*{endPoint}" class="form-input" id="rd-search-form-input-email" type="text" name="email" autocomplete="off">
+              </div>
+              <div class="form-wrap">
+                <label class="form-label" for="rd-search-form-input-free-spots">Free seats</label>
+                <input th:field="*{freeSpots}" class="form-input" id="rd-search-form-input-free-spots" type="text" name="email" autocomplete="off">
               </div>
               <div class="form-wrap mx-sm-3 mb-2">
                 <label>
                   <select class="form-control" th:field="*{sortBy}">
                     <option value="">Sort By</option>
-                    <option value="username">Username</option>
-                    <option value="email">Email</option>
-                    <option value="name">Name</option>
-                    <option value="phone number">Phone number</option>
+                    <option value="freeSpots">Free spots</option>
+                    <option value="departureTime">Departure time</option>
+                    <option value="distanceKm">Distance</option>
+                    <option value="durationMinutes">Duration</option>
                   </select>
                 </label>
               </div>
@@ -180,60 +184,38 @@
                 </label>
               </div>
             </div>
+            <div class="form-wrap form-button">
+              <button class="button button-secondary button-shadow" type="submit">Search</button>
+              <div class="rd-search-results"></div>
+            </div>
           </form>
               <!-- Repeat for other fields -->
-              <div class="form-wrap form-button">
-                <button class="button button-secondary button-shadow" type="submit">Search</button>
-              <div class="rd-search-results"></div>
-        </div>
+
             </div>
-      </section>
-      <section class="section section-md">
+        <div th:if="${travels.isEmpty()}">
+          <h2>No Travels Found</h2>
+        </div>
+      </section >
+      <section th:unless="${travels.isEmpty()}" class="section section-md">
         <div class="container">
           <div class="table-outer table-rounded table-responsive-lg">
             <table class="table-custom table-custom-primary">
               <thead>
               <tr>
-                <th>Column 1</th>
-                <th>Column 2</th>
-                <th>Column 3</th>
-                <th>Column 4</th>
+                <th>Start Point</th>
+                <th>End Point</th>
+                <th>Free Seats</th>
+                <th>Apply</th>
               </tr>
               </thead>
               <tbody>
-              <tr>
-                <td>Item #1</td>
-                <td>Description</td>
-                <td>Subtotal</td>
-                <td>$3.00</td>
+              <tr th:each="travel : ${travels} ">
+                <td th:href="@{/travels/{id}(id=${travel.id})}" th:text="${travel.startPoint}"></td>
+                <td th:text="${travel.endPoint}" ></td>
+                <td th:text="${travel.freeSpots}"></td>
+                <td><button class="button button-sm button-primary button-winona" th:text="Apply"></button></td>
               </tr>
-      <tr>
-        <td>Item #2</td>
-        <td>Description</td>
-        <td>Discount</td>
-        <td>$3.00</td>
-      </tr>
-      <tr>
-        <td>Item #3</td>
-        <td>Description</td>
-        <td>Shipping</td>
-        <td>$3.00</td>
-      </tr>
-      <tr>
-        <td>Item #4</td>
-        <td>Description</td>
-        <td>Tax</td>
-        <td>$4.00</td>
-      </tr>
       </tbody>
-      <tfoot>
-      <tr>
-        <td>All Items</td>
-        <td>Description</td>
-        <td>Your Total</td>
-        <td>$13.00</td>
-      </tr>
-      </tfoot>
       </table>
     </div>
     </div>

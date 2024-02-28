@@ -97,9 +97,20 @@ public class TravelRepositoryImpl implements TravelRepository {
                 queryString.append(" where ").append(String.join(" and ", filters));
             }
 
+            // Ensuring the sortBy field is a valid entity property before appending it to the query
             filterOptions.getSortBy().ifPresent(sortBy -> {
-                String sortOrder = filterOptions.getSortOrder().orElse("asc");
-                queryString.append(" order by t.").append(sortBy).append(" ").append(sortOrder);
+                // List of valid sort properties for safety and to avoid injection
+                List<String> validSortProperties = List.of("departureTime", "freeSpots", "startPoint", "endPoint"); // Add all properties you allow sorting by
+                String sortOrder = filterOptions.getSortOrder().orElse("asc").toLowerCase();
+
+                // Validate sortOrder
+                if (!sortOrder.equals("asc") && !sortOrder.equals("desc")) {
+                    sortOrder = "asc"; // Default to asc if invalid value provided
+                }
+
+                if (validSortProperties.contains(sortBy)) {
+                    queryString.append(" order by t.").append(sortBy).append(" ").append(sortOrder);
+                }
             });
 
             Query<Travel> query = session.createQuery(queryString.toString(), Travel.class);
