@@ -40,42 +40,42 @@
                                 <!-- RD Mailform -->
                                 <form class="rd-form rd-mailform" action="#" th:action="@{/auth/register}" th:object="${register}" method="post">
                                     <div class="form-wrap">
-                                        <input class="form-input" id="register-username" type="text" name="username" th:field="*{username}" data-constraints="@Required" placeholder="Username">
+                                        <input class="form-input" id="register-username" type="text" name="username" th:field="*{username}" required placeholder="Username">
                                         <label class="error" th:errors="*{username}">Username error placeholder</label>
                                     </div>
                                     <div class="form-wrap">
                                         <input class="form-input" id="register-password" type="password" name="password" th:field="*{password}"
                                                minlength="8"
-                                               data-constraints="@Required" placeholder="Password">
+                                               required placeholder="Password">
                                         <label class="error" th:errors="*{password}">Password error placeholder</label>
                                     </div>
                                     <div class="form-wrap">
                                         <input class="form-input" id="register-confirmPassword" type="password" name="passwordConfirm"
                                                th:field="*{passwordConfirm}"
-                                               data-constraints="@Required" placeholder="Confirm Password">
+                                               required placeholder="Confirm Password">
                                         <label class="error" th:errors="*{passwordConfirm}">Pword Confirm error placeholder</label>
                                     </div>
                                     <div class="form-wrap">
                                         <input class="form-input" id="register-firstName" type="text" name="firstName" th:field="*{firstName}"
                                                minlength="2" maxlength="20"
                                                th:classappend="${#fields.hasErrors('firstName')} ? 'First name should be between 2 and 20 symbols' : ''"
-                                               data-constraints="@Required" placeholder="First Name">
+                                               required placeholder="First Name">
                                         <label class="error" th:errors="*{firstName}">Pword Confirm error placeholder</label>
                                     </div>
                                     <div class="form-wrap">
                                         <input class="form-input" id="register-lastName" type="text" name="lastName" th:field="*{lastName}"
                                                th:classappend="${#fields.hasErrors('lastName')} ? 'Last name should be between 2 and 20 symbols' : ''"
-                                               minlength="2" maxlength="20" data-constraints="@Required" placeholder="Last Name">
+                                               minlength="2" maxlength="20" required placeholder="Last Name">
                                         <label class="error" th:errors="*{lastName}">Pword Confirm error placeholder</label>
                                     </div>
                                     <div class="form-wrap">
                                         <input class="form-input" id="register-email" type="email" name="email" th:field="*{email}"
-                                               th:classappend="${#fields.hasErrors('email')}" data-constraints="@Email @Required" placeholder="E-mail">
+                                               th:classappend="${#fields.hasErrors('email')}" required placeholder="E-mail">
                                         <label class="error" th:errors="*{email}">Pword Confirm error placeholder</label>
                                     </div>
                                     <div class="form-wrap">
-                                        <input class="form-input" id="register-phoneNumber" type="text" name="phoneNumber"
-                                               th:field="*{phoneNumber}"
+                                        <input class="form-input" id="register-phoneNumber" type="text" name="phoneNumber" th:field="*{phoneNumber}"
+                                               th:classappend="${#fields.hasErrors('phoneNumber')}" required
                                                data-constraints="@Required" placeholder="Phone Number">
                                         <label class="error" th:errors="*{phoneNumber}">Pword Confirm error placeholder</label>
                                     </div>

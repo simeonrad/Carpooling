@@ -1,7 +1,6 @@
 package com.telerikacademy.web.carpooling.controllers.mvc;
 
-import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
-import com.telerikacademy.web.carpooling.exceptions.InvalidEmailException;
+import com.telerikacademy.web.carpooling.exceptions.*;
 import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.repositories.UserRepository;
 import com.telerikacademy.web.carpooling.services.ImageStorageService;
@@ -66,9 +65,13 @@ public class ProfileController {
 
         UserPasswordUpdateDto passwordDto = new UserPasswordUpdateDto();
 
+        UserPhoneNumberUpdateDto phoneDto = new UserPhoneNumberUpdateDto();
+        phoneDto.setPhoneNumber(currentUser.getPhoneNumber());
+
         model.addAttribute("namesDto", namesDto);
         model.addAttribute("emailDto", emailDto);
         model.addAttribute("passwordDto", passwordDto);
+        model.addAttribute("phoneDto", phoneDto);
 
         return "profile";
     }
@@ -80,7 +83,6 @@ public class ProfileController {
         if (currentUser.getUsername() == null) {
             return "redirect:/login";
         }
-
 
         if (!currentUser.getPassword().equals(passwordDto.getCurrentPassword())) {
             bindingResult.rejectValue("currentPassword", "error.passwordDto", "Invalid current password.");
@@ -102,10 +104,14 @@ public class ProfileController {
         }
 
         currentUser.setPassword(passwordDto.getNewPassword());
-        userService.update(currentUser);
-
-        redirectAttributes.addFlashAttribute("passwordUpdateSuccess", "Password updated successfully.");
-        model.addAttribute("successMessage", "Password updated successfully.");
+        try {
+            userService.update(currentUser);
+            redirectAttributes.addFlashAttribute("passwordUpdateSuccess", "Password updated successfully.");
+            model.addAttribute("successMessage", "Password updated successfully.");
+        } catch (InvalidPasswordException e) {
+            redirectAttributes.addFlashAttribute("invalidPassword", "Password does not meet the requirements! " +
+                    "It should contain capital letter, digit and special symbol (+, -, *, &, ^, …)");
+        }
         return "redirect:/profile";
     }
 
@@ -165,7 +171,7 @@ public class ProfileController {
         } catch (EntityNotFoundException e) {
             try {
                 userService.update(currentUser);
-            }catch (InvalidEmailException iee) {
+            } catch (InvalidEmailException iee) {
                 redirectAttributes.addFlashAttribute("emailUpdateDenied", "The provided email is not valid.");
                 return "redirect:/profile";
             }
@@ -184,7 +190,8 @@ public class ProfileController {
             return "redirect:/auth/login";
         }
 
-        model.addAttribute("firstName", currentUser.getFirstName()); // Add first name to model
+        model.addAttribute("firstName", currentUser.getFirstName());
+        model.addAttribute("lastName", currentUser.getLastName());
         return "delete-confirm";
     }
 
@@ -220,20 +227,37 @@ public class ProfileController {
         return "redirect:/profile";
     }
 
-    @PostMapping("/add-telephone")
-    public String addTelephoneNumber(@RequestParam("phoneNumber") String phoneNumber, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
-        User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser != null) {
-            try {
-                userService.addPhoneNumber(phoneNumber, currentUser);
-            } catch (Exception e) {
-                model.addAttribute("error", "Error toggling admin status.");
-            }
-            redirectAttributes.addFlashAttribute("phoneNumberUpdateSuccess", "Phone number updated successfully.");
-            return "redirect:/profile";
-        } else {
-            return "redirect:/auth/login";
+    @PostMapping("/update-telephone")
+    public String updateTelephoneNumber(@Valid @ModelAttribute("phoneDto") UserPhoneNumberUpdateDto phoneDto, HttpSession session,
+                                        Model model, RedirectAttributes redirectAttributes, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("namesDto", new UserProfileDto());
+            model.addAttribute("passwordDto", new UserPasswordUpdateDto());
+            model.addAttribute("emailDto", new UserEmailUpdateDto());
+            model.addAttribute("phoneDto", phoneDto);
+            return "profile";
         }
+
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        if (currentUser == null) {
+            model.addAttribute("errorMessage", "User not found.");
+            return "profile";
+        }
+
+        currentUser.setPhoneNumber(phoneDto.getPhoneNumber());
+        try {
+            userService.update(currentUser);
+        } catch (InvalidPhoneNumberException iee) {
+            redirectAttributes.addFlashAttribute("phoneNumberUpdateDenied", "The provided phone number is not valid.");
+            return "redirect:/profile";
+        } catch (DuplicateExistsException e) {
+            redirectAttributes.addFlashAttribute("phoneNumberUpdateDenied", "The provided phone number is already used.");
+            return "redirect:/profile";
+        }
+        model.addAttribute("successMessage", "Phone number updated successfully.");
+        redirectAttributes.addFlashAttribute("phoneNumberUpdateSuccess", "Phone number updated successfully.");
+        return "redirect:/profile";
     }
 }
 
