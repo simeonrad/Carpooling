@@ -18,6 +18,10 @@ public interface UserService {
     void addProfilePhoto(String photoUrl, User user);
     List<User> getAll();
     User get(int id);
+    User get(String username);
+    User getByUI(String UI);
     List<User> getAllNotDeleted();
     void verifyUser(String username);
+    void sendForgottenPasswordEmail(User user);
+    String generateUI();
     }

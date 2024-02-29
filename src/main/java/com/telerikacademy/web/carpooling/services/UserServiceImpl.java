@@ -1,11 +1,9 @@
 package com.telerikacademy.web.carpooling.services;
 
 import com.telerikacademy.web.carpooling.exceptions.*;
+import com.telerikacademy.web.carpooling.helpers.UIMapper;
 import com.telerikacademy.web.carpooling.helpers.UserMapper;
-import com.telerikacademy.web.carpooling.models.FilterUserOptions;
-import com.telerikacademy.web.carpooling.models.IsDeleted;
-import com.telerikacademy.web.carpooling.models.NonVerifiedUser;
-import com.telerikacademy.web.carpooling.models.User;
+import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.repositories.RoleRepository;
 import com.telerikacademy.web.carpooling.repositories.UserRepository;
 import jakarta.mail.MessagingException;
@@ -17,7 +15,10 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,13 +39,16 @@ public class UserServiceImpl implements UserService {
     private final JavaMailSender mailSender;
     private final UserBlockService userBlockService;
 
+    private final UIMapper UIMapper;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository, JavaMailSender mailSender, UserBlockService userBlockService) {
+
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository, JavaMailSender mailSender, UserBlockService userBlockService, UIMapper UIMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
         this.mailSender = mailSender;
         this.userBlockService = userBlockService;
+        this.UIMapper = UIMapper;
     }
 
     @Override
@@ -256,6 +260,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User get(String username) {
+        return userRepository.getByUsername(username);
+    }
+
+    @Override
+    public User getByUI(String UI) {
+        return userRepository.getByUI(UI);
+    }
+
+    @Override
     public List<User> getAllNotDeleted() {
         return userRepository.getAllNotDeleted();
     }
@@ -322,7 +336,61 @@ public class UserServiceImpl implements UserService {
         } catch (MessagingException | UnsupportedEncodingException e) {
             throw new UnsupportedOperationException("Sending verification email was not possible! Please try again!");
         }
+        mailSender.send(message);
+    }
 
+    @Override
+    public String generateUI() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!.,()-=_+@#$%^&*";
+
+        StringBuilder result = new StringBuilder();
+
+        Random random = new Random();
+
+        for (int i = 0; i < 20; i++) {
+            int index = random.nextInt(characters.length());
+            result.append(characters.charAt(index));
+        }
+
+        return result.toString();
+    }
+
+    @Override
+    public void sendForgottenPasswordEmail(User user) {
+        String url = generateUI();
+        ForgottenPasswordUI FPUI = UIMapper.toFPUI(user, url);
+        if (userRepository.passwordEmailAlreadySent(user)) {
+            throw new ForgottenPasswordEmailSentException();
+        }
+        userRepository.setNewUI(FPUI);
+        sendForgottenPasswordEmail(user, "http://localhost:8080", url);
+    }
+
+    public void sendForgottenPasswordEmail(User user, String siteURL, String endpoint) {
+        String subject = "Forgotten Password";
+        String senderName = "Carpooling A56";
+
+        String senderEmail = "car.pooling.a56@gmail.com";
+
+        String mailContent = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>";
+        mailContent += "<p>Please click the link below to change your password:</p>";
+
+        String forgottenPassURL = siteURL + "/auth/forgotten_password?UI=" + endpoint;
+
+        mailContent += "<h3><a href=\"" + forgottenPassURL + "\">FORGOTTEN PASSWORD CHANGE</a></h3>";
+        mailContent += "<p>Thank you<br>The Carpooling A56 Team</p>";
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        try {
+            helper.setFrom(senderEmail, senderName);
+            helper.setTo(user.getEmail());
+            helper.setSubject(subject);
+            helper.setText(mailContent, true);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            throw new UnsupportedOperationException("Sending email was not possible! Please try again!");
+        }
         mailSender.send(message);
     }
 }
