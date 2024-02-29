@@ -157,3 +157,12 @@ create table user_blocks
         foreign key (user_id) references users (user_id)
             on delete cascade
 );
+
+create table forgottenpass_uis
+(
+    id      int auto_increment
+        primary key,
+    user_id int      not null,
+    UI      char(20) not null
+);
+

@@ -8,7 +8,6 @@ import com.telerikacademy.web.carpooling.models.FilterUserOptions;
 import com.telerikacademy.web.carpooling.models.Role;
 import com.telerikacademy.web.carpooling.models.User;
 import com.telerikacademy.web.carpooling.repositories.RoleRepository;
-import com.telerikacademy.web.carpooling.services.UserBlockService;
 import com.telerikacademy.web.carpooling.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -51,7 +50,7 @@ public class UserMvcController {
     }
 
     @GetMapping()
-    public String filterUsers(@ModelAttribute("filterOptions") FilterUserDto filterUserDto, HttpSession session, Model model){
+    public String filterUsers(@ModelAttribute("filterOptions") FilterUserDto filterUserDto, HttpSession session, Model model) {
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser != null) {
             FilterUserOptions filterUserOptions = new FilterUserOptions(filterUserDto.getUsername(), filterUserDto.getEmail(), filterUserDto.getPhoneNumber(), filterUserDto.getSortBy(), filterUserDto.getSortOrder());
@@ -64,6 +63,7 @@ public class UserMvcController {
             return "redirect:/auth/login";
         }
     }
+
     @PostMapping("/toggle-block/{id}")
     public String toggleBlockUser(@PathVariable("id") int userId, HttpSession session, Model model, HttpServletRequest request) {
         User currentUser = (User) session.getAttribute("currentUser");
@@ -84,16 +84,22 @@ public class UserMvcController {
             return "redirect:/auth/login";
         }
     }
+
     @PostMapping("/update-role/{id}")
-    public String updateUserRole(@PathVariable int id, @RequestParam("role") int roleId, RedirectAttributes redirectAttributes) {
-       try {
-           User user = userService.get(id);
-           Role newRole = roleRepository.findById(roleId);
-               user.setRole(newRole);
-               userService.update(user);
-       } catch (DuplicateEmailExists | DuplicatePhoneNumberExists | InvalidPhoneNumberException ignored){
-       }
-        return "searchUserView";
+    public String updateUserRole(@PathVariable int id, @RequestParam("role") int roleId, RedirectAttributes redirectAttributes,
+                                 Model model, @ModelAttribute("filterOptions") FilterUserDto filterUserDto) {
+        FilterUserOptions filterUserOptions = new FilterUserOptions(filterUserDto.getUsername(), filterUserDto.getEmail(), filterUserDto.getPhoneNumber(), filterUserDto.getSortBy(), filterUserDto.getSortOrder());
+        List<User> users = userService.get(filterUserOptions);
+        model.addAttribute("users", users);
+        model.addAttribute("filterOptions", filterUserOptions);
+        try {
+            User user = userService.get(id);
+            Role newRole = roleRepository.findById(roleId);
+            user.setRole(newRole);
+            userService.update(user);
+        } catch (DuplicateEmailExists | DuplicatePhoneNumberExists | InvalidPhoneNumberException ignored) {
+        }
+        return "redirect:/users";
     }
 
 }

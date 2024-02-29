@@ -11,6 +11,7 @@ public interface UserService {
     void update(User user, User updatedBy);
     void update(User user);
     List<User> get(FilterUserOptions filterUserOptions, User user);
+    List<User> get(FilterUserOptions filterUserOptions);
     void blockUser(String username, User admin);
     void unblockUser(String username, User admin);
     void makeAdmin(String username, User admin);

@@ -15,8 +15,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -179,6 +177,11 @@ public class UserServiceImpl implements UserService {
         if (!user.getRole().getName().equals(ADMIN)) {
             throw new UnauthorizedOperationException(REGULAR_USERS_UNAUTHORIZED_OPERATION);
         }
+        return userRepository.get(filterUserOptions);
+    }
+
+    @Override
+    public List<User> get(FilterUserOptions filterUserOptions) {
         return userRepository.get(filterUserOptions);
     }
 
