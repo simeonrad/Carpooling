@@ -10,6 +10,7 @@ public interface UserRepository {
     void create(NonVerifiedUser nonVerifiedUser);
 
     void delete(IsDeleted isDeleted);
+    void deleteUI(ForgottenPasswordUI forgottenPasswordUI);
 
     void unmarkAsDeleted(IsDeleted isDeleted);
 
@@ -43,6 +44,8 @@ public interface UserRepository {
     NonVerifiedUser getNonVerifiedById(int userId);
 
     void setNewUI(ForgottenPasswordUI forgottenPasswordUI);
+
+    boolean isUIExisting(String UI);
 
     void verify(NonVerifiedUser nonVerifiedUser);
 }

@@ -36,6 +36,16 @@ create table users
         foreign key (user_role) references roles (role_id)
 );
 
+create table forgottenpass_uis
+(
+    id      int auto_increment
+        primary key,
+    user_id int       not null,
+    UI      char(200) not null,
+    constraint forgottenpass_uis_users_user_id_fk
+        foreign key (user_id) references users (user_id)
+);
+
 create table is_deleted
 (
     user_id int null,
@@ -157,12 +167,3 @@ create table user_blocks
         foreign key (user_id) references users (user_id)
             on delete cascade
 );
-
-create table forgottenpass_uis
-(
-    id      int auto_increment
-        primary key,
-    user_id int      not null,
-    UI      char(20) not null
-);
-

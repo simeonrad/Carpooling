@@ -113,17 +113,23 @@ public class AuthenticationController {
         } catch (EntityNotFoundException e) {
             redirectAttributes.addFlashAttribute("userNotFound", e.getMessage());
             return "redirect:/auth/forgotten_password";
+        } catch (ForgottenPasswordEmailSentException e) {
+            redirectAttributes.addFlashAttribute("mailAlreadySent", e.getMessage());
+            return "redirect:/auth/forgotten_password";
         }
     }
 
     @GetMapping("/recover_password/{id}")
     public String showPasswordRecoveryPage(Model model, @PathVariable String id) {
-        model.addAttribute("username", new UsernameDto());
+        model.addAttribute("passwords", new ForgottenPasswordDto());
+        if (!userService.isUIExisting(id)) {
+            return "redirect:/auth/login";
+        }
         return "recover-password";
     }
 
     @PostMapping("/recover_password/{id}")
-    public String handleRecoveryPassword(@Valid @ModelAttribute("username") ForgottenPasswordDto passwordDto,
+    public String handleRecoveryPassword(@Valid @ModelAttribute("passwords") ForgottenPasswordDto passwordDto,
                                          BindingResult bindingResult, RedirectAttributes redirectAttributes, @PathVariable String id) {
         if (bindingResult.hasErrors()) {
             return "recover-password";
@@ -131,15 +137,20 @@ public class AuthenticationController {
         try {
             User user = userService.getByUI(id);
             if (!passwordDto.getNewPassword().equals(passwordDto.getConfirmNewPassword())) {
-                bindingResult.rejectValue("confirmNewPassword", "error.passwordDto", "New password and confirm password do not match.");
+                redirectAttributes.addFlashAttribute("passwordsDiffer", "New password and confirm password must be the same!");
+                return "redirect:/auth/recover_password/{id}";
             }
             user.setPassword(passwordDto.getNewPassword());
             userService.update(user);
+            userService.deleteUI(user);
             redirectAttributes.addFlashAttribute("successMessage", "Password successfully changed");
             return "redirect:/auth/recover_password/{id}";
         } catch (EntityNotFoundException e) {
             redirectAttributes.addFlashAttribute("UINotFound", e.getMessage());
-            return "redirect:/auth/forgotten_password/{id}";
+            return "redirect:/auth/recover_password/{id}";
+        } catch (InvalidPasswordException e) {
+            redirectAttributes.addFlashAttribute("invalidPassword", e.getMessage());
+            return "redirect:/auth/recover_password/{id}";
         }
     }
 }

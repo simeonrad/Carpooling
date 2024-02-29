@@ -130,6 +130,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void deleteUI(User user) {
+        ForgottenPasswordUI forgottenPasswordUI = user.getForgottenPasswordUI();
+        userRepository.deleteUI(forgottenPasswordUI);
+    }
+
+    @Override
     public void update(User user, User updatedBy) {
         if (!user.equals(updatedBy)) {
             throw new UnauthorizedOperationException("Only the user can modify it's data!");
@@ -273,6 +279,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean isUIExisting(String UI) {
+        return userRepository.isUIExisting(UI);
+    }
+
+    @Override
     public List<User> getAllNotDeleted() {
         return userRepository.getAllNotDeleted();
     }
@@ -344,17 +355,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String generateUI() {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!.,()-=_+@#$%^&*";
-
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!-_+";
         StringBuilder result = new StringBuilder();
-
         Random random = new Random();
-
         for (int i = 0; i < 20; i++) {
             int index = random.nextInt(characters.length());
             result.append(characters.charAt(index));
         }
-
         return result.toString();
     }
 
@@ -378,7 +385,7 @@ public class UserServiceImpl implements UserService {
         String mailContent = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>";
         mailContent += "<p>Please click the link below to change your password:</p>";
 
-        String forgottenPassURL = siteURL + "/auth/forgotten_password?UI=" + endpoint;
+        String forgottenPassURL = siteURL + "/auth/recover_password/" + endpoint;
 
         mailContent += "<h3><a href=\"" + forgottenPassURL + "\">FORGOTTEN PASSWORD CHANGE</a></h3>";
         mailContent += "<p>Thank you<br>The Carpooling A56 Team</p>";
