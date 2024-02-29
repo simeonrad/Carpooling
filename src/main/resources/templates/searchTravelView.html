@@ -45,7 +45,13 @@
     .form-wrap {
         margin: 10px; /* Adjust as needed for spacing */
         /* Ensure elements don't stretch if undesired: */
-        /* align-self: flex-start; */
+    }
+    .travel-is-empty{
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        height: 100%; /* Take up full parent height */
+        text-align: center;
     }
 
     .form-button {
@@ -53,6 +59,8 @@
         justify-content: center; /* Center the button horizontally */
         width: 100%; /* Ensure the .form-button takes full width to center the button correctly */
     }
+    .
+
 </style>
 <body>
 <div class="preloader" id="loading">
@@ -281,7 +289,7 @@
             </form>
 
         </div>
-        <div th:if="${travels.isEmpty()}">
+        <div class="travel-is-empty" th:if="${travels.isEmpty()}">
             <h2>No Travels Found</h2>
         </div>
     </section>

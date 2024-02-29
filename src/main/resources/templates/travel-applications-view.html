@@ -252,7 +252,7 @@
 
                         </td>
                         <td>
-                            <button th:action="@{/travels/applications/decline/{id}(id=${applicationObject.id})}" class="button button-gray-700 button-winona" th:text="Decline"></button>
+                            <button  type="submit" th:method="post" th:action="@{/travels/applications/decline/{id}(id=${applicationObject.id})}" class="button button-gray-700 button-winona" th:text="Decline"></button>
                         </td>
                     </tr>
                     </tbody>

@@ -1,17 +1,22 @@
 package com.telerikacademy.web.carpooling.controllers.mvc;
 
+import com.telerikacademy.web.carpooling.exceptions.DuplicateEmailExists;
+import com.telerikacademy.web.carpooling.exceptions.DuplicatePhoneNumberExists;
+import com.telerikacademy.web.carpooling.exceptions.InvalidPhoneNumberException;
 import com.telerikacademy.web.carpooling.models.FilterUserDto;
 import com.telerikacademy.web.carpooling.models.FilterUserOptions;
+import com.telerikacademy.web.carpooling.models.Role;
 import com.telerikacademy.web.carpooling.models.User;
+import com.telerikacademy.web.carpooling.repositories.RoleRepository;
 import com.telerikacademy.web.carpooling.services.UserBlockService;
 import com.telerikacademy.web.carpooling.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -20,7 +25,7 @@ import java.util.List;
 public class UserMvcController {
 
     private final UserService userService;
-    private final UserBlockService userBlockService;
+    private final RoleRepository roleRepository;
 
     @ModelAttribute("isAdmin")
     public boolean populateIsAdmin(HttpSession session) {
@@ -40,9 +45,9 @@ public class UserMvcController {
     }
 
     @Autowired
-    public UserMvcController(UserService userService, UserBlockService userBlockService) {
+    public UserMvcController(UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
-        this.userBlockService = userBlockService;
+        this.roleRepository = roleRepository;
     }
 
     @GetMapping()
@@ -51,11 +56,44 @@ public class UserMvcController {
         if (currentUser != null) {
             FilterUserOptions filterUserOptions = new FilterUserOptions(filterUserDto.getUsername(), filterUserDto.getEmail(), filterUserDto.getPhoneNumber(), filterUserDto.getSortBy(), filterUserDto.getSortOrder());
             List<User> users = userService.get(filterUserOptions, currentUser);
-            model.addAttribute("filterOptions", filterUserOptions);
+            model.addAttribute("filterOptions", filterUserDto);
+            model.addAttribute("allRoles", roleRepository.getAll());
             model.addAttribute("users", users);
             return "searchUserView";
         } else {
-            return "searchUserView";
+            return "redirect:/auth/login";
         }
     }
+    @PostMapping("/toggle-block/{id}")
+    public String toggleBlockUser(@PathVariable("id") int userId, HttpSession session, Model model, HttpServletRequest request) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser != null && currentUser.isAdmin()) {
+            User userToToggle = userService.get(userId);
+            try {
+                if (userToToggle.isBlocked()) {
+                    userService.unblockUser(userToToggle.getUsername(), currentUser);
+                } else {
+                    userService.blockUser(userToToggle.getUsername(), currentUser);
+                }
+            } catch (Exception e) {
+                model.addAttribute("error", "Error toggling user block status.");
+            }
+            String refererUrl = request.getHeader("Referer");
+            return "redirect:" + refererUrl;
+        } else {
+            return "redirect:/auth/login";
+        }
+    }
+    @PostMapping("/update-role/{id}")
+    public String updateUserRole(@PathVariable int id, @RequestParam("role") int roleId, RedirectAttributes redirectAttributes) {
+       try {
+           User user = userService.get(id);
+           Role newRole = roleRepository.findById(roleId);
+               user.setRole(newRole);
+               userService.update(user);
+       } catch (DuplicateEmailExists | DuplicatePhoneNumberExists | InvalidPhoneNumberException ignored){
+       }
+        return "searchUserView";
+    }
+
 }
