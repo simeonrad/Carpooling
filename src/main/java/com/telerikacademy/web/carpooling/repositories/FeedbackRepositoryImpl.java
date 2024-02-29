@@ -2,9 +2,15 @@ package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.models.Feedback;
 import com.telerikacademy.web.carpooling.models.FilterFeedbackOptions;
+import com.telerikacademy.web.carpooling.models.User;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -16,6 +22,8 @@ import java.util.Map;
 public class FeedbackRepositoryImpl implements FeedbackRepository{
 
     private final SessionFactory sessionFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public FeedbackRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -56,14 +64,14 @@ public class FeedbackRepositoryImpl implements FeedbackRepository{
 
             filterFeedbackOptions.getAuthor().ifPresent(value -> {
                 if (!value.isBlank()) {
-                    filters.add("author.username like :authorUsername"); // Assuming `username` is a string field in `User`
+                    filters.add("author.username like :authorUsername");
                     params.put("authorUsername", "%" + value + "%");
                 }
             });
 
             filterFeedbackOptions.getRecipient().ifPresent(value -> {
                 if (!value.isBlank()) {
-                    filters.add("recipient.username like :recipientUsername"); // Assuming `username` is a string field in `User`
+                    filters.add("recipient.username like :recipientUsername");
                     params.put("recipientUsername", "%" + value + "%");
                 }
             });
@@ -82,6 +90,22 @@ public class FeedbackRepositoryImpl implements FeedbackRepository{
             return query.list();
         }
     }
+
+    @Override
+    public Page<Feedback> getMyReceivedFeedbacks(User user, Pageable pageable) {
+        String fetchQuery = "SELECT f FROM Feedback f WHERE f.recipient = :user ORDER BY f.id DESC";
+        List<Feedback> feedbacks = entityManager.createQuery(fetchQuery, Feedback.class)
+                .setParameter("user", user)
+                .setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList();
+
+        String countQuery = "SELECT COUNT(f) FROM Feedback f WHERE f.recipient = :user";
+        long totalFeedbackCount = entityManager.createQuery(countQuery, Long.class)
+                .setParameter("user", user)
+                .getSingleResult();
+
+        return new PageImpl<>(feedbacks, pageable, totalFeedbackCount);    }
 
     private String generateOrderBy(FilterFeedbackOptions filterOptions) {
         if (filterOptions.getSortBy().isEmpty()) {
@@ -116,7 +140,6 @@ public class FeedbackRepositoryImpl implements FeedbackRepository{
             query.setParameter("travelId", travelId);
             query.setParameter("authorId", authorId);
             query.setParameter("recipientId", recipientId);
-            List<Feedback> feedbacks = query.list();
             return query.uniqueResult();
         }
     }

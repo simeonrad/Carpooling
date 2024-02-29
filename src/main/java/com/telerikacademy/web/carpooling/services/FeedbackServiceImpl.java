@@ -6,6 +6,9 @@ import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.repositories.FeedbackRepository;
 import com.telerikacademy.web.carpooling.repositories.TravelRepository;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -74,6 +77,12 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public List<Feedback> getForUser(FilterFeedbackOptions filterFeedbackOptions, User user) {
         return feedbackRepository.getFeedbacksForUser(filterFeedbackOptions);
+    }
+
+    @Override
+    public Page<Feedback> getMyReceivedFeedbacks(User user, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return feedbackRepository.getMyReceivedFeedbacks(user, pageable);
     }
 
     @Override
