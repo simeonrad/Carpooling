@@ -157,4 +157,3 @@ create table user_blocks
         foreign key (user_id) references users (user_id)
             on delete cascade
 );
-

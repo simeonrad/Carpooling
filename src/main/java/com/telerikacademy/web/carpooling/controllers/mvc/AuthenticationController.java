@@ -1,9 +1,6 @@
 package com.telerikacademy.web.carpooling.controllers.mvc;
 
-import com.telerikacademy.web.carpooling.exceptions.AuthenticationFailureException;
-import com.telerikacademy.web.carpooling.exceptions.DuplicateEmailExists;
-import com.telerikacademy.web.carpooling.exceptions.DuplicateExistsException;
-import com.telerikacademy.web.carpooling.exceptions.InvalidEmailException;
+import com.telerikacademy.web.carpooling.exceptions.*;
 import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
 import com.telerikacademy.web.carpooling.helpers.UserMapper;
 import com.telerikacademy.web.carpooling.models.LoginDto;
@@ -33,14 +30,14 @@ public class AuthenticationController {
     }
 
     @GetMapping("/login")
-    public String showLoginPage(Model model, @RequestParam(required = false) String error) {
+    public String showLoginPage(Model model) {
         model.addAttribute("login", new LoginDto());
-        model.addAttribute("loginError", error);
         return "login";
     }
 
     @PostMapping("/login")
-    public String handleLogin(@Valid @ModelAttribute("login") LoginDto dto, BindingResult bindingResult, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+    public String handleLogin(@Valid @ModelAttribute("login") LoginDto dto, BindingResult bindingResult,
+                              HttpSession session, RedirectAttributes redirectAttributes, Model model) {
         if (bindingResult.hasErrors()) {
             return "login";
         }
@@ -52,13 +49,9 @@ public class AuthenticationController {
             }
             return "redirect:/";
         } catch (AuthenticationFailureException e) {
-//            redirectAttributes.addFlashAttribute("loginError", "Login was not possible due to wrong username or password or non-existent user.");
-//            bindingResult.rejectValue("username", "login_error", "Invalid user");
-//            System.out.println(bindingResult.getAllErrors());
-
-            model.addAttribute("loginError", "Invalid username or password.");
-
-            return "login";
+            redirectAttributes.addFlashAttribute("loginError", "Login was not possible due to wrong username or password or non-existent user.");
+            System.out.println(bindingResult.getAllErrors());
+            return "redirect:/auth/login";
         }
     }
 
@@ -76,13 +69,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public String handleRegister(@Valid @ModelAttribute("register") RegisterDto register, BindingResult bindingResult) {
+    public String handleRegister(@Valid @ModelAttribute("register") RegisterDto register, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "register";
         }
         if (!register.getPassword().equals(register.getPasswordConfirm())) {
             bindingResult.rejectValue("passwordConfirm", "password_error", "Password confirmation should match password");
-            System.out.println(bindingResult.getAllErrors());
             return "register";
         }
         try {
@@ -91,15 +83,15 @@ public class AuthenticationController {
             return "redirect:/auth/login";
         } catch (DuplicateExistsException e) {
             bindingResult.rejectValue("username", "username-error", e.getMessage());
-            System.out.println(bindingResult.getAllErrors());
             return "register";
         } catch (InvalidEmailException e) {
             bindingResult.rejectValue("email", "email-error", e.getMessage());
-            System.out.println(bindingResult.getAllErrors());
             return "register";
         } catch (DuplicateEmailExists e) {
             bindingResult.rejectValue("email", "email-error", e.getMessage());
-            System.out.println(bindingResult.getAllErrors());
+            return "register";
+        } catch (DuplicatePhoneNumberExists e) {
+            bindingResult.rejectValue("phoneNumber", "phoneNumber-error", e.getMessage());
             return "register";
         }
     }

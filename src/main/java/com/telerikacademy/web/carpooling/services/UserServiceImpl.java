@@ -52,8 +52,9 @@ public class UserServiceImpl implements UserService {
         try {
             User newUser = userRepository.getByUsername(user.getUsername());
             IsDeleted isDeleted = userRepository.getDeletedById(newUser.getId());
-            checkIfPhoneNumberExists(user);
+            checkIfPhoneNumberExists(newUser);
             user = userMapper.fromDtoUpdate(user);
+            user.setPhotoUrl(DEFAULT_IMAGE_URL);
             update(user, user);
             userRepository.unmarkAsDeleted(isDeleted);
             sendVerificationEmail(user);
@@ -80,7 +81,7 @@ public class UserServiceImpl implements UserService {
         phoneNumberValidator(user.getPhoneNumber());
         boolean phoneNumberExists = userRepository.telephoneExists(user.getPhoneNumber(), user.getId());
         if (phoneNumberExists) {
-            throw new DuplicateExistsException("User", "phone number", user.getPhoneNumber());
+            throw new DuplicatePhoneNumberExists("User", "phone number", user.getPhoneNumber());
         }
     }
 
@@ -123,9 +124,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(User user) {
-        if (user.getIsDeletedRecord().getUser().equals(user)) {
-            throw new EntityNotFoundException("User", "username", user.getUsername());
-        }
         markUserAsDeleted(user.getId());
     }
 
@@ -244,12 +242,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addProfilePhoto(String photoUrl, User user) {
         user.setPhotoUrl(photoUrl);
-        userRepository.update(user);
-    }
-
-    @Override
-    public void addPhoneNumber(String phoneNumber, User user) {
-        user.setPhoneNumber(phoneNumber);
         userRepository.update(user);
     }
 
