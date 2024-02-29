@@ -119,6 +119,10 @@ public class User {
         return role;
     }
 
+    public boolean isBlocked() {
+        return userBlocks != null;
+    }
+
     public void setRole(Role role) {
         this.role = role;
     }
@@ -153,6 +157,10 @@ public class User {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return id == user.id && username.equals(user.username);
+    }
+
+    public boolean isAdmin() {
+        return role.getName().equals("Admin");
     }
 
     @Override

@@ -36,7 +36,7 @@ public class TravelController {
             @RequestParam(required = false) String startPoint,
             @RequestParam(required = false) String endPoint,
             @RequestParam(required = false) String status,
-            @RequestParam(required = false) int freeSpots,
+            @RequestParam(required = false) Integer freeSpots,
             @RequestParam(required = false) String driverUsername,
             @RequestParam(required = false) LocalDateTime departureTime,
             @RequestParam(required = false) String sortBy,

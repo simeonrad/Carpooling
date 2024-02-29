@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/fonts.css">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
 <div class="preloader" id="loading">
@@ -22,7 +23,7 @@
         </div>
     </div>
 </div>
-<div class="page">
+<div class="pageLogin">
     <section class="section section-layout-3-outer">
         <div class="section-layout-3">
             <div class="layout-2 section-layout-3-header">
@@ -49,27 +50,25 @@
                                 <form class="rd-form rd-mailform" action="/profile/update-password" method="post" th:object="${passwordDto}">
                                     <!-- Current Password Input -->
                                     <div class="form-wrap" th:classappend="${#fields.hasErrors('currentPassword')} ? 'has-error'">
-                                        <input class="form-input" id="current-password" type="password" th:field="*{currentPassword}" data-constraints="@Required">
-                                        <label class="form-label" for="current-password">Current Password</label>
+                                        <input class="form-input" id="current-password" type="password" th:field="*{currentPassword}" required placeholder="Current password">
                                         <label class="error" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></label>
                                     </div>
 
                                     <!-- New Password Input -->
                                     <div class="form-wrap" th:classappend="${#fields.hasErrors('newPassword')} ? 'has-error'">
-                                        <input class="form-input" id="new-password" type="password" name="newPassword" minlength="8" data-constraints="@Required">
-                                        <label class="form-label" for="new-password">New Password</label>
+                                        <input class="form-input" id="new-password" type="password" name="newPassword" minlength="8" required placeholder="New password">
                                         <label class="form-output error" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></label>
+                                        <label class="error" th:if="${invalidPassword}" th:text="${invalidPassword}"></label>
                                     </div>
 
                                     <!-- Confirm New Password Input -->
                                     <div class="form-wrap" th:classappend="${#fields.hasErrors('confirmNewPassword')} ? 'has-error'">
-                                        <input class="form-input" id="confirm-new-password" type="password" name="confirmNewPassword" data-constraints="@Required">
-                                        <label class="form-label" for="confirm-new-password">Confirm New Password</label>
-                                        <label class="form-output error" th:if="${#fields.hasErrors('confirmNewPassword')}" th:errors="*{confirmNewPassword}"></label>
+                                        <input class="form-input" id="confirm-new-password" type="password" name="confirmNewPassword" required placeholder="Confirm new password">
+                                        <label th:if="${#fields.hasErrors('confirmNewPassword')}" th:errors="*{confirmNewPassword}"></label>
                                     </div>
 
                                     <!-- Success Message on Password Update -->
-                                    <div th:if="${passwordUpdateSuccess}" class="form-output success">
+                                    <div th:if="${passwordUpdateSuccess}">
                                         <p th:text="${passwordUpdateSuccess}"></p>
                                     </div>
 
@@ -83,22 +82,20 @@
                                 <!--Names update-->
                                 <form class="rd-form rd-mailform" action="/profile/update-names" method="post" th:object="${namesDto}">
                                     <!-- First Name Input -->
-                                    <div class="form-wrap" th:classappend="${#fields.hasErrors('firstName')} ? 'has-error'">
-                                        <input class="form-input" id="first-name" type="text" name="firstName" th:field="*{firstName}" data-constraints="@Required">
-                                        <label class="form-label" for="first-name">First Name</label>
+                                    <div class="form-wrap">
+                                        <input class="form-input" id="first-name" type="text" name="firstName" th:field="*{firstName}" required placeholder="First name">
                                         <label class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></label>
                                     </div>
 
                                     <!-- Last Name Input -->
                                     <div class="form-wrap" th:classappend="${#fields.hasErrors('lastName')} ? 'has-error'">
-                                        <input class="form-input" id="last-name" type="text" name="lastName" th:field="*{lastName}" data-constraints="@Required">
-                                        <label class="form-label" for="last-name">Last Name</label>
+                                        <input class="form-input" id="last-name" type="text" name="lastName" th:field="*{lastName}" required placeholder="Last name">
                                         <label class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></label>
                                     </div>
 
                                     <!-- Success Message on Names Update -->
-                                    <div th:if="${namesUpdateSuccess}" class="form-output success">
-                                        <p th:text="${namesUpdateSuccess}"></p>
+                                    <div th:if="${namesUpdateSuccess}"
+                                         th:text="${namesUpdateSuccess}">
                                     </div>
 
                                     <!-- Submit Button -->
@@ -112,26 +109,76 @@
                                 <form class="rd-form rd-mailform" action="/profile/update-email" method="post" th:object="${emailDto}">
                                     <!-- Email Input -->
                                     <div class="form-wrap" th:classappend="${#fields.hasErrors('email')} ? 'has-error'">
-                                        <input class="form-input" id="email" type="text" name="email" th:field="*{email}" data-constraints="@Required">
-                                        <label class="form-label" for="email">Email</label>
+                                        <input class="form-input" id="email" type="email" name="email" th:field="*{email}" required placeholder="Email">
                                         <label class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></label>
+                                        <label th:if="${emailUpdateDenied}" th:text="${emailUpdateDenied}"></label>
                                     </div>
 
                                     <!-- Success Message on Email Update -->
-                                    <div th:if="${emailUpdateSuccess}" class="form-output success">
-                                        <p th:text="${emailUpdateSuccess}"></p>
+                                    <div th:if="${emailUpdateSuccess}"
+                                         th:text="${emailUpdateSuccess}">
                                     </div>
 
                                     <!-- Submit Button -->
                                     <div class="form-wrap">
                                         <button class="button button-block button-secondary button-shadow button-winona"
-                                                type="submit">Update Names</button>
+                                                type="submit">Update Email</button>
                                     </div>
                                 </form>
+
+                                <!-- Phone number update -->
+                                <form class="rd-form rd-mailform" action="/profile/update-telephone" method="post" th:object="${phoneDto}">
+                                    <!-- Phone number Input -->
+                                    <div class="form-wrap" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'has-error'">
+                                        <input class="form-input" id="phoneNumber" type="text" name="phoneDto" th:field="*{phoneNumber}" required placeholder="Phone number">
+                                        <label class="error" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></label>
+                                        <label th:if="${phoneNumberUpdateDenied}" th:text="${phoneNumberUpdateDenied}"></label>
+                                    </div>
+
+                                    <!-- Success Message on Phone number Update -->
+                                    <div th:if="${phoneNumberUpdateSuccess}"
+                                         th:text="${phoneNumberUpdateSuccess}">
+                                    </div>
+
+                                    <!-- Submit Button -->
+                                    <div class="form-wrap">
+                                        <button class="button button-block button-secondary button-shadow button-winona"
+                                                type="submit">Update Phone number</button>
+                                    </div>
+                                </form>
+
+                                <!-- Profile Photo Upload Form -->
+                                <form class="rd-form rd-mailform" action="/profile/upload-image" method="post" enctype="multipart/form-data">
+                                    <div class="form-wrap">
+                                        <input type="file" id="profileImage" name="image" required>
+                                        <label for="profileImage">Profile Image</label>
+                                    </div>
+
+                                    <!-- Success Message on Photo Upload -->
+                                    <div th:if="${photoSuccess}" class="success-message">
+                                        <p th:text="${photoSuccess}"></p>
+                                    </div>
+
+                                    <!-- Submit Button -->
+                                    <div class="form-wrap">
+                                        <button class="button button-block button-secondary button-shadow button-winona"
+                                                type="submit">Upload Image</button>
+                                    </div>
+                                </form>
+
+                                <!-- Delete Profile Button -->
+                                <form class="rd-form rd-mailform" action="/profile/delete-confirm" method="get">
+                                    <!-- Submit Button -->
+                                    <div class="form-wrap">
+                                        <button class="button button-block button-delete button-shadow button-winona"
+                                                type="submit">Delete Profile</button>
+                                    </div>
+                                </form>
+
+
                                     <div class="form-wrap text-center"><a class="link link-underline small"
                                                                           href="privacy-policy.html">Privacy
                                         Policy</a></div>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -141,7 +188,5 @@
     </section>
 </div>
 <div class="snackbars" id="form-output-global"></div>
-<script src="/js/core.min.js"></script>
-<script src="/js/script.js"></script>
 </body>
 </html>
