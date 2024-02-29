@@ -311,7 +311,8 @@
                         <td th:text="${travel.endPoint}"></td>
                         <td th:text="${travel.freeSpots}"></td>
                         <td>
-                            <button class="button button-sm button-primary button-winona" th:text="Apply"></button>
+                            <button th:if="${isAdmin}" type="submit" th:method="post" th:action="@{/travels/delete/{id}(id=${travel.id})}" class="button button-gray-700 button-winona" th:text="Delete"></button>
+                            <button th:unless="${isAdmin}" class="button button-sm button-primary button-winona" th:text="Apply"></button>
                         </td>
                     </tr>
                     </tbody>

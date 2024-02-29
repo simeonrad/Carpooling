@@ -21,12 +21,29 @@ public class TravelMvcController {
     private final TravelService travelService;
     private final TravelApplicationService travelApplicationService;
     private final AuthenticationHelper authenticationHelper;
-@Autowired
+    @ModelAttribute("isAdmin")
+    public boolean populateIsAdmin(HttpSession session) {
+        boolean isAdmin = false;
+        if (populateIsAuthenticated(session)) {
+            User currentUser = (User) session.getAttribute("currentUser");
+            if (currentUser.getRole().getName().equals("Admin")) {
+                isAdmin = true;
+            }
+        }
+        return isAdmin;
+    }
+    @ModelAttribute("isAuthenticated")
+    public boolean populateIsAuthenticated(HttpSession session) {
+        return session.getAttribute("currentUser") != null;
+    }
+
+    @Autowired
     public TravelMvcController(TravelService travelService, TravelApplicationService travelApplicationService, AuthenticationHelper authenticationHelper) {
         this.travelService = travelService;
     this.travelApplicationService = travelApplicationService;
     this.authenticationHelper = authenticationHelper;
 }
+
 
     @GetMapping("/search-travels")
     public String filterTravels(@ModelAttribute("filterOptions") FilterTravelDto filterTravelDto, Model model){
@@ -70,6 +87,24 @@ public class TravelMvcController {
         model.addAttribute("error-message",e.getMessage());
         return "redirect:/404-page";
     }
+        return "redirect:/auth/login";
+    }
+    @PostMapping("/delete/{id}")
+    public String deleteTravel(@PathVariable int id,Model model, HttpSession session){
+        try {
+            User user = authenticationHelper.tryGetUser(session);
+            if (user.equals(travelService.getById(id).getDriver())) {
+                TravelApplication travelApplication = travelApplicationService.getById(id);
+                travelApplicationService.delete(user, travelApplication);
+                return "travel-applications-view";
+            }
+        } catch (AuthenticationFailureException e){
+            return "redirect:/auth/login";
+        }
+        catch (ForbiddenOperationException | UnauthorizedOperationException e){
+            model.addAttribute("error-message",e.getMessage());
+            return "redirect:/404-page";
+        }
         return "redirect:/auth/login";
     }
     @PostMapping("/applications/decline/{id}")
