@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html class="wide wow-animation" lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head>
+<head>
     <title>Search Travel</title>
     <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
     <meta charset="utf-8">
@@ -10,288 +10,370 @@
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/fonts.css">
     <link rel="stylesheet" href="/css/style.css">
-  </head>
-  <style>
+</head>
+<style>
     .flex-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px; /* Adjust the space between items */
-      align-items: center; /* Align items vertically */
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .button {
+        height: 38px;
+        align-content: center;
+    }
+
+    .button {
+        padding: 5px 15px;
+        font-size: 14px;
+    }
+
+    .button {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        font-size: smaller;
+        line-height: 1;
     }
 
     .form-wrap, .form-wrap.form-button {
-      flex: 1;
-      min-width: 90px; /* Minimum width of each form field, adjust as needed */
+        flex: 1;
+        min-width: 90px;
     }
-  </style>
-  <body>
-    <div class="preloader" id="loading">
-      <div class="preloader-body">
+
+    .form-wrap {
+        margin: 10px; /* Adjust as needed for spacing */
+        /* Ensure elements don't stretch if undesired: */
+        /* align-self: flex-start; */
+    }
+
+    .form-button {
+        display: flex;
+        justify-content: center; /* Center the button horizontally */
+        width: 100%; /* Ensure the .form-button takes full width to center the button correctly */
+    }
+</style>
+<body>
+<div class="preloader" id="loading">
+    <div class="preloader-body">
         <div id="loading-center-object">
-          <div class="object" id="object_four"></div>
-          <div class="object" id="object_three"></div>
-          <div class="object" id="object_two"></div>
-          <div class="object" id="object_one"></div>
+            <div class="object" id="object_four"></div>
+            <div class="object" id="object_three"></div>
+            <div class="object" id="object_two"></div>
+            <div class="object" id="object_one"></div>
         </div>
-      </div>
     </div>
-    <div class="page">
-      <!-- Page Header-->
-      <header class="section page-header page-header-4">
+</div>
+<div class="page">
+    <!-- Page Header-->
+    <header class="section page-header page-header-4">
         <!-- RD Navbar-->
         <div class="rd-navbar-wrap">
-          <nav class="rd-navbar rd-navbar-modern" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-fixed" data-lg-device-layout="rd-navbar-fixed" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-xxl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static" data-lg-stick-up-offset="10px" data-xl-stick-up-offset="10px" data-xxl-stick-up-offset="10px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
-            <div class="rd-navbar-main">
-              <!-- RD Navbar Panel-->
-              <div class="rd-navbar-panel">
-                <!-- RD Navbar Toggle-->
-                <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
-                <!-- RD Navbar Brand-->
-                <div class="rd-navbar-brand"> <a class="brand" href="/templates/index.html"><img class="brand-logo-dark" src="/images/logo-111x33.png" alt="" width="111" height="33" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a></div>
-              </div>
-              <div class="rd-navbar-nav-wrap">
-                <!-- RD Navbar Nav-->
-                <ul class="rd-navbar-nav">
-                  <li class="rd-nav-item"><a class="rd-nav-link" href="#">Get Our App</a>
-                  </li>
-                  <li class="rd-nav-item active"><a class="rd-nav-link" href="#">Pages</a>
-                    <!-- RD Navbar Megamenu-->
-                    <div class="rd-menu rd-navbar-megamenu">
-                      <ul class="rd-navbar-megamenu-inner">
-                        <li class="rd-megamenu-item">
-                          <ul class="rd-megamenu-list">
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/typography.html">Typography</a></li>
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/buttons.html">Buttons</a></li>
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/forms.html">Forms</a></li>
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/tabs-and-accordions.html">Tabs and Accordions</a></li>
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/progress-bars.html">Progress bars</a></li>
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/tables.html">Tables</a></li>
-                          </ul>
-                        </li>
-                        <li class="rd-megamenu-item">
-                          <ul class="rd-megamenu-list">
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/gallery.html">Gallery</a></li>
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/services.html">Services</a></li>
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/services-2.html">Services 2</a></li>
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/pricing.html">Pricing</a></li>
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/careers.html">Careers</a></li>
-                          </ul>
-                        </li>
-                        <li class="rd-megamenu-item">
-                          <ul class="rd-megamenu-list">
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/grid-system.html">Grid system</a></li>
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/privacy-policy.html">Privacy policy</a></li>
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/404-page.html">404 Page</a></li>
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/coming-soon.html">Coming Soon</a></li>
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/search-results.html">Search results</a></li>
-                          </ul>
-                        </li>
-                        <li class="rd-megamenu-item">
-                          <ul class="rd-megamenu-list">
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/contact-us.html">Contact Us</a></li>
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/login.html">Login</a></li>
-                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="/templates/register.html">Register</a></li>
-                          </ul>
-                        </li>
-                      </ul>
+            <nav class="rd-navbar rd-navbar-modern" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed"
+                 data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed"
+                 data-lg-layout="rd-navbar-fixed" data-lg-device-layout="rd-navbar-fixed"
+                 data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static"
+                 data-xxl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static"
+                 data-lg-stick-up-offset="10px" data-xl-stick-up-offset="10px" data-xxl-stick-up-offset="10px"
+                 data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
+                <div class="rd-navbar-main">
+                    <!-- RD Navbar Panel-->
+                    <div class="rd-navbar-panel">
+                        <!-- RD Navbar Toggle-->
+                        <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span>
+                        </button>
+                        <!-- RD Navbar Brand-->
+                        <div class="rd-navbar-brand"><a class="brand" href="/templates/index.html"><img
+                                class="brand-logo-dark" src="/images/logo-111x33.png" alt="" width="111" height="33"
+                                loading="lazy" srcset="/images/logo-222x66.png 2x"/></a></div>
                     </div>
-                  </li>
-                </ul>
-              </div>
-              <div class="rd-navbar-element"><a class="button button-sm button-default-outline button-winona" href="/templates/careers.html">Join Us</a>
-                <button class="rd-navbar-aside-open-toggle" data-multitoggle="#rd-navbar-aside" aria-label="Sidebar toggle"> <span></span><span></span><span></span></button>
-              </div>
-              <div class="rd-navbar-dummy"></div>
-            </div>
-            <div class="rd-navbar-aside" id="rd-navbar-aside"> 
-              <div class="rd-navbar-aside-header">
-                <p class="rd-navbar-aside-title">Navigation</p>
-                <button class="rd-navbar-aside-close-toggle linearicons-cross2" data-multitoggle="#rd-navbar-aside" data-scope=".rd-navbar" aria-label="Sidebar toggle"></button>
-              </div>
-              <div class="rd-navbar-aside-main">
-                <div class="rd-navbar-aside-group navbar" data-navbar="{&quot;stuck&quot;: false, &quot;anchor&quot;: {&quot;offsetRef&quot;: &quot;.rd-navbar-main&quot;}}">
-                  <div class="navbar-inner"><a class="rd-navbar-aside-link" href="/templates/about-us.html">About Us</a><a class="rd-navbar-aside-link" href="/templates/faq.html">FAQ</a><a class="rd-navbar-aside-link" href="/templates/testimonials.html">Testimonials</a><a class="rd-navbar-aside-link" href="/templates/our-team.html">Our Team</a>
-                  </div>
+                    <div class="rd-navbar-nav-wrap">
+                        <!-- RD Navbar Nav-->
+                        <ul class="rd-navbar-nav">
+                            <li class="rd-nav-item"><a class="rd-nav-link" href="#">Get Our App</a>
+                            </li>
+                            <li class="rd-nav-item active"><a class="rd-nav-link" href="#">Pages</a>
+                                <!-- RD Navbar Megamenu-->
+                                <div class="rd-menu rd-navbar-megamenu">
+                                    <ul class="rd-navbar-megamenu-inner">
+                                        <li class="rd-megamenu-item">
+                                            <ul class="rd-megamenu-list">
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/typography.html">Typography</a>
+                                                </li>
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/buttons.html">Buttons</a>
+                                                </li>
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/forms.html">Forms</a>
+                                                </li>
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/tabs-and-accordions.html">Tabs
+                                                    and Accordions</a></li>
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/progress-bars.html">Progress
+                                                    bars</a></li>
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/tables.html">Tables</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="rd-megamenu-item">
+                                            <ul class="rd-megamenu-list">
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/gallery.html">Gallery</a>
+                                                </li>
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/services.html">Services</a>
+                                                </li>
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/services-2.html">Services
+                                                    2</a></li>
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/pricing.html">Pricing</a>
+                                                </li>
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/careers.html">Careers</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="rd-megamenu-item">
+                                            <ul class="rd-megamenu-list">
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/grid-system.html">Grid
+                                                    system</a></li>
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/privacy-policy.html">Privacy
+                                                    policy</a></li>
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/404-page.html">404
+                                                    Page</a></li>
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/coming-soon.html">Coming
+                                                    Soon</a></li>
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/search-results.html">Search
+                                                    results</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="rd-megamenu-item">
+                                            <ul class="rd-megamenu-list">
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/contact-us.html">Contact
+                                                    Us</a></li>
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/login.html">Login</a>
+                                                </li>
+                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                     href="/templates/register.html">Register</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="rd-navbar-element"><a class="button button-sm button-default-outline button-winona"
+                                                      href="/templates/careers.html">Join Us</a>
+                        <button class="rd-navbar-aside-open-toggle" data-multitoggle="#rd-navbar-aside"
+                                aria-label="Sidebar toggle"><span></span><span></span><span></span></button>
+                    </div>
+                    <div class="rd-navbar-dummy"></div>
                 </div>
-              </div>
-            </div>
-          </nav>
+                <div class="rd-navbar-aside" id="rd-navbar-aside">
+                    <div class="rd-navbar-aside-header">
+                        <p class="rd-navbar-aside-title">Navigation</p>
+                        <button class="rd-navbar-aside-close-toggle linearicons-cross2"
+                                data-multitoggle="#rd-navbar-aside" data-scope=".rd-navbar"
+                                aria-label="Sidebar toggle"></button>
+                    </div>
+                    <div class="rd-navbar-aside-main">
+                        <div class="rd-navbar-aside-group navbar"
+                             data-navbar="{&quot;stuck&quot;: false, &quot;anchor&quot;: {&quot;offsetRef&quot;: &quot;.rd-navbar-main&quot;}}">
+                            <div class="navbar-inner"><a class="rd-navbar-aside-link" href="/templates/about-us.html">About
+                                Us</a><a class="rd-navbar-aside-link" href="/templates/faq.html">FAQ</a><a
+                                    class="rd-navbar-aside-link" href="/templates/testimonials.html">Testimonials</a><a
+                                    class="rd-navbar-aside-link" href="/templates/our-team.html">Our Team</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
         </div>
-      </header>
-      <section class="breadcrumbs-custom">
+    </header>
+    <section class="breadcrumbs-custom">
         <div class="breadcrumbs-custom-main context-dark">
-          <div class="container">
-            <div class="row justify-content-center">
-              <div class="col-xl-9">
-                <h2 class="breadcrumbs-custom-title">Search Results</h2>
-              </div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-9">
+                        <h2 class="breadcrumbs-custom-title">Find Your Travel</h2>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
         <div class="breadcrumbs-custom-aside">
-          <div class="container">
-            <ul class="breadcrumbs-custom-path">
-              <li><a href="/templates/index.html">Home</a></li>
-              <li><a href="#">Pages</a></li>
-              <li class="active">Search Results</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-      <!-- Search results-->
-      <section class="section section-md">
-        <div class="container">
-          <!-- RD Search-->
-          <form class="rd-form rd-search"  action="#" th:action="@{/search-travel}" method="get" th:object="${filterOptions}">
-            <div class="flex-container">
-              <div class="form-wrap" id="first-input-field"></div>
-              <div class="form-wrap">
-                <label class="form-label" for="rd-search-form-input-username">Username</label>
-                <input type="text" th:field="*{author}" class="form-input" id="rd-search-form-input-username" name="username" autocomplete="off">
-              </div>
-              <div class="form-wrap">
-                <label class="form-label" for="rd-search-form-input-phone-number">Phone number</label>
-                <input th:field="*{startPoint}" class="form-input" id="rd-search-form-input-phone-number" type="text" name="phoneNumber" autocomplete="off">
-              </div>
-              <div class="form-wrap">
-                <label class="form-label" for="rd-search-form-input-email">Email</label>
-                <input th:field="*{endPoint}" class="form-input" id="rd-search-form-input-email" type="text" name="email" autocomplete="off">
-              </div>
-              <div class="form-wrap mx-sm-3 mb-2">
-                <label>
-                  <select class="form-control" th:field="*{sortBy}">
-                    <option value="">Sort By</option>
-                    <option value="username">Username</option>
-                    <option value="email">Email</option>
-                    <option value="name">Name</option>
-                    <option value="phone number">Phone number</option>
-                  </select>
-                </label>
-              </div>
-
-              <!-- Sort Order Select -->
-              <div class="form-wrap mx-sm-3 mb-2">
-                <label>
-                  <select class="form-control" th:field="*{sortOrder}">
-                    <option value="">Sort Order</option>
-                    <option value="asc">Ascending</option>
-                    <option value="desc">Descending</option>
-                  </select>
-                </label>
-              </div>
+            <div class="container">
+                <ul class="breadcrumbs-custom-path">
+                    <li><a href="/templates/index.html">Home</a></li>
+                    <li><a href="#">Pages</a></li>
+                    <li class="active">Find Your Travel</li>
+                </ul>
             </div>
-          </form>
-              <!-- Repeat for other fields -->
-              <div class="form-wrap form-button">
-                <button class="button button-secondary button-shadow" type="submit">Search</button>
-              <div class="rd-search-results"></div>
         </div>
-            </div>
-      </section>
-      <section class="section section-md">
-        <div class="container">
-          <div class="table-outer table-rounded table-responsive-lg">
-            <table class="table-custom table-custom-primary">
-              <thead>
-              <tr>
-                <th>Column 1</th>
-                <th>Column 2</th>
-                <th>Column 3</th>
-                <th>Column 4</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td>Item #1</td>
-                <td>Description</td>
-                <td>Subtotal</td>
-                <td>$3.00</td>
-              </tr>
-      <tr>
-        <td>Item #2</td>
-        <td>Description</td>
-        <td>Discount</td>
-        <td>$3.00</td>
-      </tr>
-      <tr>
-        <td>Item #3</td>
-        <td>Description</td>
-        <td>Shipping</td>
-        <td>$3.00</td>
-      </tr>
-      <tr>
-        <td>Item #4</td>
-        <td>Description</td>
-        <td>Tax</td>
-        <td>$4.00</td>
-      </tr>
-      </tbody>
-      <tfoot>
-      <tr>
-        <td>All Items</td>
-        <td>Description</td>
-        <td>Your Total</td>
-        <td>$13.00</td>
-      </tr>
-      </tfoot>
-      </table>
-    </div>
-    </div>
     </section>
-      <!-- Page Footer-->
-      <footer class="section footer-classic">
-        <div class="footer-classic-main">
-          <div class="container">
-            <div class="row row-50 justify-content-lg-between">
-              <div class="col-sm-7 col-lg-3 col-xl-2"><a class="brand" href="/templates/index.html"><img class="brand-logo-dark" src="/images/logo-111x33.png" alt="" width="111" height="33" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a>
-                <p><span style="max-width: 250px;">We provide the best taxi services for you all over the USA.</span></p><a class="button button-sm button-default-outline button-winona" href="/templates/login.html">Order Now</a>
-              </div>
-              <div class="col-sm-5 col-lg-3 col-xl-2">
-                <h5 class="footer-classic-title">About</h5>
-                <ul class="list footer-classic-list">
-                  <li><a href="/templates/about-us.html">About Us</a></li>
-                  <li><a href="/templates/careers.html">Careers</a></li>
-                  <li><a href="#">Press and media</a></li>
-                </ul>
-              </div>
-              <div class="col-sm-7 col-lg-5 col-xl-3">
-                <h5 class="footer-classic-title">Quick Links</h5>
-                <ul class="list footer-classic-list footer-classic-list_2-cols">
-                  <li><a href="/templates/login.html">Sign Up</a></li>
-                  <li><a href="/templates/services.html">Services</a></li>
-                  <li><a href="/templates/privacy-policy.html">Privacy policy</a></li>
-                  <li><a href="#">Blog</a></li>
-                  <li><a href="/templates/pricing.html">Pricing</a></li>
-                  <li><a href="/templates/faq.html">Online Help</a></li>
-                  <li><a href="/templates/faq.html">FAQ</a></li>
-                </ul>
-              </div>
-              <div class="col-sm-5 col-lg-9 col-xl-2">
-                <h5 class="footer-classic-title">Contacts</h5>
-                <div class="row row-20 row-sm-35">
-                  <div class="col-6 col-sm-12 col-lg-8 col-xl-12">
-                    <div class="row row-10 text-black">
-                      <div class="col-lg-6 col-xl-12"><a href="mailto:#">info@demolink.org</a></div>
-                      <div class="col-lg-6 col-xl-12"><a href="tel:#">+1-800-123-1234</a></div>
+    <!-- Search results-->
+    <section class="section section-md">
+        <div class="container">
+            <!-- RD Search-->
+            <form class="rd-form rd-search" action="#" th:action="@{/travels/search-travels}" method="get"
+                  th:object="${filterOptions}">
+                <div class="flex-container">
+                    <div class="form-wrap" id="first-input-field"></div>
+                    <div class="form-wrap">
+                        <label class="form-label" for="rd-search-form-input-username">Username</label>
+                        <input type="text" th:field="*{author}" class="form-input" id="rd-search-form-input-username"
+                               name="username" autocomplete="off">
                     </div>
-                  </div>
-                  <div class="col-6 col-sm-12 col-lg-4 col-xl-12 text-end text-sm-start">
-                    <div class="group group-xs"><a class="link link-social-1 mdi mdi-twitter" href="#"></a><a class="link link-social-1 mdi mdi-facebook" href="#"></a><a class="link link-social-1 mdi mdi-instagram" href="#"></a></div>
-                  </div>
+                    <div class="form-wrap">
+                        <label class="form-label" for="rd-search-form-input-phone-number">Start point</label>
+                        <input th:field="*{startPoint}" class="form-input" id="rd-search-form-input-phone-number"
+                               type="text" name="start-point" autocomplete="off">
+                    </div>
+                    <div class="form-wrap">
+                        <label class="form-label" for="rd-search-form-input-email">End point</label>
+                        <input th:field="*{endPoint}" class="form-input" id="rd-search-form-input-email" type="text"
+                               name="email" autocomplete="off">
+                    </div>
+                    <div class="form-wrap">
+                        <label class="form-label" for="rd-search-form-input-free-spots">Free seats</label>
+                        <input th:field="*{freeSpots}" class="form-input" id="rd-search-form-input-free-spots"
+                               type="text" name="email" autocomplete="off">
+                    </div>
+                    <div class="form-wrap mx-sm-3 mb-2">
+                        <label>
+                            <select class="form-control" th:field="*{sortBy}">
+                                <option value="">Sort By</option>
+                                <option value="freeSpots">Free spots</option>
+                                <option value="departureTime">Departure time</option>
+                                <option value="distanceKm">Distance</option>
+                                <option value="durationMinutes">Duration</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <!-- Sort Order Select -->
+                    <div class="form-wrap mx-sm-3 mb-2">
+                        <label>
+                            <select class="form-control" th:field="*{sortOrder}">
+                                <option value="">Sort Order</option>
+                                <option value="asc">Ascending</option>
+                                <option value="desc">Descending</option>
+                            </select>
+                        </label>
+                    </div>
                 </div>
-              </div>
+                <div class="form-wrap form-button">
+                    <button class="button button-secondary button-shadow" type="submit">Search</button>
+                    <div class="rd-search-results"></div>
+                </div>
+            </form>
+
+        </div>
+        <div th:if="${travels.isEmpty()}">
+            <h2>No Travels Found</h2>
+        </div>
+    </section>
+    <section th:unless="${travels.isEmpty()}" class="section section-md">
+        <div class="container">
+            <div class="table-outer table-rounded table-responsive-lg">
+                <table class="table-custom table-custom-primary">
+                    <thead>
+                    <tr>
+                        <th>Start Point</th>
+                        <th>End Point</th>
+                        <th>Free Seats</th>
+                        <th>Apply</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="travel : ${travels} ">
+                        <td th:href="@{/travels/{id}(id=${travel.id})}" th:text="${travel.startPoint}"></td>
+                        <td th:text="${travel.endPoint}"></td>
+                        <td th:text="${travel.freeSpots}"></td>
+                        <td>
+                            <button class="button button-sm button-primary button-winona" th:text="Apply"></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-          </div>
+        </div>
+    </section>
+    <!-- Page Footer-->
+    <footer class="section footer-classic">
+        <div class="footer-classic-main">
+            <div class="container">
+                <div class="row row-50 justify-content-lg-between">
+                    <div class="col-sm-7 col-lg-3 col-xl-2"><a class="brand" href="/templates/index.html"><img
+                            class="brand-logo-dark" src="/images/logo-111x33.png" alt="" width="111" height="33"
+                            loading="lazy" srcset="/images/logo-222x66.png 2x"/></a>
+                        <p><span
+                                style="max-width: 250px;">We provide the best taxi services for you all over the USA.</span>
+                        </p><a class="button button-sm button-default-outline button-winona"
+                               href="/templates/login.html">Order Now</a>
+                    </div>
+                    <div class="col-sm-5 col-lg-3 col-xl-2">
+                        <h5 class="footer-classic-title">About</h5>
+                        <ul class="list footer-classic-list">
+                            <li><a href="/templates/about-us.html">About Us</a></li>
+                            <li><a href="/templates/careers.html">Careers</a></li>
+                            <li><a href="#">Press and media</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-7 col-lg-5 col-xl-3">
+                        <h5 class="footer-classic-title">Quick Links</h5>
+                        <ul class="list footer-classic-list footer-classic-list_2-cols">
+                            <li><a href="/templates/login.html">Sign Up</a></li>
+                            <li><a href="/templates/services.html">Services</a></li>
+                            <li><a href="/templates/privacy-policy.html">Privacy policy</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="/templates/pricing.html">Pricing</a></li>
+                            <li><a href="/templates/faq.html">Online Help</a></li>
+                            <li><a href="/templates/faq.html">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-5 col-lg-9 col-xl-2">
+                        <h5 class="footer-classic-title">Contacts</h5>
+                        <div class="row row-20 row-sm-35">
+                            <div class="col-6 col-sm-12 col-lg-8 col-xl-12">
+                                <div class="row row-10 text-black">
+                                    <div class="col-lg-6 col-xl-12"><a href="mailto:#">info@demolink.org</a></div>
+                                    <div class="col-lg-6 col-xl-12"><a href="tel:#">+1-800-123-1234</a></div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-12 col-lg-4 col-xl-12 text-end text-sm-start">
+                                <div class="group group-xs"><a class="link link-social-1 mdi mdi-twitter"
+                                                               href="#"></a><a
+                                        class="link link-social-1 mdi mdi-facebook" href="#"></a><a
+                                        class="link link-social-1 mdi mdi-instagram" href="#"></a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="footer-classic-aside">
-          <div class="container">
-            <p class="rights"><span>&copy;&nbsp; </span><span class="copyright-year"></span><span>. All Rights Reserved</span><span>.</span><span> Design&nbsp;by&nbsp;<a href="https://zemez.io/">Zemez</a></span></p>
-          </div>
+            <div class="container">
+                <p class="rights"><span>&copy;&nbsp; </span><span class="copyright-year"></span><span>. All Rights Reserved</span><span>.</span><span> Design&nbsp;by&nbsp;<a
+                        href="https://zemez.io/">Zemez</a></span></p>
+            </div>
         </div>
-      </footer>
-    </div>
-    <div class="snackbars" id="form-output-global"></div>
-    <script src="/js/core.min.js"></script>
-    <script src="/js/script.js"></script>
-  </body>
+    </footer>
+</div>
+<div class="snackbars" id="form-output-global"></div>
+<script src="/js/core.min.js"></script>
+<script src="/js/script.js"></script>
+</body>
 </html>
