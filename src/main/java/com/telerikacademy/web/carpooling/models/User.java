@@ -47,6 +47,9 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private IsDeleted isDeletedRecord;
 
+    @OneToOne(mappedBy = "user")
+    private ForgottenPasswordUI forgottenPasswordUI;
+
     public User() {
     }
 
@@ -161,6 +164,14 @@ public class User {
 
     public boolean isAdmin() {
         return role.getName().equals("Admin");
+    }
+
+    public ForgottenPasswordUI getForgottenPasswordUI() {
+        return forgottenPasswordUI;
+    }
+
+    public void setForgottenPasswordUI(ForgottenPasswordUI forgottenPasswordUI) {
+        this.forgottenPasswordUI = forgottenPasswordUI;
     }
 
     @Override
