@@ -183,6 +183,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> get(FilterUserOptions filterUserOptions) {
+        return userRepository.get(filterUserOptions);
+    }
+
+    @Override
     public void blockUser(String username, User admin) {
         if (!admin.getRole().getName().equals(ADMIN)) {
             throw new UnauthorizedOperationException(REGULAR_USERS_UNAUTHORIZED_OPERATION);
