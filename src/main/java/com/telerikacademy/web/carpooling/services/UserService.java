@@ -8,6 +8,7 @@ public interface UserService {
     void create(User user);
     void delete(User user, User deletedBy);
     void delete(User user);
+    void deleteUI(User user);
     void update(User user, User updatedBy);
     void update(User user);
     List<User> get(FilterUserOptions filterUserOptions, User user);
@@ -21,6 +22,7 @@ public interface UserService {
     User get(int id);
     User get(String username);
     User getByUI(String UI);
+    boolean isUIExisting(String UI);
     List<User> getAllNotDeleted();
     void verifyUser(String username);
     void sendForgottenPasswordEmail(User user);

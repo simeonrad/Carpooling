@@ -49,6 +49,15 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public void deleteUI(ForgottenPasswordUI forgottenPasswordUI) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.remove(forgottenPasswordUI);
+            session.getTransaction().commit();
+        }
+    }
+
+    @Override
     public void unmarkAsDeleted(IsDeleted isDeleted) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
@@ -223,13 +232,14 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User getByUI(String UI) {
         try (Session session = sessionFactory.openSession()) {
-            Query<User> query = session.createQuery("from ForgottenPasswordUI where UI = :UI", User.class);
+            Query<User> query = session.createQuery("SELECT f.user from ForgottenPasswordUI f where f.UI = :UI", User.class);
             query.setParameter("UI", UI);
-            List<User> result = query.list();
-            if (result.isEmpty()) {
+            User result = query.uniqueResult();
+            if (result == null) {
                 throw new EntityNotFoundException("UI", "value", UI);
             }
-            return result.get(0);
+            return result;
+
         }
     }
 
@@ -272,6 +282,16 @@ public class UserRepositoryImpl implements UserRepository {
             Query<NonVerifiedUser> query = session.createQuery(queryString, NonVerifiedUser.class);
             query.setParameter("userId", userId);
             return query.uniqueResult();
+        }
+    }
+
+    @Override
+    public boolean isUIExisting(String UI) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<ForgottenPasswordUI> query = session.createQuery("from ForgottenPasswordUI where UI = :UI", ForgottenPasswordUI.class);
+            query.setParameter("UI", UI);
+            List<ForgottenPasswordUI> result = query.list();
+            return !result.isEmpty();
         }
     }
 
