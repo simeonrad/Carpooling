@@ -93,11 +93,9 @@ public class TravelMvcController {
     public String deleteTravel(@PathVariable int id,Model model, HttpSession session){
         try {
             User user = authenticationHelper.tryGetUser(session);
-            if (user.equals(travelService.getById(id).getDriver())) {
-                TravelApplication travelApplication = travelApplicationService.getById(id);
-                travelApplicationService.delete(user, travelApplication);
-                return "travel-applications-view";
-            }
+                Travel travel = travelService.getById(id);
+                travelService.delete(travel, user);
+                return "redirect:/travels/search-travels";
         } catch (AuthenticationFailureException e){
             return "redirect:/auth/login";
         }
@@ -105,7 +103,6 @@ public class TravelMvcController {
             model.addAttribute("error-message",e.getMessage());
             return "redirect:/404-page";
         }
-        return "redirect:/auth/login";
     }
     @PostMapping("/applications/decline/{id}")
     public String declineApplications(@PathVariable int id,Model model, HttpSession session){

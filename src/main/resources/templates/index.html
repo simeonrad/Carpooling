@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="wide wow-animation" lang="en"> 
+<html class="wide wow-animation" lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>Home</title>
     <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
@@ -34,15 +34,21 @@
                 <!-- RD Navbar Toggle-->
                 <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
                 <!-- RD Navbar Brand-->
-                <div class="rd-navbar-brand"> <a class="brand" href="index.html"><img class="brand-logo-dark" src="/images/logo-111x33.png" alt="" width="111" height="33" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a></div>
+                <div class="rd-navbar-brand"> <a class="brand" href="index.html"><img class="brand-logo-dark" src="/images/cut-logo-carpool.jpg" alt="" width="111" height="72" loading="lazy" srcset="/images/logo-111x33.png 2x"/></a></div>
               </div>
               <div class="rd-navbar-nav-wrap">
                 <!-- RD Navbar Nav-->
                 <ul class="rd-navbar-nav">
-                  <li class="rd-nav-item"><a class="rd-nav-link" href="#">Get Our App</a>
+                  <li class="rd-nav-item"><a class="rd-nav-link" href="#">Create a travel</a>
                   </li>
-                  <li class="rd-nav-item"><a class="rd-nav-link" href="#">Pages</a>
-                    <!-- RD Navbar Megamenu-->
+                  <li class="rd-nav-item"><a class="rd-nav-link" href="/travels/search-travels">Travels</a>
+                  </li>
+                  <li class="rd-nav-item"><a class="rd-nav-link" href="/profile">Profile</a>
+                  </li>
+                  <li class="rd-nav-item"><a class="rd-nav-link" href="/profile">Profile</a>
+                  </li>
+<!--                  <li class="rd-nav-item"><a class="rd-nav-link" href="#">Pages</a>-->
+                      <!-- RD Navbar Megamenu-->
                     <div class="rd-menu rd-navbar-megamenu">
                       <ul class="rd-navbar-megamenu-inner">
                         <li class="rd-megamenu-item">
@@ -85,7 +91,7 @@
                   </li>
                 </ul>
               </div>
-              <div class="rd-navbar-element bg-accent"><a class="button button-sm button-default-outline button-winona" href="careers.html">Join Us</a>
+              <div class="rd-navbar-element bg-accent"><a class="button button-sm button-default-outline button-winona" href="/auth/login">Log in</a>
                 <button class="rd-navbar-aside-open-toggle" data-multitoggle="#rd-navbar-aside" aria-label="Sidebar toggle"> <span></span><span></span><span></span></button>
               </div>
               <div class="rd-navbar-dummy"></div>
@@ -114,45 +120,45 @@
                 </div>
               </div>
               <div class="box-custom-2-inner">
-                <h2 class="wow fadeIn">Get a taxi now</h2>
+                <h2 class="wow fadeIn">Find your travel now</h2>
                 <div class="contacts-default">
                   <div class="unit align-items-center">
                     <div class="unit-left">
-                      <div class="contacts-default-icon mdi mdi-phone-incoming"></div>
                     </div>
-                    <div class="unit-body"><a class="contacts-default-link" href="#">1-800-123-1234</a></div>
                   </div>
                 </div>
-                <p class="big wow fadeIn" data-wow-delay=".2s">Trust the leading and the most<br>reliable US taxi operator.</p>
+                <p class="big wow fadeIn" data-wow-delay=".2s">Trips have never been<br>so fun and budget friendly.</p>
                 <!-- RD Mailform-->
-                <form class="rd-form rd-mailform form-style-1">
+                <form class="rd-form rd-mailform form-style-1" id="searchTravelsForm">
                   <div class="form-wrap">
-                    <!-- Select 2-->
-                    <select class="form-input select button-shadow" name="find-job-location" data-minimum-results-for-search="Infinity" data-constraints="@Required" data-placeholder="Car Type">
-                      <option label="placeholder"></option>
-                      <option>Type 1</option>
-                      <option>Type 2</option>
-                      <option>Type 3</option>
-                    </select>
+                    <input class="form-input" id="start-point" type="text" name="pickup-address" data-constraints="@Required">
+                    <label class="form-label" for="start-point">Start Point</label><span class="form-icon mdi mdi-map-marker"></span>
                   </div>
                   <div class="form-wrap">
-                    <input class="form-input" id="form-location" type="text" name="pickup-address" data-constraints="@Required">
-                    <label class="form-label" for="form-location">Pickup Address</label><span class="form-icon mdi mdi-map-marker"></span>
-                  </div>
-                  <div class="form-wrap">
-                    <input class="form-input" id="form-location-2" type="text" name="destination-address" data-constraints="@Required">
-                    <label class="form-label" for="form-location-2">Destination Address</label><span class="form-icon mdi mdi-map-marker"></span>
+                    <input class="form-input" id="end-point" type="text" name="destination-address" data-constraints="@Required">
+                    <label class="form-label" for="end-point">End Point</label><span class="form-icon mdi mdi-map-marker"></span>
                   </div>
                   <div class="form-wrap-2">
-                    <div class="form-wrap">
-                      <input class="form-input" id="form-phone" type="text" name="phone" data-constraints="@Required @PhoneNumber">
-                      <label class="form-label" for="form-phone">Your Phone Number</label><span class="form-icon mdi mdi-cellphone"></span>
-                    </div>
                     <div class="form-button">
                       <button class="button button-block button-secondary button-winona" type="submit">Order now</button>
                     </div>
                   </div>
                 </form>
+
+                <script>
+                  document.getElementById('searchTravelsForm').addEventListener('submit', function(event) {
+                    event.preventDefault(); // Prevent the default form submission
+
+                    var startPoint = document.getElementById('start-point').value;
+                    var endPoint = document.getElementById('end-point').value;
+
+                    // Construct the URL with query parameters
+                    var searchUrl = '/travels/search-travels?author=&startPoint=' + encodeURIComponent(startPoint) + '&endPoint=' + encodeURIComponent(endPoint) + '&freeSpots=&sortBy=&sortOrder=&filter=*.html';
+
+                    // Redirect the user to the constructed URL
+                    window.location.href = searchUrl;
+                  });
+                </script>
               </div>
             </div>
           </div>
@@ -163,7 +169,7 @@
       <!-- Messenger of The Next Generation-->
       <section class="section section-md bg-gray-100 text-center" id="features">
         <div class="container">
-          <h3 class="wow fadeIn" data-wow-delay=".1s">Our Services</h3>
+          <h3 class="wow fadeIn" data-wow-delay=".1s">The benefits</h3>
           <div class="row row-30 row-md-50 row-xl-60">
             <div class="col-sm-6 col-lg-4 wow fadeIn">
               <!-- Box Modern-->
@@ -173,9 +179,9 @@
                   <div class="box-modern-circle box-modern-circle-1"></div>
                   <div class="box-modern-circle box-modern-circle-2"></div>
                 </div>
-                <p class="box-modern-title">Private Driver</p>
+                <p class="box-modern-title">Fun Traveling</p>
                 <div class="box-modern-text">
-                  <p>Enjoy the best customer service from our professional drivers.</p>
+                  <p>Find new people and get to your destination with new friends</p>
                 </div>
               </article>
             </div>
@@ -187,9 +193,9 @@
                   <div class="box-modern-circle box-modern-circle-1"></div>
                   <div class="box-modern-circle box-modern-circle-2"></div>
                 </div>
-                <p class="box-modern-title">Airport transfer</p>
+                <p class="box-modern-title">Budget Friendly</p>
                 <div class="box-modern-text">
-                  <p>Comfortable transfer services from airport to any chosen address.</p>
+                  <p>Enjoy the comfort of a car ride and skip public transportation.</p>
                 </div>
               </article>
             </div>
@@ -201,76 +207,36 @@
                   <div class="box-modern-circle box-modern-circle-1"></div>
                   <div class="box-modern-circle box-modern-circle-2"></div>
                 </div>
-                <p class="box-modern-title">Baggage Transfer</p>
+                <p class="box-modern-title">Get the most of your drive</p>
                 <div class="box-modern-text">
-                  <p>If you need to collect your baggage, we are ready to help you.</p>
+                  <p>You are going there anyway why don't you lower your costs.</p>
                 </div>
               </article>
             </div>
           </div>
         </div>
       </section>
-      <section class="section section-lg bg-accent oh">
-        <div class="container">
-          <div class="row row-50 justify-content-center align-items-center align-items-lg-stretch flex-md-row-reverse">
-            <div class="col-sm-5 col-md-5 col-lg-6 wow fadeInLeftSmall position-relative">
-              <div class="phone-frame-2 text-end"><img class="phone-frame-2-outer" src="/images/frame-1-533x868.png" alt="" width="533" height="868" loading="lazy"/>
-              </div>
-            </div>
-            <div class="col-md-7 col-lg-6 wow fadeInRightSmall">
-              <h3>Download the app</h3>
-              <!-- Bootstrap tabs-->
-              <div class="tabs-custom tabs-horizontal tabs-line tabs-line_1 block-8" id="tabs-1">
-                <!-- Nav tabs-->
-                <ul class="nav nav-tabs">
-                  <li class="nav-item" role="presentation"><a class="nav-link active" href="#tabs-1-1" data-bs-toggle="tab"><span>Details</span></a></li>
-                  <li class="nav-item" role="presentation"><a class="nav-link" href="#tabs-1-2" data-bs-toggle="tab"><span>How it Works</span></a></li>
-                </ul>
-                <!-- Tab panes-->
-                <div class="tab-content">
-                  <div class="tab-pane fade show active" id="tabs-1-1">
-                    <p>Download our app and enjoy the best service from ETAXI. All you have to do to begin using it is to enter your name and mobile phone number. You’ll access:</p>
-                    <ul class="list-marked list-marked_secondary">
-                      <li>Special offers</li>
-                      <li>ETAXI loyalty program</li>
-                      <li>More pricing plans</li>
-                    </ul>
-                  </div>
-                  <div class="tab-pane fade" id="tabs-1-2">
-                    <p>ETAXI App allows you to book a taxi without having to call our dispatcher as well as set your route in advance or pick a driver, a preferred car, and more:</p>
-                    <ul class="list-marked list-marked_secondary">
-                      <li>Manage your taxi spendings;</li>
-                      <li>Pay for taxi without a credit card;</li>
-                      <li>Great discounts for regular clients.</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div class="group"><a href="#"><img src="/images/button-1-170x53.png" alt="" width="170" height="53" loading="lazy"/></a><a href="#"><img src="/images/button-2-170x53.png" alt="" width="170" height="53" loading="lazy"/></a></div>
-            </div>
-          </div>
-        </div>
-      </section>
+
       <!-- Stickers-->
       <section class="section section-1 text-center" id="stickers">
         <div class="container">
           <div class="row justify-content-center align-items-center bordered-1">
             <div class="col-sm-4">
               <div class="box-default">
-                <p class="box-default-title">Standard</p>
-                <p class="box-default-text">$2,7 /km</p>
+                <p class="box-default-title">Total Users</p>
+                <p class="box-default-text" th:text="${totalUsers}"></p>
               </div>
             </div>
             <div class="col-sm-4">
               <div class="box-default">
-                <p class="box-default-title">Business</p>
-                <p class="box-default-text">$5,7 /km</p>
+                <p class="box-default-title">Organised Travels</p>
+                <p class="box-default-text" th:text="${totalTravels}"></p>
               </div>
             </div>
             <div class="col-sm-4">
               <div class="box-default">
-                <p class="box-default-title">Premium</p>
-                <p class="box-default-text">$7,7 /km</p>
+                <p class="box-default-title">Applications For Travels</p>
+                <p class="box-default-text" th:text="${totalApplications}"></p>
               </div>
             </div>
           </div>
@@ -298,9 +264,6 @@
                     <div class="quote-modern-text">
                       <p>I found your service to be a 5-star experience. The driver was waiting at the arrivals hall for us. All the people we communicated with were pleasant and cheerful.</p>
                     </div>
-                    <div class="quote-modern-meta"><a class="quote-modern-link icon mdi mdi-facebook" href="#"></a>
-                      <time class="quote-modern-time" datetime="2023">Mar 24, 2023</time>
-                    </div>
                   </div>
                 </blockquote>
               </div>
@@ -311,16 +274,13 @@
                     <div class="quote-modern-info"><img class="quote-modern-avatar" src="/images/testimonials-2-74x74.jpg" alt="" width="74" height="74" loading="lazy"/>
                       <div class="quote-modern-info-main">
                         <cite class="quote-modern-cite">John Doe</cite>
-                        <p class="quote-modern-position">Regular Client</p>
+                        <p class="quote-modern-position">Regular Driver</p>
                       </div>
                     </div>
                   </div>
                   <div class="quote-modern-main">
                     <div class="quote-modern-text">
-                      <p>Everything went perfectly! Incredibly punctual, friendly drivers, and the best service!</p>
-                    </div>
-                    <div class="quote-modern-meta"><a class="quote-modern-link icon mdi mdi-facebook" href="#"></a>
-                      <time class="quote-modern-time" datetime="2023">Mar 24, 2023</time>
+                      <p>Everything went perfectly! I saved 70% of my costs and the travel was way more fun!</p>
                     </div>
                   </div>
                 </blockquote>
@@ -340,26 +300,13 @@
                     <div class="quote-modern-text">
                       <p>The service was excellent, thank you. My driver was waiting at Arrivals for me with a clear sign. He introduced himself, was very polite and friendly.</p>
                     </div>
-                    <div class="quote-modern-meta"><a class="quote-modern-link icon mdi mdi-facebook" href="#"></a>
-                      <time class="quote-modern-time" datetime="2023">Mar 24, 2023</time>
-                    </div>
                   </div>
                 </blockquote>
               </div>
             </div>
           </div>
         </div>
-        <div class="container">
-          <h3>Our Partners</h3>
-          <!-- Owl Carousel-->
-          <div class="owl-carousel owl-carousel-centered" data-items="2" data-sm-items="3" data-md-items="4" data-lg-items="5" data-stage-padding="0" data-loop="true" data-margin="30" data-mouse-drag="false" data-owl='{"dots":true}'>
-            <div class="wow clipInLeft"><a class="link-image-1" href="#"><img src="/images/investor-1-88x77.png" alt="" width="88" height="77" loading="lazy"/></a></div>
-            <div class="wow clipInLeft" data-wow-delay=".1s"><a class="link-image-1" href="#"><img src="/images/investor-2-73x78.png" alt="" width="73" height="78" loading="lazy"/></a></div>
-            <div class="wow clipInLeft" data-wow-delay=".2s"><a class="link-image-1" href="#"><img src="/images/investor-3-96x62.png" alt="" width="96" height="62" loading="lazy"/></a></div>
-            <div class="wow clipInLeft" data-wow-delay=".3s"><a class="link-image-1" href="#"><img src="/images/investor-4-78x80.png" alt="" width="78" height="80" loading="lazy"/></a></div>
-            <div class="wow clipInLeft" data-wow-delay=".4s"><a class="link-image-1" href="#"><img src="/images/investor-5-87x76.png" alt="" width="87" height="76" loading="lazy"/></a></div>
-          </div>
-        </div>
+
       </section>
       <!-- CTA-->
       <section class="section parallax-container section-lg bg-accent bg-overlay-1 text-center" data-parallax-img="images/bg-image-5.jpg">
@@ -367,8 +314,8 @@
           <div class="container">
             <div class="row row-50 justify-content-end">
               <div class="col-md-6 col-lg-5">
-                <h1 class="wow clipInLeft"><span class="fw-light">-50%</span> on first order</h1>
-                <p class="big wow clipInLeft" data-wow-delay=".1s">Our first-time customers get a great discount on their order.</p><a class="button button-secondary button-winona wow clipInLeft" href="#" data-wow-delay=".1s">Order a taxi now</a>
+                <h1 class="wow clipInLeft"><span class="fw-light">Up to -80%</span> on travel costs</h1>
+                <p class="big wow clipInLeft" data-wow-delay=".1s">Create a travel approve other users applications and save on your next trip</p><a class="button button-secondary button-winona wow clipInLeft" href="#" data-wow-delay=".1s">Create your travel</a>
               </div>
             </div>
           </div>
@@ -379,7 +326,7 @@
         <div class="footer-classic-main">
           <div class="container">
             <div class="row row-50 justify-content-lg-between">
-              <div class="col-sm-7 col-lg-3 col-xl-2"><a class="brand" href="index.html"><img class="brand-logo-dark" src="/images/logo-111x33.png" alt="" width="111" height="33" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a>
+              <div class="col-sm-7 col-lg-3 col-xl-2"><a class="brand" href="index.html"><img class="brand-logo-dark" src="/images/cut-logo-carpool.jpg" alt="" width="111" height="72" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a>
                 <p><span style="max-width: 250px;">We provide the best taxi services for you all over the USA.</span></p><a class="button button-sm button-default-outline button-winona" href="login.html">Order Now</a>
               </div>
               <div class="col-sm-5 col-lg-3 col-xl-2">
