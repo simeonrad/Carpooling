@@ -5,10 +5,8 @@ import com.telerikacademy.web.carpooling.helpers.TravelMapper;
 import com.telerikacademy.web.carpooling.exceptions.AuthenticationFailureException;
 import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
 import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
-import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
 import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.services.TravelApplicationService;
-import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
 import com.telerikacademy.web.carpooling.repositories.StatusRepository;
 import com.telerikacademy.web.carpooling.services.TravelService;
 import jakarta.servlet.http.HttpSession;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @Controller
@@ -27,11 +24,8 @@ public class TravelMvcController {
     private final TravelService travelService;
     private final AuthenticationHelper authenticationHelper;
     private final TravelMapper travelMapper;
-    private final StatusRepository statusRepository;
-    @Autowired
-    public TravelMvcController(TravelService travelService, AuthenticationHelper authenticationHelper, TravelMapper travelMapper, StatusRepository statusRepository) {
     private final TravelApplicationService travelApplicationService;
-    private final AuthenticationHelper authenticationHelper;
+
     @ModelAttribute("isAdmin")
     public boolean populateIsAdmin(HttpSession session) {
         boolean isAdmin = false;
@@ -48,16 +42,14 @@ public class TravelMvcController {
         return session.getAttribute("currentUser") != null;
     }
 
+
     @Autowired
-    public TravelMvcController(TravelService travelService, TravelApplicationService travelApplicationService, AuthenticationHelper authenticationHelper) {
+    public TravelMvcController(TravelService travelService, TravelApplicationService travelApplicationService, AuthenticationHelper authenticationHelper, TravelMapper travelMapper) {
         this.travelService = travelService;
         this.authenticationHelper = authenticationHelper;
+        this.travelApplicationService = travelApplicationService;
         this.travelMapper = travelMapper;
-        this.statusRepository = statusRepository;
     }
-    this.travelApplicationService = travelApplicationService;
-    this.authenticationHelper = authenticationHelper;
-}
 
 
     @GetMapping("/search-travels")
@@ -145,8 +137,6 @@ public class TravelMvcController {
             return "updateTravel";
         }
     }
-
-
 
 
     @GetMapping("/applications/{id}")
