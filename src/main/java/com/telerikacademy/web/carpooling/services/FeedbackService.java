@@ -1,6 +1,7 @@
 package com.telerikacademy.web.carpooling.services;
 
 import com.telerikacademy.web.carpooling.models.*;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -13,9 +14,13 @@ public interface FeedbackService {
 
     Feedback getByTravelId(int travelId, int authorId, int recipientId);
 
-    List<Feedback>getForUser(FilterFeedbackOptions filterFeedbackOptions, User user);
+    List<Feedback> getForUser(FilterFeedbackOptions filterFeedbackOptions, User user);
+
+    Page<Feedback> getMyReceivedFeedbacks(User user, int page, int size);
+
 
     boolean isAuthorAParticipantInTravel(int authorId, int travelId);
+
     boolean isRecipientAParticipantInTravel(int recipientId, int travelId);
 
     boolean userHasAlreadyGivenFeedbackForTheRecipient(int authorId, int recipientId, int travelId);

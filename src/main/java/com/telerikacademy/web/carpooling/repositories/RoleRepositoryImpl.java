@@ -40,4 +40,12 @@ public class RoleRepositoryImpl implements RoleRepository {
             return role;
         }
     }
+
+    @Override
+    public List<Role> getAll() {
+        try (Session session = sessionFactory.openSession()) {
+            Query<Role> query = session.createQuery("from Role ", Role.class);
+            return query.list();
+        }
+    }
 }

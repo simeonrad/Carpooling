@@ -3,6 +3,10 @@ package com.telerikacademy.web.carpooling.models;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -47,6 +51,13 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private IsDeleted isDeletedRecord;
 
+    @OneToOne(mappedBy = "user")
+    private ForgottenPasswordUI forgottenPasswordUI;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "recipient_id")
+    private List<Feedback> feedbacks;
+
     public User() {
     }
 
@@ -62,7 +73,18 @@ public class User {
     public int getId() {
         return id;
     }
-
+    public double getFeedback(){
+        int sum = 0;
+        for (Feedback feedback : feedbacks) {
+            sum += feedback.getRating();
+        }
+        if (sum == 0) {
+            return 0;
+        }
+        BigDecimal average = BigDecimal.valueOf(sum)
+                .divide(BigDecimal.valueOf(feedbacks.size()), 2, RoundingMode.HALF_UP);
+        return average.doubleValue();
+    }
     public void setId(int id) {
         this.id = id;
     }
@@ -161,6 +183,14 @@ public class User {
 
     public boolean isAdmin() {
         return role.getName().equals("Admin");
+    }
+
+    public ForgottenPasswordUI getForgottenPasswordUI() {
+        return forgottenPasswordUI;
+    }
+
+    public void setForgottenPasswordUI(ForgottenPasswordUI forgottenPasswordUI) {
+        this.forgottenPasswordUI = forgottenPasswordUI;
     }
 
     @Override

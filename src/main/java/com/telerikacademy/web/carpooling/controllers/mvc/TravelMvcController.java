@@ -2,7 +2,12 @@ package com.telerikacademy.web.carpooling.controllers.mvc;
 
 import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
 import com.telerikacademy.web.carpooling.helpers.TravelMapper;
+import com.telerikacademy.web.carpooling.exceptions.AuthenticationFailureException;
+import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
+import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
+import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
 import com.telerikacademy.web.carpooling.models.*;
+import com.telerikacademy.web.carpooling.services.TravelApplicationService;
 import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
 import com.telerikacademy.web.carpooling.repositories.StatusRepository;
 import com.telerikacademy.web.carpooling.services.TravelService;
@@ -10,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,11 +30,35 @@ public class TravelMvcController {
     private final StatusRepository statusRepository;
     @Autowired
     public TravelMvcController(TravelService travelService, AuthenticationHelper authenticationHelper, TravelMapper travelMapper, StatusRepository statusRepository) {
+    private final TravelApplicationService travelApplicationService;
+    private final AuthenticationHelper authenticationHelper;
+    @ModelAttribute("isAdmin")
+    public boolean populateIsAdmin(HttpSession session) {
+        boolean isAdmin = false;
+        if (populateIsAuthenticated(session)) {
+            User currentUser = (User) session.getAttribute("currentUser");
+            if (currentUser.getRole().getName().equals("Admin")) {
+                isAdmin = true;
+            }
+        }
+        return isAdmin;
+    }
+    @ModelAttribute("isAuthenticated")
+    public boolean populateIsAuthenticated(HttpSession session) {
+        return session.getAttribute("currentUser") != null;
+    }
+
+    @Autowired
+    public TravelMvcController(TravelService travelService, TravelApplicationService travelApplicationService, AuthenticationHelper authenticationHelper) {
         this.travelService = travelService;
         this.authenticationHelper = authenticationHelper;
         this.travelMapper = travelMapper;
         this.statusRepository = statusRepository;
     }
+    this.travelApplicationService = travelApplicationService;
+    this.authenticationHelper = authenticationHelper;
+}
+
 
     @GetMapping("/search-travels")
     public String filterUsers(@ModelAttribute("filterOptions") FilterTravelDto filterTravelDto, Model model){
@@ -118,5 +148,71 @@ public class TravelMvcController {
 
 
 
+
+    @GetMapping("/applications/{id}")
+    public String travelApplications(@PathVariable int id, Model model, HttpSession session){
+    try {
+        User user = authenticationHelper.tryGetUser(session);
+        if (user.equals(travelService.getById(id).getDriver())) {
+            List<TravelApplication> applications = travelApplicationService.getByTravelId(id);
+            model.addAttribute("applications", applications);
+            return "travel-applications-view";
+        }
+    } catch (AuthenticationFailureException e){
+        return "redirect:/auth/login";
+    }
+        return "redirect:/auth/login";
+    }
+    @PostMapping("/applications/approve/{id}")
+    public String approveApplications(@PathVariable int id,Model model, HttpSession session){
+    try {
+        User user = authenticationHelper.tryGetUser(session);
+        if (user.equals(travelService.getById(id).getDriver())) {
+        TravelApplication travelApplication = travelApplicationService.getById(id);
+        travelApplicationService.approve(user, travelApplication);
+            return "travel-applications-view";
+        }
+    } catch (AuthenticationFailureException e){
+        return "redirect:/auth/login";
+    }
+    catch (ForbiddenOperationException | UnauthorizedOperationException e){
+        model.addAttribute("error-message",e.getMessage());
+        return "redirect:/404-page";
+    }
+        return "redirect:/auth/login";
+    }
+    @PostMapping("/delete/{id}")
+    public String deleteTravel(@PathVariable int id,Model model, HttpSession session){
+        try {
+            User user = authenticationHelper.tryGetUser(session);
+                Travel travel = travelService.getById(id);
+                travelService.delete(travel, user);
+                return "redirect:/travels/search-travels";
+        } catch (AuthenticationFailureException e){
+            return "redirect:/auth/login";
+        }
+        catch (ForbiddenOperationException | UnauthorizedOperationException e){
+            model.addAttribute("error-message",e.getMessage());
+            return "redirect:/404-page";
+        }
+    }
+    @PostMapping("/applications/decline/{id}")
+    public String declineApplications(@PathVariable int id,Model model, HttpSession session){
+        try {
+            User user = authenticationHelper.tryGetUser(session);
+            if (user.equals(travelService.getById(id).getDriver())) {
+                TravelApplication travelApplication = travelApplicationService.getById(id);
+                travelApplicationService.decline(user, travelApplication);
+                return "travel-applications-view";
+            }
+        } catch (AuthenticationFailureException e){
+            return "redirect:/auth/login";
+        }
+        catch (ForbiddenOperationException | UnauthorizedOperationException e){
+            model.addAttribute("error-message",e.getMessage());
+            return "redirect:/404-page";
+        }
+        return "redirect:/auth/login";
+    }
 
 }

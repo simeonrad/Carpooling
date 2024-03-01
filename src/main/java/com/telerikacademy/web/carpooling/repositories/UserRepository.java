@@ -1,9 +1,7 @@
 package com.telerikacademy.web.carpooling.repositories;
 
-import com.telerikacademy.web.carpooling.models.FilterUserOptions;
-import com.telerikacademy.web.carpooling.models.IsDeleted;
-import com.telerikacademy.web.carpooling.models.NonVerifiedUser;
-import com.telerikacademy.web.carpooling.models.User;
+import com.telerikacademy.web.carpooling.models.*;
+
 import java.util.List;
 
 public interface UserRepository {
@@ -12,6 +10,7 @@ public interface UserRepository {
     void create(NonVerifiedUser nonVerifiedUser);
 
     void delete(IsDeleted isDeleted);
+    void deleteUI(ForgottenPasswordUI forgottenPasswordUI);
 
     void unmarkAsDeleted(IsDeleted isDeleted);
 
@@ -34,11 +33,19 @@ public interface UserRepository {
 
     User getByEmail(String email);
 
+    User getByUI(String UI);
+
     boolean telephoneExists(String phoneNumber, int currentUserId);
 
     boolean updateEmail(String email, int currentUserId);
 
+    boolean passwordEmailAlreadySent(User user);
+
     NonVerifiedUser getNonVerifiedById(int userId);
+
+    void setNewUI(ForgottenPasswordUI forgottenPasswordUI);
+
+    boolean isUIExisting(String UI);
 
     void verify(NonVerifiedUser nonVerifiedUser);
 }

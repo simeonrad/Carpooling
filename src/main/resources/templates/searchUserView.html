@@ -47,14 +47,19 @@
                 <!-- RD Navbar Toggle-->
                 <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
                 <!-- RD Navbar Brand-->
-                <div class="rd-navbar-brand"> <a class="brand" href="/templates/index.html"><img class="brand-logo-dark" src="/images/logo-111x33.png" alt="" width="111" height="33" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a></div>
+                <div class="rd-navbar-brand"> <a class="brand" href="index.html"><img class="brand-logo-dark" src="/images/cut-logo-carpool.jpg" alt="" width="111" height="72" loading="lazy" srcset="/images/logo-111x33.png 2x"/></a></div>
               </div>
               <div class="rd-navbar-nav-wrap">
                 <!-- RD Navbar Nav-->
                 <ul class="rd-navbar-nav">
-                  <li class="rd-nav-item"><a class="rd-nav-link" href="#">Get Our App</a>
+                  <li class="rd-nav-item"><a class="rd-nav-link" href="#">Create a travel</a>
                   </li>
-                  <li class="rd-nav-item active"><a class="rd-nav-link" href="#">Pages</a>
+                  <li class="rd-nav-item"><a class="rd-nav-link" href="/travels/search-travels">Travels</a>
+                  </li>
+                  <li class="rd-nav-item"><a class="rd-nav-link" href="/profile">Profile</a>
+                  </li>
+                  <li class="rd-nav-item"><a class="rd-nav-link" href="/profile/my-profile">Dashbord</a>
+                  </li>
                     <!-- RD Navbar Megamenu-->
                     <div class="rd-menu rd-navbar-megamenu">
                       <ul class="rd-navbar-megamenu-inner">
@@ -98,7 +103,7 @@
                   </li>
                 </ul>
               </div>
-              <div class="rd-navbar-element"><a class="button button-sm button-default-outline button-winona" href="/templates/careers.html">Join Us</a>
+              <div class="rd-navbar-element"><a class="button button-sm button-default-outline button-winona" href="/auth/login">Log in</a>
                 <button class="rd-navbar-aside-open-toggle" data-multitoggle="#rd-navbar-aside" aria-label="Sidebar toggle"> <span></span><span></span><span></span></button>
               </div>
               <div class="rd-navbar-dummy"></div>
@@ -142,7 +147,7 @@
       <section class="section section-md">
         <div class="container">
           <!-- RD Search-->
-          <form class="rd-form rd-search" action="searchUserView.html" method="GET" th:object="${filterOptions}">
+          <form class="rd-form rd-search" action="#" th:action="@{/users}" method="get" th:object="${filterOptions}">
             <div class="flex-container">
               <div class="form-wrap" id="first-input-field"></div>
               <div class="form-wrap">
@@ -150,7 +155,7 @@
                 <input th:field="*{username}" class="form-input" id="rd-search-form-input-username" type="text" name="username" autocomplete="off">
               </div>
               <div class="form-wrap">
-                <label class="form-label" for="rd-search-form-input-phone-number">Phone number</label>
+                <label class="form-label" for="rd-search-form-input-phone-number">Phone</label>
                 <input th:field="*{phoneNumber}" class="form-input" id="rd-search-form-input-phone-number" type="text" name="phoneNumber" autocomplete="off">
               </div>
               <div class="form-wrap">
@@ -185,93 +190,53 @@
               </div>
             </div>
           </form>
-          <div th:if="${users.isEmpty()}">
-            <h2>No Users Found</h2>
-          </div>
-          <div  th:unless="${users.isEmpty()}">
-            <h2>All Users</h2>
-            <div class="table">
-              <div class="header">
-                <div class="cell">Username</div>
-                <div class="cell">Email</div>
-                <div class="cell">Name</div>
-              </div>
-              <div class="row" th:each="user : ${users}">
-                <div class="cell">
-                  <a th:href="@{/posts/posted-by/{username}(username=${user.getUsername()})}" th:text="${user.getUsername()}"></a>
                 </div>
-                <div class="cell" th:text="${user.email}"></div>
-                <div class="cell" th:text="${user.firstName}"></div>
-                <div th:if="${isAdmin}" class="cell">
-                  <form th:action="@{/admin/toggle-block/{id}(id=${user.id})}" class="user-action-form" method="post">
-                    <button class="button" type="submit" th:text="${user.getUserBlocks().getBlockId() == null ? 'Unblock' : 'Block'}"></button>
-                  </form>
-                  <form th:action="@{/admin/toggle-admin/{id}(id=${user.id})}" class="user-action-form" method="post">
-                    <button class="button" type="submit" th:text="${user.getRole().getId() == 2 ? 'Remove Admin' : 'Make Admin'}"></button>
-                  </form>
-                </div>
-              </div>
+            <div class="travel-is-empty" th:if="${users.isEmpty()}">
+              <h2>No Users Found</h2>
             </div>
-            </div>
-              <div class="rd-search-results"></div>
-        </div>
       </section>
-      <section class="section section-md">
+      <section th:unless="${users.isEmpty()}" class="section section-md">
         <div class="container">
           <div class="table-outer table-rounded table-responsive-lg">
             <table class="table-custom table-custom-primary">
               <thead>
               <tr>
-                <th>Column 1</th>
-                <th>Column 2</th>
-                <th>Column 3</th>
-                <th>Column 4</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Change Role</th>
+                <th>Block/Unblock</th>
               </tr>
               </thead>
               <tbody>
-              <tr>
-                <td>Item #1</td>
-                <td>Description</td>
-                <td>Subtotal</td>
-                <td>$3.00</td>
+              <tr th:each="user : ${users} ">
+                <td th:href="@{/users/{id}(id=${user.id})}" th:text="${user.username}"></td>
+                <td th:text="${user.role.name}"></td>
+                <td>
+                <form class="form-wrap mx-sm-3 mb-2" action="#" th:action="@{/users/update-role/{id}(id=${user.id})}"  method="post">
+                  <label>
+                    <select class="form-control" name="role" onchange="this.form.submit()">
+                      <option value="">Select Role</option>
+                      <option th:each="role : ${allRoles}" th:value="${role.id}" th:text="${role.name}" th:selected="${user.role.id == role.id}"></option>
+                    </select>
+                  </label>
+                </form>
+              </td>
+                <td><form action="#" th:action="@{/users/toggle-block/{id}(id=${user.id})}" class="user-action-form" method="post">
+                  <button type="submit" class="button  button-sm button-primary button-winona" th:text="${user.isBlocked() ? 'Unblock' : 'Block'}"></button>
+                </form>
+                </td>
               </tr>
-      <tr>
-        <td>Item #2</td>
-        <td>Description</td>
-        <td>Discount</td>
-        <td>$3.00</td>
-      </tr>
-      <tr>
-        <td>Item #3</td>
-        <td>Description</td>
-        <td>Shipping</td>
-        <td>$3.00</td>
-      </tr>
-      <tr>
-        <td>Item #4</td>
-        <td>Description</td>
-        <td>Tax</td>
-        <td>$4.00</td>
-      </tr>
-      </tbody>
-      <tfoot>
-      <tr>
-        <td>All Items</td>
-        <td>Description</td>
-        <td>Your Total</td>
-        <td>$13.00</td>
-      </tr>
-      </tfoot>
-      </table>
-    </div>
-    </div>
-    </section>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
       <!-- Page Footer-->
       <footer class="section footer-classic">
         <div class="footer-classic-main">
           <div class="container">
             <div class="row row-50 justify-content-lg-between">
-              <div class="col-sm-7 col-lg-3 col-xl-2"><a class="brand" href="/templates/index.html"><img class="brand-logo-dark" src="/images/logo-111x33.png" alt="" width="111" height="33" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a>
+              <div class="col-sm-7 col-lg-3 col-xl-2"><a class="brand" href="/"><img class="brand-logo-dark" src="/images/logo-111x33.png" alt="" width="111" height="33" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a>
                 <p><span style="max-width: 250px;">We provide the best taxi services for you all over the USA.</span></p><a class="button button-sm button-default-outline button-winona" href="/templates/login.html">Order Now</a>
               </div>
               <div class="col-sm-5 col-lg-3 col-xl-2">

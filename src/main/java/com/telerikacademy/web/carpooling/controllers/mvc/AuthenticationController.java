@@ -3,9 +3,7 @@ package com.telerikacademy.web.carpooling.controllers.mvc;
 import com.telerikacademy.web.carpooling.exceptions.*;
 import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
 import com.telerikacademy.web.carpooling.helpers.UserMapper;
-import com.telerikacademy.web.carpooling.models.LoginDto;
-import com.telerikacademy.web.carpooling.models.RegisterDto;
-import com.telerikacademy.web.carpooling.models.User;
+import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -45,12 +43,11 @@ public class AuthenticationController {
             User user = authenticationHelper.verifyAuthentication(dto.getUsername(), dto.getPassword());
             session.setAttribute("currentUser", user);
             if (user.getRole().getName().equals("Admin")) {
-                return "redirect:/admin";
+                return "redirect:/users";
             }
             return "redirect:/";
         } catch (AuthenticationFailureException e) {
             redirectAttributes.addFlashAttribute("loginError", "Login was not possible due to wrong username or password or non-existent user.");
-            System.out.println(bindingResult.getAllErrors());
             return "redirect:/auth/login";
         }
     }
@@ -96,5 +93,64 @@ public class AuthenticationController {
         }
     }
 
+    @GetMapping("/forgotten_password")
+    public String showForgottenPasswordPage(Model model) {
+        model.addAttribute("username", new UsernameDto());
+        return "forgotten-password";
+    }
 
+    @PostMapping("/forgotten_password")
+    public String handleForgottenPassword(@Valid @ModelAttribute("username") UsernameDto passwordDto,
+                                          BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "forgotten-password";
+        }
+        try {
+            User user = userService.get(passwordDto.getUsername());
+            userService.sendForgottenPasswordEmail(user);
+            redirectAttributes.addFlashAttribute("successMessage", "Email sent. Please check your inbox.");
+            return "redirect:/auth/forgotten_password";
+        } catch (EntityNotFoundException e) {
+            redirectAttributes.addFlashAttribute("userNotFound", e.getMessage());
+            return "redirect:/auth/forgotten_password";
+        } catch (ForgottenPasswordEmailSentException e) {
+            redirectAttributes.addFlashAttribute("mailAlreadySent", e.getMessage());
+            return "redirect:/auth/forgotten_password";
+        }
+    }
+
+    @GetMapping("/recover_password/{id}")
+    public String showPasswordRecoveryPage(Model model, @PathVariable String id) {
+        model.addAttribute("passwords", new ForgottenPasswordDto());
+        if (!userService.isUIExisting(id)) {
+            return "redirect:/auth/login";
+        }
+        return "recover-password";
+    }
+
+    @PostMapping("/recover_password/{id}")
+    public String handleRecoveryPassword(@Valid @ModelAttribute("passwords") ForgottenPasswordDto passwordDto,
+                                         BindingResult bindingResult, RedirectAttributes redirectAttributes, @PathVariable String id) {
+        if (bindingResult.hasErrors()) {
+            return "recover-password";
+        }
+        try {
+            User user = userService.getByUI(id);
+            if (!passwordDto.getNewPassword().equals(passwordDto.getConfirmNewPassword())) {
+                redirectAttributes.addFlashAttribute("passwordsDiffer", "New password and confirm password must be the same!");
+                return "redirect:/auth/recover_password/{id}";
+            }
+            user.setPassword(passwordDto.getNewPassword());
+            userService.update(user);
+            userService.deleteUI(user);
+            redirectAttributes.addFlashAttribute("successMessage", "Password successfully changed");
+            return "redirect:/auth/recover_password/{id}";
+        } catch (EntityNotFoundException e) {
+            redirectAttributes.addFlashAttribute("UINotFound", e.getMessage());
+            return "redirect:/auth/recover_password/{id}";
+        } catch (InvalidPasswordException e) {
+            redirectAttributes.addFlashAttribute("invalidPassword", e.getMessage());
+            return "redirect:/auth/recover_password/{id}";
+        }
+    }
 }

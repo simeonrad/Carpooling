@@ -1,13 +1,15 @@
 package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
-import com.telerikacademy.web.carpooling.models.Feedback;
-import com.telerikacademy.web.carpooling.models.FilterTravelOptions;
-import com.telerikacademy.web.carpooling.models.Travel;
-import com.telerikacademy.web.carpooling.models.TravelApplication;
+import com.telerikacademy.web.carpooling.models.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -18,6 +20,8 @@ import java.util.Map;
 @Repository
 public class TravelRepositoryImpl implements TravelRepository {
     private final SessionFactory sessionFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public TravelRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -97,15 +101,12 @@ public class TravelRepositoryImpl implements TravelRepository {
                 queryString.append(" where ").append(String.join(" and ", filters));
             }
 
-            // Ensuring the sortBy field is a valid entity property before appending it to the query
             filterOptions.getSortBy().ifPresent(sortBy -> {
-                // List of valid sort properties for safety and to avoid injection
-                List<String> validSortProperties = List.of("departureTime", "freeSpots", "startPoint", "endPoint"); // Add all properties you allow sorting by
+                List<String> validSortProperties = List.of("departureTime", "freeSpots", "startPoint", "endPoint");
                 String sortOrder = filterOptions.getSortOrder().orElse("asc").toLowerCase();
 
-                // Validate sortOrder
                 if (!sortOrder.equals("asc") && !sortOrder.equals("desc")) {
-                    sortOrder = "asc"; // Default to asc if invalid value provided
+                    sortOrder = "asc";
                 }
 
                 if (validSortProperties.contains(sortBy)) {
@@ -120,6 +121,101 @@ public class TravelRepositoryImpl implements TravelRepository {
         }
     }
 
+    @Override
+    public Page<Travel> getMyTravels(FilterTravelOptions filterOptions, Pageable pageable) {
+        try (Session session = sessionFactory.openSession()) {
+            List<String> filters = new ArrayList<>();
+            Map<String, Object> params = new HashMap<>();
+
+            filterOptions.getAuthor().ifPresent(author -> {
+                if (!author.isBlank()) {
+                    filters.add("driver.username like :author");
+                    params.put("author", "%" + author + "%");
+                }
+            });
+
+            filterOptions.getStartPoint().ifPresent(startPoint -> {
+                if (!startPoint.isBlank()) {
+                    filters.add("startPoint like :startPoint");
+                    params.put("startPoint", "%" + startPoint + "%");
+                }
+            });
+
+            filterOptions.getEndPoint().ifPresent(endPoint -> {
+                if (!endPoint.isBlank()) {
+                    filters.add("endPoint like :endPoint");
+                    params.put("endPoint", "%" + endPoint + "%");
+                }
+            });
+
+            filterOptions.getDepartureTime().ifPresent(departureTime -> {
+                filters.add("departureTime = :departureTime");
+                params.put("departureTime", departureTime);
+            });
+
+            filterOptions.getFreeSpots().ifPresent(freeSpots -> {
+                filters.add("freeSpots = :freeSpots");
+                params.put("freeSpots", freeSpots);
+            });
+
+            filterOptions.getTravelStatus().ifPresent(travelStatus -> {
+                filters.add("status.status like :travelStatus");
+                params.put("travelStatus", "%" + travelStatus + "%");
+            });
+
+            StringBuilder queryString = new StringBuilder("from Travel t ");
+            StringBuilder countQueryString = new StringBuilder("select count(t) from Travel t ");
+
+            if (!filters.isEmpty()) {
+                String whereClause = "where " + String.join(" and ", filters);
+                queryString.append(whereClause);
+                countQueryString.append(whereClause);
+            }
+
+            filterOptions.getSortBy().ifPresent(sortBy -> {
+                List<String> validSortProperties = List.of("departureTime", "freeSpots", "startPoint", "endPoint");
+                String sortOrder = filterOptions.getSortOrder().orElse("asc").toLowerCase();
+
+                if (!sortOrder.equals("asc") && !sortOrder.equals("desc")) {
+                    sortOrder = "asc";
+                }
+
+                if (validSortProperties.contains(sortBy)) {
+                    queryString.append(" order by t.").append(sortBy).append(" ").append(sortOrder);
+                }
+            });
+
+            Query<Long> countQuery = session.createQuery(countQueryString.toString(), Long.class);
+            params.forEach(countQuery::setParameter);
+            long total = countQuery.uniqueResult();
+
+            Query<Travel> query = session.createQuery(queryString.toString(), Travel.class);
+            params.forEach(query::setParameter);
+
+            query.setFirstResult((int) pageable.getOffset());
+            query.setMaxResults(pageable.getPageSize());
+
+            List<Travel> travels = query.list();
+            return new PageImpl<>(travels, pageable, total);
+        }
+    }
+
+    @Override
+    public Page<TravelApplication> getMyTravelApplications(User user, Pageable pageable) {
+        String fetchQuery = "SELECT ta FROM TravelApplication ta WHERE ta.passenger = :currentUser ORDER BY ta.travel.departureTime DESC";
+        List<TravelApplication> applications = entityManager.createQuery(fetchQuery, TravelApplication.class)
+                .setParameter("currentUser", user)
+                .setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList();
+
+        String countQuery = "SELECT COUNT(ta) FROM TravelApplication ta WHERE ta.passenger = :currentUser";
+        long totalApplicationsCount = entityManager.createQuery(countQuery, Long.class)
+                .setParameter("currentUser", user)
+                .getSingleResult();
+
+        return new PageImpl<>(applications, pageable, totalApplicationsCount);
+    }
 
     @Override
     public List<Travel> getAll() {

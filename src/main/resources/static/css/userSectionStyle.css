@@ -1,0 +1,43 @@
+.user-profile-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: auto;
+    padding: 20px;
+    background-color: #fafafa;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    width: 45%;
+    max-width: 600px;
+    box-sizing: border-box;
+}
+
+.user-photo img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-info .username, .user-info .names, .user-info .rating {
+    margin: 4px 0;
+    font-size: 16px;
+}
+
+.user-info .rating {
+    font-weight: bold;
+    color: #FFD700; /* Gold color for stars */
+}

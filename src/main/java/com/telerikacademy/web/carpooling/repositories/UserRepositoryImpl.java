@@ -1,10 +1,7 @@
 package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
-import com.telerikacademy.web.carpooling.models.FilterUserOptions;
-import com.telerikacademy.web.carpooling.models.IsDeleted;
-import com.telerikacademy.web.carpooling.models.NonVerifiedUser;
-import com.telerikacademy.web.carpooling.models.User;
+import com.telerikacademy.web.carpooling.models.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -47,6 +44,15 @@ public class UserRepositoryImpl implements UserRepository {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.persist(isDeleted);
+            session.getTransaction().commit();
+        }
+    }
+
+    @Override
+    public void deleteUI(ForgottenPasswordUI forgottenPasswordUI) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.remove(forgottenPasswordUI);
             session.getTransaction().commit();
         }
     }
@@ -224,12 +230,36 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public User getByUI(String UI) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<User> query = session.createQuery("SELECT f.user from ForgottenPasswordUI f where f.UI = :UI", User.class);
+            query.setParameter("UI", UI);
+            User result = query.uniqueResult();
+            if (result == null) {
+                throw new EntityNotFoundException("UI", "value", UI);
+            }
+            return result;
+
+        }
+    }
+
+    @Override
     public boolean updateEmail(String email, int currentUserId) {
         try (Session session = sessionFactory.openSession()) {
             Query<User> query = session.createQuery("from User where email = :email and id != :currentUserId", User.class);
             query.setParameter("email", email);
             query.setParameter("currentUserId", currentUserId);
             List<User> result = query.list();
+            return !result.isEmpty();
+        }
+    }
+
+    @Override
+    public boolean passwordEmailAlreadySent(User user) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<ForgottenPasswordUI> query = session.createQuery("from ForgottenPasswordUI where user = :user", ForgottenPasswordUI.class);
+            query.setParameter("user", user);
+            List<ForgottenPasswordUI> result = query.list();
             return !result.isEmpty();
         }
     }
@@ -256,10 +286,29 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public boolean isUIExisting(String UI) {
+        try (Session session = sessionFactory.openSession()) {
+            Query<ForgottenPasswordUI> query = session.createQuery("from ForgottenPasswordUI where UI = :UI", ForgottenPasswordUI.class);
+            query.setParameter("UI", UI);
+            List<ForgottenPasswordUI> result = query.list();
+            return !result.isEmpty();
+        }
+    }
+
+    @Override
     public void verify(NonVerifiedUser nonVerifiedUser) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.merge(nonVerifiedUser);
+            session.getTransaction().commit();
+        }
+    }
+
+    @Override
+    public void setNewUI(ForgottenPasswordUI forgottenPasswordUI) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.merge(forgottenPasswordUI);
             session.getTransaction().commit();
         }
     }

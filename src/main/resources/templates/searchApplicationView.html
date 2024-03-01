@@ -43,22 +43,16 @@
     }
 
     .form-wrap {
-        margin: 10px;
-    }
-    .travel-is-empty{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        text-align: center;
+        margin: 10px; /* Adjust as needed for spacing */
+        /* Ensure elements don't stretch if undesired: */
+        /* align-self: flex-start; */
     }
 
     .form-button {
         display: flex;
-        justify-content: center;
-        width: 100%;
+        justify-content: center; /* Center the button horizontally */
+        width: 100%; /* Ensure the .form-button takes full width to center the button correctly */
     }
-
 </style>
 <body>
 <div class="preloader" id="loading">
@@ -90,19 +84,16 @@
                         <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span>
                         </button>
                         <!-- RD Navbar Brand-->
-                        <div class="rd-navbar-brand"> <a class="brand" href="/"><img class="brand-logo-dark" src="/images/cut-logo-carpool.jpg" alt="" width="111" height="72" loading="lazy" srcset="/images/logo-111x33.png 2x"/></a></div>
+                        <div class="rd-navbar-brand"><a class="brand" href="/templates/index.html"><img
+                                class="brand-logo-dark" src="/images/logo-111x33.png" alt="" width="111" height="33"
+                                loading="lazy" srcset="/images/logo-222x66.png 2x"/></a></div>
                     </div>
                     <div class="rd-navbar-nav-wrap">
                         <!-- RD Navbar Nav-->
                         <ul class="rd-navbar-nav">
-                            <li class="rd-nav-item"><a class="rd-nav-link" href="#">Create a travel</a>
+                            <li class="rd-nav-item"><a class="rd-nav-link" href="#">Get Our App</a>
                             </li>
-                            <li class="rd-nav-item"><a class="rd-nav-link" href="/travels/search-travels">Travels</a>
-                            </li>
-                            <li class="rd-nav-item"><a class="rd-nav-link" href="/profile">Profile</a>
-                            </li>
-                            <li class="rd-nav-item"><a class="rd-nav-link" href="/profile/my-profile">Dashbord</a>
-                            </li>
+                            <li class="rd-nav-item active"><a class="rd-nav-link" href="#">Pages</a>
                                 <!-- RD Navbar Megamenu-->
                                 <div class="rd-menu rd-navbar-megamenu">
                                     <ul class="rd-navbar-megamenu-inner">
@@ -185,7 +176,7 @@
                         </ul>
                     </div>
                     <div class="rd-navbar-element"><a class="button button-sm button-default-outline button-winona"
-                                                      href="/auth/login">Log in</a>
+                                                      href="/templates/careers.html">Join Us</a>
                         <button class="rd-navbar-aside-open-toggle" data-multitoggle="#rd-navbar-aside"
                                 aria-label="Sidebar toggle"><span></span><span></span><span></span></button>
                     </div>
@@ -290,7 +281,7 @@
             </form>
 
         </div>
-        <div class="travel-is-empty" th:if="${travels.isEmpty()}">
+        <div th:if="${travels.isEmpty()}">
             <h2>No Travels Found</h2>
         </div>
     </section>
@@ -312,10 +303,7 @@
                         <td th:text="${travel.endPoint}"></td>
                         <td th:text="${travel.freeSpots}"></td>
                         <td>
-                            <form th:if="${isAdmin}" action="#" th:action="@{/travels/delete/{id}(id=${travel.id})}" class="user-action-form" method="post">
-                                <button  type="submit" th:method="post" th:action="@{/travels/delete/{id}(id=${travel.id})}" class="button button-gray-700 button-winona" th:text="Delete"></button>
-                            </form>
-                            <button th:unless="${isAdmin}" class="button button-sm button-primary button-winona" th:text="Apply"></button>
+                            <button class="button button-sm button-primary button-winona" th:text="Apply"></button>
                         </td>
                     </tr>
                     </tbody>
@@ -328,7 +316,7 @@
         <div class="footer-classic-main">
             <div class="container">
                 <div class="row row-50 justify-content-lg-between">
-                    <div class="col-sm-7 col-lg-3 col-xl-2"><a class="brand" href="/"><img
+                    <div class="col-sm-7 col-lg-3 col-xl-2"><a class="brand" href="/templates/index.html"><img
                             class="brand-logo-dark" src="/images/logo-111x33.png" alt="" width="111" height="33"
                             loading="lazy" srcset="/images/logo-222x66.png 2x"/></a>
                         <p><span
