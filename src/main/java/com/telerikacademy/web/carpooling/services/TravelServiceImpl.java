@@ -4,14 +4,12 @@ import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
 import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.web.carpooling.models.FilterTravelOptions;
 import com.telerikacademy.web.carpooling.models.Travel;
-import com.telerikacademy.web.carpooling.models.TravelApplication;
 import com.telerikacademy.web.carpooling.models.User;
 import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
 import com.telerikacademy.web.carpooling.repositories.StatusRepository;
 import com.telerikacademy.web.carpooling.repositories.TravelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -87,11 +85,6 @@ public class TravelServiceImpl implements TravelService {
         return travelRepository.getMyTravels(filterTravelOptions, page);
     }
 
-    @Override
-    public Page<TravelApplication> getMyTravelApplications(User user, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return travelRepository.getMyTravelApplications(user, pageable);
-    }
 
     @Override
     public void cancel(User user, Travel travel) {

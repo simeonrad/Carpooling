@@ -6,6 +6,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -17,7 +20,6 @@ import java.util.Map;
 public class TravelApplicationRepositoryImpl implements TravelApplicationRepository {
     public static final String NO_APPLICATIONS_FOUND = "No applications found";
     private final SessionFactory sessionFactory;
-
     @Autowired
     public TravelApplicationRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -116,6 +118,87 @@ public class TravelApplicationRepositoryImpl implements TravelApplicationReposit
             return query.list();
         }
     }
+
+    @Override
+    public Page<TravelApplication> getMyTravelApplications(FilterMyApplicationsOptions filterOptions, Pageable pageable) {
+        try (Session session = sessionFactory.openSession()) {
+            List<String> filters = new ArrayList<>();
+            Map<String, Object> params = new HashMap<>();
+
+            filterOptions.getStartPoint().ifPresent(startPoint -> {
+                if (!startPoint.isBlank()) {
+                    filters.add("t.travel.startPoint like :startPoint");
+                    params.put("startPoint", "%" + startPoint + "%");
+                }
+            });
+
+            filterOptions.getEndPoint().ifPresent(endPoint -> {
+                if (!endPoint.isBlank()) {
+                    filters.add("t.travel.endPoint like :endPoint");
+                    params.put("endPoint", "%" + endPoint + "%");
+                }
+            });
+
+            filterOptions.getDepartureTime().ifPresent(departureTime -> {
+                filters.add("t.travel.departureTime = :departureTime");
+                params.put("departureTime", departureTime);
+            });
+
+            filterOptions.getDriver().ifPresent(driver -> {
+                if (!driver.isBlank()) {
+                    filters.add("t.travel.driver.username like :driver");
+                    params.put("driver", "%" + driver + "%");
+                }
+            });
+
+
+            StringBuilder queryString = new StringBuilder(
+                    "select t from TravelApplication t " +
+                            "join t.travel " +
+                            "join t.travel.driver driver " +
+                            "join t.status ");
+
+            StringBuilder countQueryString = new StringBuilder(
+                    "select count(t) from TravelApplication t " +
+                            "join t.travel " +
+                            "join t.travel.driver driver " +
+                            "join t.status ");
+
+            if (!filters.isEmpty()) {
+                String whereClause = "where " + String.join(" and ", filters);
+                queryString.append(whereClause);
+                countQueryString.append(whereClause);
+            }
+
+            filterOptions.getSortBy().ifPresent(sortBy -> {
+                List<String> validSortProperties = List.of("departureTime", "freeSpots", "startPoint", "endPoint", "travelStatus");
+                String sortOrder = filterOptions.getSortOrder().orElse("asc").toLowerCase();
+
+                if (!sortOrder.equals("asc") && !sortOrder.equals("desc")) {
+                    sortOrder = "asc";
+                }
+
+                if (validSortProperties.contains(sortBy)) {
+                    queryString.append(" order by t.travel.").append(sortBy).append(" ").append(sortOrder);
+                }
+            });
+
+            Query<Long> countQuery = session.createQuery(countQueryString.toString(), Long.class);
+            params.forEach(countQuery::setParameter);
+            long total = countQuery.uniqueResult();
+
+            Query<TravelApplication> query = session.createQuery(queryString.toString(), TravelApplication.class);
+            params.forEach(query::setParameter);
+
+            query.setFirstResult((int) pageable.getOffset());
+            query.setMaxResults(pageable.getPageSize());
+
+            List<TravelApplication> applications = query.list();
+            return new PageImpl<>(applications, pageable, total);
+        }
+    }
+
+
 
     private String generateOrderBy(FilterApplicationOptions filterOptions) {
         if (filterOptions.getSortBy().isEmpty()) {

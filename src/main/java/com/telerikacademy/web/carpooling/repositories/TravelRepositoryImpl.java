@@ -2,8 +2,6 @@ package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.carpooling.models.*;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -20,8 +18,7 @@ import java.util.Map;
 @Repository
 public class TravelRepositoryImpl implements TravelRepository {
     private final SessionFactory sessionFactory;
-    @PersistenceContext
-    private EntityManager entityManager;
+
 
     public TravelRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -198,23 +195,6 @@ public class TravelRepositoryImpl implements TravelRepository {
             List<Travel> travels = query.list();
             return new PageImpl<>(travels, pageable, total);
         }
-    }
-
-    @Override
-    public Page<TravelApplication> getMyTravelApplications(User user, Pageable pageable) {
-        String fetchQuery = "SELECT ta FROM TravelApplication ta WHERE ta.passenger = :currentUser ORDER BY ta.travel.departureTime DESC";
-        List<TravelApplication> applications = entityManager.createQuery(fetchQuery, TravelApplication.class)
-                .setParameter("currentUser", user)
-                .setFirstResult((int) pageable.getOffset())
-                .setMaxResults(pageable.getPageSize())
-                .getResultList();
-
-        String countQuery = "SELECT COUNT(ta) FROM TravelApplication ta WHERE ta.passenger = :currentUser";
-        long totalApplicationsCount = entityManager.createQuery(countQuery, Long.class)
-                .setParameter("currentUser", user)
-                .getSingleResult();
-
-        return new PageImpl<>(applications, pageable, totalApplicationsCount);
     }
 
     @Override

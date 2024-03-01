@@ -3,12 +3,15 @@ package com.telerikacademy.web.carpooling.services;
 import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
 import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.web.carpooling.models.FilterApplicationOptions;
+import com.telerikacademy.web.carpooling.models.FilterMyApplicationsOptions;
 import com.telerikacademy.web.carpooling.models.TravelApplication;
 import com.telerikacademy.web.carpooling.models.User;
 import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
 import com.telerikacademy.web.carpooling.repositories.StatusRepository;
 import com.telerikacademy.web.carpooling.repositories.TravelApplicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -95,6 +98,11 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
     @Override
     public List<TravelApplication> get(FilterApplicationOptions filterApplicationOptions) {
         return applicationRepository.get(filterApplicationOptions);
+    }
+
+    @Override
+    public Page<TravelApplication> getMyTravelApplications(FilterMyApplicationsOptions filterMyApplicationsOptions, Pageable pageable) {
+        return applicationRepository.getMyTravelApplications(filterMyApplicationsOptions, pageable);
     }
 
     @Override
