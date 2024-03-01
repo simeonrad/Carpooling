@@ -43,7 +43,7 @@ public class AuthenticationController {
             User user = authenticationHelper.verifyAuthentication(dto.getUsername(), dto.getPassword());
             session.setAttribute("currentUser", user);
             if (user.getRole().getName().equals("Admin")) {
-                return "redirect:/admin";
+                return "redirect:/users";
             }
             return "redirect:/";
         } catch (AuthenticationFailureException e) {
