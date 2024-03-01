@@ -3,11 +3,16 @@ package com.telerikacademy.web.carpooling.controllers.mvc;
 import com.telerikacademy.web.carpooling.exceptions.*;
 import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.repositories.UserRepository;
+import com.telerikacademy.web.carpooling.services.FeedbackService;
 import com.telerikacademy.web.carpooling.services.ImageStorageService;
+import com.telerikacademy.web.carpooling.services.TravelService;
 import com.telerikacademy.web.carpooling.services.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,12 +26,17 @@ public class ProfileController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final ImageStorageService imageStorageService;
+    private final TravelService travelService;
+    private final FeedbackService feedbackService;
 
     @Autowired
-    public ProfileController(UserService userService, ImageStorageService imageStorageService, UserRepository userRepository) {
+    public ProfileController(UserService userService, ImageStorageService imageStorageService,
+                             UserRepository userRepository, TravelService travelService, FeedbackService feedbackService) {
         this.userService = userService;
         this.imageStorageService = imageStorageService;
         this.userRepository = userRepository;
+        this.travelService = travelService;
+        this.feedbackService = feedbackService;
     }
 
     @ModelAttribute("isAdmin")
@@ -76,9 +86,49 @@ public class ProfileController {
         return "profile";
     }
 
+    @GetMapping("/my-profile")
+    public String showMyProfile(Model model, HttpSession session,
+                                @RequestParam(defaultValue = "0", name = "travelPage") int travelPage,
+                                @RequestParam(defaultValue = "5", name = "travelSize") int travelSize,
+                                @RequestParam(defaultValue = "0", name = "travelApplicationPage") int travelApplicationPage,
+                                @RequestParam(defaultValue = "5", name = "travelApplicationSize") int travelApplicationSize,
+                                @RequestParam(defaultValue = "0", name = "feedbackPage") int feedbackPage,
+                                @RequestParam(defaultValue = "5", name = "feedbackSize") int feedbackSize,
+                                @ModelAttribute("travelFilterOptions") FilterTravelDto filterTravelDto) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/auth/login";
+        }
+        filterTravelDto.setAuthor(currentUser.getUsername());
+
+        Pageable travelPageable = PageRequest.of(travelPage, travelSize);
+
+        Page<Travel> userTravels = travelService.getMyTravels(
+                new FilterTravelOptions(filterTravelDto.getAuthor(),
+                        filterTravelDto.getStartPoint(), filterTravelDto.getEndPoint(),
+                        filterTravelDto.getDepartureTime(), filterTravelDto.getFreeSpots(),
+                        filterTravelDto.getTravelStatus(), filterTravelDto.getSortBy(),
+                        filterTravelDto.getSortOrder()), travelPageable);
+
+
+        Page<TravelApplication> userTravelApplications = travelService.getMyTravelApplications(currentUser, travelApplicationPage, travelApplicationSize);
+
+        Page<Feedback> userFeedbacksReceived = feedbackService.getMyReceivedFeedbacks(currentUser, feedbackPage, feedbackSize);
+
+        model.addAttribute("travelFilterOptions", filterTravelDto);
+        model.addAttribute("userTravels", userTravels);
+        model.addAttribute("userTravelApplications", userTravelApplications);
+        model.addAttribute("userFeedbacksReceived", userFeedbacksReceived);
+        model.addAttribute("profileUser", currentUser);
+
+        return "profile";
+    }
+
+
     @PostMapping("/update-password")
     public String updatePassword(@Valid @ModelAttribute("passwordDto") UserPasswordUpdateDto passwordDto,
-                                 BindingResult bindingResult, Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+                                 BindingResult bindingResult, Model model, HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser.getUsername() == null) {
             return "redirect:/login";
@@ -260,4 +310,3 @@ public class ProfileController {
         return "redirect:/profile";
     }
 }
-
