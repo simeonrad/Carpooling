@@ -66,9 +66,15 @@ public class TravelMvcController {
     }
 
     @GetMapping("/create")
-    public String showCreateTravelForm(Model model) {
-        model.addAttribute("createTravel", new TravelDto());
-        return "createTravel";
+    public String showCreateTravelForm(Model model, HttpSession session) {
+        try {
+            authenticationHelper.tryGetUser(session);
+            model.addAttribute("createTravel", new TravelDto());
+            return "createTravel";
+        } catch (AuthenticationFailureException e){
+            return "redirect:/auth/login";
+        }
+
     }
 
     @PostMapping("/create")
