@@ -82,6 +82,7 @@ public class ProfileController {
         model.addAttribute("emailDto", emailDto);
         model.addAttribute("passwordDto", passwordDto);
         model.addAttribute("phoneDto", phoneDto);
+        model.addAttribute("profileUser", currentUser);
 
         return "profile";
     }
@@ -121,7 +122,7 @@ public class ProfileController {
         model.addAttribute("userFeedbacksReceived", userFeedbacksReceived);
         model.addAttribute("profileUser", currentUser);
 
-        return "profile";
+        return "my-dashboard";
     }
 
 

@@ -79,6 +79,9 @@ public class User {
         for (Feedback feedback : feedbacks) {
             sum += feedback.getRating();
         }
+        if (sum == 0) {
+            return 0;
+        }
         BigDecimal average = BigDecimal.valueOf(sum)
                 .divide(BigDecimal.valueOf(feedbacks.size()), 2, RoundingMode.HALF_UP);
         return average.doubleValue();
