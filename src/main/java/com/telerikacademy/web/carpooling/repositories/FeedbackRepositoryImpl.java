@@ -2,8 +2,6 @@ package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.models.Feedback;
 import com.telerikacademy.web.carpooling.models.FilterFeedbackOptions;
-import com.telerikacademy.web.carpooling.models.FilterFeedbackOptionsDto;
-import com.telerikacademy.web.carpooling.models.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Session;
@@ -112,7 +110,7 @@ public class FeedbackRepositoryImpl implements FeedbackRepository{
                 }
             });
 
-            StringBuilder queryString = new StringBuilder("SELECT f FROM Feedback f LEFT JOIN f.comments c");
+            StringBuilder queryString = new StringBuilder("SELECT f FROM Feedback f");
             if (!filters.isEmpty()) {
                 queryString.append(" WHERE ").append(String.join(" AND ", filters));
             }
@@ -136,6 +134,7 @@ public class FeedbackRepositoryImpl implements FeedbackRepository{
             return new PageImpl<>(feedbacks, pageable, totalResults);
         }
     }
+
 
 
 

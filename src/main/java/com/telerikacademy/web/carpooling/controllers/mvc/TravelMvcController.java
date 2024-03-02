@@ -89,11 +89,9 @@ public class TravelMvcController {
         }
         try {
             User user = authenticationHelper.tryGetUser(session);
-
             Travel travel = travelMapper.fromDto(travelDto);
             travel.setDriver(user);
             travelService.create(travel, user);
-
             return "redirect:/travels/search-travels";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error creating travel: " + e.getMessage());
