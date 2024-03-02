@@ -81,6 +81,11 @@ public class TravelServiceImpl implements TravelService {
     }
 
     @Override
+    public Page<Travel> get(FilterTravelOptions filterTravelOptions, Pageable pageable) {
+        return travelRepository.get(filterTravelOptions, pageable);
+    }
+
+    @Override
     public Page<Travel> getMyTravels(FilterTravelOptions filterTravelOptions, Pageable page) {
         return travelRepository.getMyTravels(filterTravelOptions, page);
     }

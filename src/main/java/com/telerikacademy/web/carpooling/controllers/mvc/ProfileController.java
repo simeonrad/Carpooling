@@ -140,16 +140,26 @@ public class ProfileController {
     @GetMapping("/my-feedbacks")
     public String showMyFeedbacks(Model model, HttpSession session,
                                 @RequestParam(defaultValue = "0", name = "feedbackPage") int feedbackPage,
-                                @RequestParam(defaultValue = "5", name = "feedbackSize") int feedbackSize) {
+                                @RequestParam(defaultValue = "5", name = "feedbackSize") int feedbackSize,
+                                  @ModelAttribute ("feedbackFilterOptions") FilterFeedbackOptionsDto filterFeedbackOptionsDto) {
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) {
             return "redirect:/auth/login";
         }
-        Page<Feedback> userFeedbacksReceived = feedbackService.getMyReceivedFeedbacks(currentUser, feedbackPage, feedbackSize);
-        model.addAttribute("userFeedbacksReceived", userFeedbacksReceived);
+        filterFeedbackOptionsDto.setRecipient(currentUser.getUsername());
+        Pageable feedbacksPageable = PageRequest.of(feedbackPage, feedbackSize);
+        Page<Feedback> userFeedbacksReceived = feedbackService.getMyReceivedFeedbacks(
+                new FilterFeedbackOptions(filterFeedbackOptionsDto.getAuthor(),
+                        filterFeedbackOptionsDto.getRecipient(),
+                        filterFeedbackOptionsDto.getComment(),
+                        filterFeedbackOptionsDto.getRating(),
+                        filterFeedbackOptionsDto.getSortBy(),
+                        filterFeedbackOptionsDto.getSortOrder()),
+                feedbacksPageable);
+        model.addAttribute("feedbacks", userFeedbacksReceived);
         model.addAttribute("profileUser", currentUser);
 
-        return "my-travels-dashboard";
+        return "my-feedbacks-dashboard";
     }
 
 

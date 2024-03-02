@@ -198,6 +198,11 @@ public class TravelRepositoryImpl implements TravelRepository {
     }
 
     @Override
+    public Page<Travel> get(FilterTravelOptions filterOptions, Pageable pageable) {
+        return null;
+    }
+
+    @Override
     public List<Travel> getAll() {
         try (Session session = sessionFactory.openSession()) {
             Query<Travel> query = session.createQuery("from Travel", Travel.class);

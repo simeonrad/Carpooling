@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="wide wow-animation" lang="en">
 <head>
-    <title>Tables</title>
+    <title>My Feedbacks</title>
     <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -309,40 +309,33 @@
     </div>
 
 
-    <h3 style="text-align: center; margin-top: 20px;">My Applications</h3>
 
-    <!-- Search results for My Applications-->
+    <h3 style="text-align: center; margin-top: 20px;">My Feedbacks</h3>
+
+
+    <!-- Search results for My Organised Travels-->
     <section class="section section-mdDashboard">
         <div class="container">
-            <form class="rd-form rd-search" action="#" th:action="@{/profile/my-travel-applications}" method="get" th:object="${travelApplicationFilterOptions}">
+            <!-- RD Search-->
+            <form class="rd-form rd-search" action="#" th:action="@{/profile/my-feedbacks}" method="get"
+                  th:object="${feedbackFilterOptions}">
                 <div class="flex-container">
-                    <div class="form-wrap" id="application-first-input-field"></div>
+                    <div class="form-wrap" id="first-input-field"></div>
                     <div class="form-wrap">
-                        <label class="form-label" for="application-start-point">Start point</label>
-                        <input th:field="*{startPoint}" class="form-input" id="application-start-point" type="text" name="startPoint" autocomplete="off">
-                    </div>
-                    <div class="form-wrap">
-                        <label class="form-label" for="application-end-point">End point</label>
-                        <input th:field="*{endPoint}" class="form-input" id="application-end-point" type="text" name="endPoint" autocomplete="off">
-                    </div>
-                    <div class="form-wrap">
-                        <label class="form-label" for="application-departure-time">Departure Time</label>
-                        <input th:field="*{departureTime}" class="form-input" id="application-departure-time" type="text" name="departureTime" autocomplete="off">
-                    </div>
-                    <div class="form-wrap">
-                        <label class="form-label" for="application-driver">Driver</label>
-                        <input th:field="*{driver}" class="form-input" id="application-driver" type="text" name="driver" autocomplete="off">
+                        <label class="form-label" for="rd-search-form-input-phone-number">Author</label>
+                        <input th:field="*{author}" class="form-input" id="rd-search-form-input-phone-number"
+                               type="text" name="start-point" autocomplete="off">
                     </div>
                     <div class="form-wrap mx-sm-3 mb-2">
                         <label>
                             <select class="form-control" th:field="*{sortBy}">
                                 <option value="">Sort By</option>
-                                <option value="departureTime">Departure time</option>
-                                <option value="distanceKm">Distance</option>
-                                <option value="durationMinutes">Duration</option>
+                                <option value="start-point">Author</option>
                             </select>
                         </label>
                     </div>
+
+                    <!-- Sort Order Select -->
                     <div class="form-wrap mx-sm-3 mb-2">
                         <label>
                             <select class="form-control" th:field="*{sortOrder}">
@@ -355,51 +348,52 @@
                 </div>
                 <div class="form-wrap form-button">
                     <button class="button button-secondary button-shadow" type="submit">Search</button>
+                    <div class="rd-search-results"></div>
                 </div>
             </form>
+
         </div>
-        <div class="travel-is-empty" th:if="${userTravelApplications.isEmpty()}">
-            <h2>No Applications Found</h2>
+        <div class="travel-is-empty" th:if="${feedbacks.isEmpty()}">
+            <h2>No Feedbacks Found</h2>
         </div>
     </section>
-    <section th:unless="${userTravelApplications.isEmpty()}" class="section section-mdDashboard">
+    <section th:unless="${feedbacks.isEmpty()}" class="section section-mdDashboard">
         <div class="container">
             <div class="table-outer table-rounded table-responsive-lg">
                 <table class="table-custom table-custom-primary">
                     <thead>
                     <tr>
-                        <th>Start Point</th>
-                        <th>End Point</th>
-                        <th>Departure time</th>
-                        <th>Driver</th>
-                        <th>Status</th>
+                        <th>Author</th>
+                        <th>Rating</th>
+                        <th>Comment</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="travelApplication : ${userTravelApplications}">
-                        <td th:href="@{/travels/{id}(id=${travelApplication.travel.id})}" th:text="${travelApplication.travel.startPoint}"></td>
-                        <td th:text="${travelApplication.travel.endPoint}"></td>
-                        <td th:text="${travelApplication.travel.departureTime}"></td>
-                        <td th:text="${travelApplication.travel.driver.username}"></td>
-                        <td th:text="${travelApplication.status.status.name()}"></td>
+                    <tr th:each="feedback : ${feedbacks}">
+                        <td th:text="${feedback.author.username}"></td>
+                        <td th:text="${feedback.rating}"></td>
+                        <td th:if="${#lists.isEmpty(feedback.comments)}">No comment left by the user</td>
+                        <td th:unless="${#lists.isEmpty(feedback.comments)}" th:text="${feedback.comments.iterator().next().comment}"></td>
                     </tr>
-                    </tbody>
                 </table>
             </div>
 
-            <!-- Pagination controls -->
 
-            <div th:if="${userTravelApplications.totalPages > 1}" class="pagination-wrapper">
+            <!-- Pagination controls -->
+            <div th:if="${feedbacks != null && feedbacks.totalPages > 1}" class="pagination-wrapper">
                 <ul class="paginationLogin">
-                    <li th:classappend="${userTravelApplications.first ? 'disabled' : ''}">
-                        <a th:href="@{/my-travel-applications(travelApplicationPage=${userTravelApplications.number - 1}, travelApplicationSize=${userTravelApplications.size})}" aria-label="Previous">&laquo;</a>
+                    <li th:classappend="${feedbacks.number == 0 ? 'disabled' : ''}">
+                        <a th:href="@{/profile/my-feedbacks(feedbackPage=${feedbacks.number - 1}, feedbackSize=${feedbacks.size})}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
                     </li>
-                    <li th:each="pageNum : ${#numbers.sequence(0, userTravelApplications.totalPages - 1)}"
-                        th:classappend="${pageNum == userTravelApplications.number ? 'active' : ''}">
-                        <a th:href="@{/my-travel-applications(travelApplicationPage=${pageNum}, travelApplicationSize=${userTravelApplications.size})}" th:text="${pageNum + 1}"></a>
+                    <li th:each="pageNum : ${#numbers.sequence(0, feedbacks.totalPages - 1)}"
+                        th:classappend="${pageNum == feedbacks.number ? 'active' : ''}">
+                        <a th:href="@{/profile/my-feedbacks(feedbackPage=${pageNum}, feedbackSize=${feedbacks.size})}" th:text="${pageNum + 1}"></a>
                     </li>
-                    <li th:classappend="${userTravelApplications.last ? 'disabled' : ''}">
-                        <a th:href="@{/my-travel-applications(travelApplicationPage=${userTravelApplications.number + 1}, travelApplicationSize=${userTravelApplications.size})}" aria-label="Next">&raquo;</a>
+                    <li th:classappend="${feedbacks.number + 1 == feedbacks.totalPages ? 'disabled' : ''}">
+                        <a th:href="@{/profile/my-feedbacks(feedbackPage=${feedbacks.number + 1}, feedbackSize=${feedbacks.size})}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
                     </li>
                 </ul>
             </div>

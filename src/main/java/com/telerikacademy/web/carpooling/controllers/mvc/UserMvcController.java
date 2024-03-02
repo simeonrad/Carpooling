@@ -12,6 +12,9 @@ import com.telerikacademy.web.carpooling.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -50,11 +53,14 @@ public class UserMvcController {
     }
 
     @GetMapping()
-    public String filterUsers(@ModelAttribute("filterOptions") FilterUserDto filterUserDto, HttpSession session, Model model) {
+    public String filterUsers(@ModelAttribute("filterOptions") FilterUserDto filterUserDto, HttpSession session, Model model,
+                              @RequestParam(defaultValue = "0", name = "userPage") int userPage,
+                              @RequestParam(defaultValue = "5", name = "userSize") int userSize) {
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser != null) {
             FilterUserOptions filterUserOptions = new FilterUserOptions(filterUserDto.getUsername(), filterUserDto.getEmail(), filterUserDto.getPhoneNumber(), filterUserDto.getSortBy(), filterUserDto.getSortOrder());
-            List<User> users = userService.get(filterUserOptions, currentUser);
+            Pageable travelsPageable = PageRequest.of(userPage, userSize);
+            Page<User> users = userService.get(filterUserOptions, currentUser, travelsPageable);
             model.addAttribute("filterOptions", filterUserDto);
             model.addAttribute("allRoles", roleRepository.getAll());
             model.addAttribute("users", users);

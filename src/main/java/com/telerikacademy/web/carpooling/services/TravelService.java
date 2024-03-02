@@ -19,6 +19,7 @@ public interface TravelService {
 
     Travel getById(int id);
     List<Travel> get(FilterTravelOptions filterTravelOptions);
+    Page<Travel> get(FilterTravelOptions filterTravelOptions, Pageable pageable);
     void cancel(User user, Travel travel);
     void complete(User user, Travel travel);
 }

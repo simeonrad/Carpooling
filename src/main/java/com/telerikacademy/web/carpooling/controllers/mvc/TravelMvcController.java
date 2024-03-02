@@ -7,10 +7,12 @@ import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
 import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.services.TravelApplicationService;
-import com.telerikacademy.web.carpooling.repositories.StatusRepository;
 import com.telerikacademy.web.carpooling.services.TravelService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -53,13 +55,16 @@ public class TravelMvcController {
 
 
     @GetMapping("/search-travels")
-    public String filterUsers(@ModelAttribute("filterOptions") FilterTravelDto filterTravelDto, Model model){
+    public String filterUsers(@ModelAttribute("filterOptions") FilterTravelDto filterTravelDto, Model model,
+                              @RequestParam(defaultValue = "0", name = "travelPage") int travelPage,
+                              @RequestParam(defaultValue = "5", name = "travelSize") int travelSize){
             FilterTravelOptions filterTravelOptions = new FilterTravelOptions(filterTravelDto.getAuthor(),
                     filterTravelDto.getStartPoint(), filterTravelDto.getEndPoint(),
                     filterTravelDto.getDepartureTime(), filterTravelDto.getFreeSpots(),
                     filterTravelDto.getTravelStatus(), filterTravelDto.getSortBy(),
                     filterTravelDto.getSortOrder());
-            List<Travel> travels = travelService.get(filterTravelOptions);
+        Pageable travelsPageable = PageRequest.of(travelPage, travelSize);
+        Page<Travel> travels = travelService.getMyTravels(filterTravelOptions, travelsPageable);
             model.addAttribute("filterOptions", filterTravelDto);
             model.addAttribute("travels", travels);
             return "searchTravelView";

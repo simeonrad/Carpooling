@@ -16,6 +16,7 @@ public interface TravelRepository {
     void delete(Travel travel);
 
     List<Travel> get(FilterTravelOptions filterOptions);
+    Page<Travel> get(FilterTravelOptions filterOptions, Pageable pageable);
     Page<Travel> getMyTravels(FilterTravelOptions filterOptions, Pageable pageable);
     List<Travel> getAll();
 
