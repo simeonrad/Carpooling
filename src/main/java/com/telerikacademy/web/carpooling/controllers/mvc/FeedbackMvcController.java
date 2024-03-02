@@ -73,7 +73,7 @@ public class FeedbackMvcController {
         } catch (AuthenticationFailureException e){
             return "redirect:/auth/login";
         }
-        catch (ForbiddenOperationException | UnauthorizedOperationException e){
+        catch (ForbiddenOperationException | UnauthorizedOperationException | EntityNotFoundException e){
             model.addAttribute("message", e.getMessage());
             model.addAttribute("status", e.getLocalizedMessage());
             return "404-page";

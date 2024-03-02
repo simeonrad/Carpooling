@@ -68,7 +68,7 @@ public class TravelApplicationRepositoryImpl implements TravelApplicationReposit
             Query<TravelApplication> query = session.createQuery("from TravelApplication where travel.id = :id", TravelApplication.class);
             query.setParameter("id", id);
             if (query.list().isEmpty())
-                throw new EntityNotFoundException("Application",id);
+                throw new EntityNotFoundException(String.format("Applications with travel id %s not found!", id));
             return query.list();
 
         }

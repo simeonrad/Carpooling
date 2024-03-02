@@ -310,7 +310,7 @@
                         <th>End Point</th>
                         <th>Departure time</th>
                         <th>Status</th>
-                        <th>Give Feedback</th>
+                        <th>Manage applications</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -320,8 +320,10 @@
                         <td th:text="${travel.getDepartureTime()}"></td>
                         <td th:text="${travel.getStatus().getStatus().name()}"></td>
                         <td>
-                            <button class="button button-sm button-primary button-winona"
-                                    th:text="'Give Feedback'"></button>
+                            <form action="/" th:action="@{/travels/applications/{id}(id=${travel.id})}" >
+                            <button type="submit" class="button button-sm button-primary button-winona"
+                                    th:text="'Manage applications'"></button>
+                            </form>
                         </td>
                     </tr>
                     </tbody>
