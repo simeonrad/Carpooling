@@ -6,6 +6,8 @@ import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
 import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
 import com.telerikacademy.web.carpooling.models.Feedback;
+import com.telerikacademy.web.carpooling.models.FeedbackComment;
+import com.telerikacademy.web.carpooling.models.FeedbackDto;
 import com.telerikacademy.web.carpooling.models.User;
 import com.telerikacademy.web.carpooling.services.FeedbackService;
 import com.telerikacademy.web.carpooling.services.TravelService;
@@ -36,7 +38,7 @@ public class FeedbackMvcController {
     @GetMapping("/{recipientId}/travel/{travelId}")
     private String createFeedbackView(Model model, @PathVariable("recipientId") int recipientId, @PathVariable("travelId") int travelId){
         try {
-            Feedback feedback = new Feedback();
+            FeedbackDto feedback = new FeedbackDto();
             model.addAttribute("feedbackObject", feedback);
             model.addAttribute("recipientId", recipientId);
             model.addAttribute("travelId", travelId);
@@ -51,15 +53,21 @@ public class FeedbackMvcController {
 
     @PostMapping("/{id}/travel/{travelId}")
     private String createFeedback(Model model, HttpSession session,
-                                  @ModelAttribute("feedbackObject") Feedback feedback,
+                                  @ModelAttribute("feedbackObject") FeedbackDto feedbackDto,
                                   @PathVariable("id") int id
             , @PathVariable("travelId") int travelId){
         try {
             User author = authenticationHelper.tryGetUser(session);
             User recipient = userService.get(id);
+            Feedback feedback = new Feedback();
             feedback.setAuthor(author);
             feedback.setRecipient(recipient);
             feedback.setTravel(travelService.getById(travelId));
+            FeedbackComment feedbackComment = new FeedbackComment();
+            feedbackComment.setComment(feedbackDto.getComment());
+            feedbackComment.setFeedback(feedback);
+            feedback.setComment(feedbackComment);
+            feedback.setRating(feedbackDto.getRating());
             feedbackService.create(feedback, author);
             return "redirect:/";
         } catch (AuthenticationFailureException e){

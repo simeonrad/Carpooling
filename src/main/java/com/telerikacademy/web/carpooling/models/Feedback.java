@@ -20,11 +20,11 @@ public class Feedback {
     @JoinColumn(name = "travel_id", nullable = false, foreignKey = @ForeignKey(name = "feedbacks_ibfk_1"))
     private Travel travel;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "author_id", nullable = false, foreignKey = @ForeignKey(name = "feedbacks_ibfk_2"))
     private User author;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "recipient_id", nullable = false, foreignKey = @ForeignKey(name = "feedbacks_ibfk_3"))
     private User recipient;
 
