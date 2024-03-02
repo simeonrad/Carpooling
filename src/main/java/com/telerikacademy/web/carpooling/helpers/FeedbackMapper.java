@@ -25,16 +25,10 @@ public class FeedbackMapper {
         feedback.setAuthor(author);
         feedback.setRecipient(userRepository.getByUsername(feedbackDto.getRecipient()));
         feedback.setRating(feedbackDto.getRating());
-        if (feedbackDto.getComment() != null && !feedbackDto.getComment().isEmpty()) {
-            FeedbackComment comment = new FeedbackComment();
-            comment.setComment(feedbackDto.getComment());
-            comment.setFeedback(feedback);
-
-            if (feedback.getComments() == null) {
-                feedback.setComments(new HashSet<>());
-            }
-
-            feedback.getComments().add(comment);
+        if (feedbackDto.getComment() != null){
+            FeedbackComment feedbackComment = new FeedbackComment();
+            feedbackComment.setComment(feedbackDto.getComment());
+        feedback.setComment(feedbackComment);
         }
         return feedback;
     }
@@ -51,14 +45,14 @@ public class FeedbackMapper {
     public Feedback fromDtoUpdate(FeedbackDto feedbackDto, Feedback feedback) {
         feedback.setRating(feedbackDto.getRating());
         if (feedbackDto.getComment() != null && !feedbackDto.getComment().isEmpty()) {
-            if (!feedback.getComments().isEmpty()) {
-                FeedbackComment existingComment = feedback.getComments().iterator().next();
+            if (feedback.getComment() != null) {
+                FeedbackComment existingComment = feedback.getComment();
                 existingComment.setComment(feedbackDto.getComment());
             } else {
                 FeedbackComment newComment = new FeedbackComment();
                 newComment.setComment(feedbackDto.getComment());
                 newComment.setFeedback(feedback);
-                feedback.getComments().add(newComment);
+                feedback.setComment(newComment);
             }
         }
         return feedback;

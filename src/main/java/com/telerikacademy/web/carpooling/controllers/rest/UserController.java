@@ -71,18 +71,12 @@ public class UserController {
             User user = userMapper.fromDto(userDto);
             userService.create(user);
             return userMapper.toDto(user);
-        } catch (DuplicateExistsException de) {
+        } catch (DuplicateExistsException | DuplicateEmailExists de) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, de.getMessage());
-        } catch (DuplicateEmailExists dee) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, dee.getMessage());
         } catch (InvalidEmailException ie) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, ie.getMessage());
-        } catch (InvalidPasswordException epe) {
+        } catch (InvalidPasswordException | UnsupportedOperationException | InvalidPhoneNumberException epe) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, epe.getMessage());
-        } catch (UnsupportedOperationException uoe) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, uoe.getMessage());
-        } catch (InvalidPhoneNumberException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 

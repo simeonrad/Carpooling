@@ -11,7 +11,7 @@ public class FeedbackComment {
     @Column(name = "comment_id")
     private int id;
 
-    @ManyToOne
+    @OneToOne
     @JsonBackReference
     @JoinColumn(name = "feedback_id", nullable = false, foreignKey = @ForeignKey(name = "feedback_comments_ibfk_1"))
     private Feedback feedback;
