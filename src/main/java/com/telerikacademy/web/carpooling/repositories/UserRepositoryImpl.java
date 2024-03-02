@@ -5,6 +5,9 @@ import com.telerikacademy.web.carpooling.models.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -148,6 +151,59 @@ public class UserRepositoryImpl implements UserRepository {
             return query.list();
         }
     }
+
+    @Override
+    public Page<User> get(FilterUserOptions filterOptions, Pageable pageable) {
+        try (Session session = sessionFactory.openSession()) {
+            List<String> filters = new ArrayList<>();
+            Map<String, Object> params = new HashMap<>();
+
+            filterOptions.getUsername().ifPresent(value -> {
+                if (!value.isBlank()) {
+                    filters.add("username like :username");
+                    params.put("username", "%" + value + "%");
+                }
+            });
+
+            filterOptions.getEmail().ifPresent(value -> {
+                if (!value.isBlank()) {
+                    filters.add("email like :email");
+                    params.put("email", "%" + value + "%");
+                }
+            });
+
+            filterOptions.getPhoneNumber().ifPresent(value -> {
+                if (!value.isBlank()) {
+                    filters.add("phoneNumber = :phoneNumber");
+                    params.put("phoneNumber", value);
+                }
+            });
+
+            StringBuilder queryString = new StringBuilder("FROM User u");
+
+            if (!filters.isEmpty()) {
+                queryString.append(" WHERE ").append(String.join(" AND ", filters));
+            }
+
+            Query<Long> countQuery = session.createQuery("SELECT COUNT(u) " + queryString, Long.class);
+            countQuery.setProperties(params);
+
+            long total = countQuery.uniqueResult();
+
+            queryString.append(generateOrderBy(filterOptions));
+
+            Query<User> query = session.createQuery(queryString.toString(), User.class);
+            query.setProperties(params);
+
+            query.setFirstResult((int) pageable.getOffset());
+            query.setMaxResults(pageable.getPageSize());
+
+            List<User> users = query.getResultList();
+
+            return new PageImpl<>(users, pageable, total);
+        }
+    }
+
 
     private String generateOrderBy(FilterUserOptions filterOptions) {
         if (filterOptions.getSortBy().isEmpty()) {

@@ -2,6 +2,9 @@ package com.telerikacademy.web.carpooling.services;
 
 import com.telerikacademy.web.carpooling.models.FilterUserOptions;
 import com.telerikacademy.web.carpooling.models.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 public interface UserService {
@@ -12,6 +15,7 @@ public interface UserService {
     void update(User user, User updatedBy);
     void update(User user);
     List<User> get(FilterUserOptions filterUserOptions, User user);
+    Page<User> get(FilterUserOptions filterUserOptions, User user, Pageable pageable);
     List<User> get(FilterUserOptions filterUserOptions);
     void blockUser(String username, User admin);
     void unblockUser(String username, User admin);

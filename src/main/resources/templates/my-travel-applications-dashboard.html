@@ -11,6 +11,70 @@
     <link rel="stylesheet" href="/css/fonts.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/userSectionStyle.css">
+    <style>
+        .pagination-wrapper {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .paginationLogin {
+            display: inline-block;
+            padding-left: 0;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .paginationLogin li {
+            display: inline;
+            margin: 0 2px;
+        }
+
+        .paginationLogin li a {
+            position: relative;
+            float: left;
+            padding: 6px 12px;
+            margin-left: -1px;
+            line-height: 1.42857143;
+            color: #337ab7;
+            text-decoration: none;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+
+        .paginationLogin li:first-child a {
+            margin-left: 0;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }
+
+        .paginationLogin li:last-child a {
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+
+        .paginationLogin li a:hover,
+        .paginationLogin li a:focus {
+            z-index: 2;
+            color: #23527c;
+            background-color: #eee;
+            border-color: #ddd;
+        }
+
+        .paginationLogin .active a {
+            z-index: 3;
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #337ab7;
+            cursor: default;
+        }
+
+        .paginationLogin .disabled a {
+            color: #777;
+            cursor: not-allowed;
+            background-color: #fff;
+            border-color: #ddd;
+        }
+    </style>
 </head>
 <style>
     .flex-container {
@@ -245,37 +309,29 @@
     </div>
 
 
-<!--    <div class="breadcrumbs-custom-main context-dark">-->
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-xl-9">
-                    <h2 class="breadcrumbs-custom-title">My Organised Travels</h2>
-                </div>
-            </div>
-        </div>
-<!--    </div>-->
-<!--    <section class="breadcrumbs-custom">-->
+    <h3 style="text-align: center; margin-top: 20px;">My Applications</h3>
 
-    <h3>My Organised Travels</h3>
-
-
-    <!-- Search results-->
+    <!-- Search results for My Applications-->
     <section class="section section-mdDashboard">
         <div class="container">
-            <!-- RD Search-->
-            <form class="rd-form rd-search" action="#" th:action="@{/profile/my-profile}" method="get"
-                  th:object="${travelFilterOptions}">
+            <form class="rd-form rd-search" action="#" th:action="@{/profile/my-travel-applications}" method="get" th:object="${travelApplicationFilterOptions}">
                 <div class="flex-container">
-                    <div class="form-wrap" id="first-input-field"></div>
+                    <div class="form-wrap" id="application-first-input-field"></div>
                     <div class="form-wrap">
-                        <label class="form-label" for="rd-search-form-input-phone-number">Start point</label>
-                        <input th:field="*{startPoint}" class="form-input" id="rd-search-form-input-phone-number"
-                               type="text" name="start-point" autocomplete="off">
+                        <label class="form-label" for="application-start-point">Start point</label>
+                        <input th:field="*{startPoint}" class="form-input" id="application-start-point" type="text" name="startPoint" autocomplete="off">
                     </div>
                     <div class="form-wrap">
-                        <label class="form-label" for="rd-search-form-input-email">End point</label>
-                        <input th:field="*{endPoint}" class="form-input" id="rd-search-form-input-email" type="text"
-                               name="email" autocomplete="off">
+                        <label class="form-label" for="application-end-point">End point</label>
+                        <input th:field="*{endPoint}" class="form-input" id="application-end-point" type="text" name="endPoint" autocomplete="off">
+                    </div>
+                    <div class="form-wrap">
+                        <label class="form-label" for="application-departure-time">Departure Time</label>
+                        <input th:field="*{departureTime}" class="form-input" id="application-departure-time" type="text" name="departureTime" autocomplete="off">
+                    </div>
+                    <div class="form-wrap">
+                        <label class="form-label" for="application-driver">Driver</label>
+                        <input th:field="*{driver}" class="form-input" id="application-driver" type="text" name="driver" autocomplete="off">
                     </div>
                     <div class="form-wrap mx-sm-3 mb-2">
                         <label>
@@ -287,8 +343,6 @@
                             </select>
                         </label>
                     </div>
-
-                    <!-- Sort Order Select -->
                     <div class="form-wrap mx-sm-3 mb-2">
                         <label>
                             <select class="form-control" th:field="*{sortOrder}">
@@ -301,16 +355,14 @@
                 </div>
                 <div class="form-wrap form-button">
                     <button class="button button-secondary button-shadow" type="submit">Search</button>
-                    <div class="rd-search-results"></div>
                 </div>
             </form>
-
         </div>
-        <div class="travel-is-empty" th:if="${userTravels.isEmpty()}">
-            <h2>No Travels Found</h2>
+        <div class="travel-is-empty" th:if="${userTravelApplications.isEmpty()}">
+            <h2>No Applications Found</h2>
         </div>
     </section>
-    <section th:unless="${userTravels.isEmpty()}" class="section section-mdDashboard">
+    <section th:unless="${userTravelApplications.isEmpty()}" class="section section-mdDashboard">
         <div class="container">
             <div class="table-outer table-rounded table-responsive-lg">
                 <table class="table-custom table-custom-primary">
@@ -319,128 +371,43 @@
                         <th>Start Point</th>
                         <th>End Point</th>
                         <th>Departure time</th>
+                        <th>Driver</th>
                         <th>Status</th>
-                        <th>Give Feedback</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="travel : ${userTravels} ">
-                        <td th:href="@{/travels/{id}(id=${travel.id})}" th:text="${travel.startPoint}"></td>
-                        <td th:text="${travel.endPoint}"></td>
-                        <td th:text="${travel.getDepartureTime()}"></td>
-                        <td th:text="${travel.getStatus().getStatus().name()}"></td>
-                        <td>
-                            <button class="button button-sm button-primary button-winona"
-                                    th:text="'Give Feedback'"></button>
-                        </td>
+                    <tr th:each="travelApplication : ${userTravelApplications}">
+                        <td th:href="@{/travels/{id}(id=${travelApplication.travel.id})}" th:text="${travelApplication.travel.startPoint}"></td>
+                        <td th:text="${travelApplication.travel.endPoint}"></td>
+                        <td th:text="${travelApplication.travel.departureTime}"></td>
+                        <td th:text="${travelApplication.travel.driver.username}"></td>
+                        <td th:text="${travelApplication.status.status.name()}"></td>
                     </tr>
                     </tbody>
                 </table>
             </div>
-        </div>
-    </section>
-    <hr>
-    <section class="section section-md">
-        <div class="container">
-            <div class="table-outer table-rounded table-responsive-lg">
-                <table class="table-custom table-custom-bordered">
-                    <thead>
-                    <tr>
-                        <th>Column 1</th>
-                        <th>Column 2</th>
-                        <th>Column 3</th>
-                        <th>Column 4</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Item #1</td>
-                        <td>Description</td>
-                        <td>Subtotal</td>
-                        <td>$3.00</td>
-                    </tr>
-                    <tr>
-                        <td>Item #2</td>
-                        <td>Description</td>
-                        <td>Discount</td>
-                        <td>$3.00</td>
-                    </tr>
-                    <tr>
-                        <td>Item #3</td>
-                        <td>Description</td>
-                        <td>Shipping</td>
-                        <td>$3.00</td>
-                    </tr>
-                    <tr>
-                        <td>Item #4</td>
-                        <td>Description</td>
-                        <td>Tax</td>
-                        <td>$4.00</td>
-                    </tr>
-                    </tbody>
-                    <tfoot>
-                    <tr>
-                        <td>All Items</td>
-                        <td>Description</td>
-                        <td>Your Total</td>
-                        <td>$13.00</td>
-                    </tr>
-                    </tfoot>
-                </table>
+
+            <!-- Pagination controls -->
+
+            <div th:if="${userTravelApplications.totalPages > 1}" class="pagination-wrapper">
+                <ul class="paginationLogin">
+                    <li th:classappend="${userTravelApplications.first ? 'disabled' : ''}">
+                        <a th:href="@{/my-travel-applications(travelApplicationPage=${userTravelApplications.number - 1}, travelApplicationSize=${userTravelApplications.size})}" aria-label="Previous">&laquo;</a>
+                    </li>
+                    <li th:each="pageNum : ${#numbers.sequence(0, userTravelApplications.totalPages - 1)}"
+                        th:classappend="${pageNum == userTravelApplications.number ? 'active' : ''}">
+                        <a th:href="@{/my-travel-applications(travelApplicationPage=${pageNum}, travelApplicationSize=${userTravelApplications.size})}" th:text="${pageNum + 1}"></a>
+                    </li>
+                    <li th:classappend="${userTravelApplications.last ? 'disabled' : ''}">
+                        <a th:href="@{/my-travel-applications(travelApplicationPage=${userTravelApplications.number + 1}, travelApplicationSize=${userTravelApplications.size})}" aria-label="Next">&raquo;</a>
+                    </li>
+                </ul>
             </div>
+
         </div>
     </section>
-    <hr>
-    <section class="section section-md">
-        <div class="container">
-            <div class="table-outer table-rounded table-responsive-lg">
-                <table class="table-custom table-custom-striped table-custom-secondary">
-                    <thead>
-                    <tr>
-                        <th>Column 1</th>
-                        <th>Column 2</th>
-                        <th>Column 3</th>
-                        <th>Column 4</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Item #1</td>
-                        <td>Description</td>
-                        <td>Subtotal</td>
-                        <td>$3.00</td>
-                    </tr>
-                    <tr>
-                        <td>Item #2</td>
-                        <td>Description</td>
-                        <td>Discount</td>
-                        <td>$3.00</td>
-                    </tr>
-                    <tr>
-                        <td>Item #3</td>
-                        <td>Description</td>
-                        <td>Shipping</td>
-                        <td>$3.00</td>
-                    </tr>
-                    <tr>
-                        <td>Item #4</td>
-                        <td>Description</td>
-                        <td>Tax</td>
-                        <td>$4.00</td>
-                    </tr>
-                    </tbody>
-                    <tfoot>
-                    <tr>
-                        <td>All Items</td>
-                        <td>Description</td>
-                        <td>Your Total</td>
-                        <td>$13.00</td>
-                    </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-    </section>
+
+
     <!-- Page Footer-->
     <footer class="section footer-classic">
         <div class="footer-classic-main">

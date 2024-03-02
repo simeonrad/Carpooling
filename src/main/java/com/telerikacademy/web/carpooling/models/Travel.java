@@ -10,23 +10,17 @@ public class Travel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "travel_id")
     private int id;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "organizer_id")
     private User driver;
-
     @Column(name = "start_point", nullable = false, length = 255)
     private String startPoint;
-
     @Column(name = "end_point", nullable = false, length = 255)
     private String endPoint;
-
     @Column(name = "departure_time", nullable = false)
     private LocalDateTime departureTime;
-
     @Column(name = "free_spots", nullable = false)
     private int freeSpots;
-
     @ManyToOne
     @JoinColumn(name = "travel_status")
     private Status status;

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html class="wide wow-animation" lang="en" xmlns:th="http://www.thymeleaf.org">
+<html class="wide wow-animation" lang="en">
 <head>
-    <title>Search Travel</title>
+    <title>My Travels</title>
     <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,70 +10,7 @@
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/fonts.css">
     <link rel="stylesheet" href="/css/style.css">
-    <style>
-        .pagination-wrapper {
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        .paginationLogin {
-            display: inline-block;
-            padding-left: 0;
-            margin: 20px 0;
-            border-radius: 4px;
-        }
-
-        .paginationLogin li {
-            display: inline;
-            margin: 0 2px;
-        }
-
-        .paginationLogin li a {
-            position: relative;
-            float: left;
-            padding: 6px 12px;
-            margin-left: -1px;
-            line-height: 1.42857143;
-            color: #337ab7;
-            text-decoration: none;
-            background-color: #fff;
-            border: 1px solid #ddd;
-        }
-
-        .paginationLogin li:first-child a {
-            margin-left: 0;
-            border-top-left-radius: 4px;
-            border-bottom-left-radius: 4px;
-        }
-
-        .paginationLogin li:last-child a {
-            border-top-right-radius: 4px;
-            border-bottom-right-radius: 4px;
-        }
-
-        .paginationLogin li a:hover,
-        .paginationLogin li a:focus {
-            z-index: 2;
-            color: #23527c;
-            background-color: #eee;
-            border-color: #ddd;
-        }
-
-        .paginationLogin .active a {
-            z-index: 3;
-            color: #fff;
-            background-color: #337ab7;
-            border-color: #337ab7;
-            cursor: default;
-        }
-
-        .paginationLogin .disabled a {
-            color: #777;
-            cursor: not-allowed;
-            background-color: #fff;
-            border-color: #ddd;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/userSectionStyle.css">
 </head>
 <style>
     .flex-container {
@@ -122,8 +59,8 @@
         justify-content: center;
         width: 100%;
     }
-</style>
 
+</style>
 <body>
 <div class="preloader" id="loading">
     <div class="preloader-body">
@@ -136,7 +73,6 @@
     </div>
 </div>
 <div class="page">
-    <!-- Page Header-->
     <header class="section page-header page-header-4">
         <!-- RD Navbar-->
         <div class="rd-navbar-wrap">
@@ -154,12 +90,12 @@
                         <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span>
                         </button>
                         <!-- RD Navbar Brand-->
-                        <div class="rd-navbar-brand"> <a class="brand" href="/"><img class="brand-logo-dark" src="/images/cut-logo-carpool.jpg" alt="" width="111" height="72" loading="lazy" srcset="/images/logo-111x33.png 2x"/></a></div>
+                        <div class="rd-navbar-brand"> <a class="brand" href="index.html"><img class="brand-logo-dark" src="/images/cut-logo-carpool.jpg" alt="" width="111" height="72" loading="lazy" srcset="/images/logo-111x33.png 2x"/></a></div>
                     </div>
                     <div class="rd-navbar-nav-wrap">
                         <!-- RD Navbar Nav-->
                         <ul class="rd-navbar-nav">
-                            <li class="rd-nav-item"><a class="rd-nav-link" href="/travels/create">Create a travel</a>
+                            <li class="rd-nav-item"><a class="rd-nav-link" href="#">Create a travel</a>
                             </li>
                             <li class="rd-nav-item"><a class="rd-nav-link" href="/travels/search-travels">Travels</a>
                             </li>
@@ -173,73 +109,70 @@
                                         <li class="rd-megamenu-item">
                                             <ul class="rd-megamenu-list">
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/typography.html">Typography</a>
+                                                                                     href="typography.html">Typography</a>
                                                 </li>
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/buttons.html">Buttons</a>
+                                                                                     href="buttons.html">Buttons</a>
                                                 </li>
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/forms.html">Forms</a>
-                                                </li>
+                                                                                     href="forms.html">Forms</a></li>
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/tabs-and-accordions.html">Tabs
+                                                                                     href="tabs-and-accordions.html">Tabs
                                                     and Accordions</a></li>
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/progress-bars.html">Progress
+                                                                                     href="progress-bars.html">Progress
                                                     bars</a></li>
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/tables.html">Tables</a>
-                                                </li>
+                                                                                     href="tables.html">Tables</a></li>
                                             </ul>
                                         </li>
                                         <li class="rd-megamenu-item">
                                             <ul class="rd-megamenu-list">
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/gallery.html">Gallery</a>
+                                                                                     href="gallery.html">Gallery</a>
                                                 </li>
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/services.html">Services</a>
+                                                                                     href="services.html">Services</a>
                                                 </li>
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/services-2.html">Services
+                                                                                     href="services-2.html">Services
                                                     2</a></li>
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/pricing.html">Pricing</a>
+                                                                                     href="pricing.html">Pricing</a>
                                                 </li>
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/careers.html">Careers</a>
+                                                                                     href="careers.html">Careers</a>
                                                 </li>
                                             </ul>
                                         </li>
                                         <li class="rd-megamenu-item">
                                             <ul class="rd-megamenu-list">
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/grid-system.html">Grid
+                                                                                     href="grid-system.html">Grid
                                                     system</a></li>
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/privacy-policy.html">Privacy
+                                                                                     href="privacy-policy.html">Privacy
                                                     policy</a></li>
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/404-page.html">404
-                                                    Page</a></li>
+                                                                                     href="404-page.html">404 Page</a>
+                                                </li>
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/coming-soon.html">Coming
+                                                                                     href="coming-soon.html">Coming
                                                     Soon</a></li>
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/search-results.html">Search
+                                                                                     href="search-results.html">Search
                                                     results</a></li>
                                             </ul>
                                         </li>
                                         <li class="rd-megamenu-item">
                                             <ul class="rd-megamenu-list">
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/contact-us.html">Contact
+                                                                                     href="contact-us.html">Contact
                                                     Us</a></li>
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/login.html">Login</a>
-                                                </li>
+                                                                                     href="login.html">Login</a></li>
                                                 <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
-                                                                                     href="/templates/register.html">Register</a>
+                                                                                     href="../templates/register.html">Register</a>
                                                 </li>
                                             </ul>
                                         </li>
@@ -249,7 +182,7 @@
                         </ul>
                     </div>
                     <div class="rd-navbar-element"><a class="button button-sm button-default-outline button-winona"
-                                                      href="/auth/login">Log in</a>
+                                                      href="auth/login">Log in</a>
                         <button class="rd-navbar-aside-open-toggle" data-multitoggle="#rd-navbar-aside"
                                 aria-label="Sidebar toggle"><span></span><span></span><span></span></button>
                     </div>
@@ -265,10 +198,10 @@
                     <div class="rd-navbar-aside-main">
                         <div class="rd-navbar-aside-group navbar"
                              data-navbar="{&quot;stuck&quot;: false, &quot;anchor&quot;: {&quot;offsetRef&quot;: &quot;.rd-navbar-main&quot;}}">
-                            <div class="navbar-inner"><a class="rd-navbar-aside-link" href="/templates/about-us.html">About
-                                Us</a><a class="rd-navbar-aside-link" href="/templates/faq.html">FAQ</a><a
-                                    class="rd-navbar-aside-link" href="/templates/testimonials.html">Testimonials</a><a
-                                    class="rd-navbar-aside-link" href="/templates/our-team.html">Our Team</a>
+                            <div class="navbar-inner"><a class="rd-navbar-aside-link" href="about-us.html">About
+                                Us</a><a class="rd-navbar-aside-link" href="faq.html">FAQ</a><a
+                                    class="rd-navbar-aside-link" href="testimonials.html">Testimonials</a><a
+                                    class="rd-navbar-aside-link" href="our-team.html">Our Team</a>
                             </div>
                         </div>
                     </div>
@@ -281,7 +214,7 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-xl-9">
-                        <h2 class="breadcrumbs-custom-title">Find Your Travel</h2>
+                        <h2 class="breadcrumbs-custom-title">My Dashboard</h2>
                     </div>
                 </div>
             </div>
@@ -289,26 +222,41 @@
         <div class="breadcrumbs-custom-aside">
             <div class="container">
                 <ul class="breadcrumbs-custom-path">
-                    <li><a href="/templates/index.html">Home</a></li>
+                    <li><a href="index.html">Home</a></li>
                     <li><a href="#">Pages</a></li>
-                    <li class="active">Find Your Travel</li>
+                    <li class="active">Tables</li>
                 </ul>
             </div>
         </div>
     </section>
-    <!-- Search results-->
-    <section class="section section-md">
+    <div class="user-profile-wrapper">
+        <div class="user-profile">
+            <div class="user-photo">
+                <img th:if="${profileUser.photoUrl}"
+                     th:src="${profileUser.photoUrl}"
+                     alt="User Photo">
+            </div>
+            <div class="user-info">
+                <p th:text="${profileUser.username}" class="username">Username: johndoe</p>
+                <p th:text="${profileUser.firstName + ' ' + profileUser.lastName}" class="names">Name: John Doe</p>
+                <p th:text="${profileUser.feedback}" class="rating">Rating: ★★★★☆</p>
+            </div>
+        </div>
+    </div>
+
+
+
+    <h3 style="text-align: center; margin-top: 20px;">My Organised Travels</h3>
+
+
+    <!-- Search results for My Organised Travels-->
+    <section class="section section-mdDashboard">
         <div class="container">
             <!-- RD Search-->
-            <form class="rd-form rd-search" action="#" th:action="@{/travels/search-travels}" method="get"
-                  th:object="${filterOptions}">
+            <form class="rd-form rd-search" action="#" th:action="@{/profile/my-organised-travels}" method="get"
+                  th:object="${travelFilterOptions}">
                 <div class="flex-container">
                     <div class="form-wrap" id="first-input-field"></div>
-                    <div class="form-wrap">
-                        <label class="form-label" for="rd-search-form-input-username">Username</label>
-                        <input type="text" th:field="*{author}" class="form-input" id="rd-search-form-input-username"
-                               name="username" autocomplete="off">
-                    </div>
                     <div class="form-wrap">
                         <label class="form-label" for="rd-search-form-input-phone-number">Start point</label>
                         <input th:field="*{startPoint}" class="form-input" id="rd-search-form-input-phone-number"
@@ -319,16 +267,10 @@
                         <input th:field="*{endPoint}" class="form-input" id="rd-search-form-input-email" type="text"
                                name="email" autocomplete="off">
                     </div>
-                    <div class="form-wrap">
-                        <label class="form-label" for="rd-search-form-input-free-spots">Free seats</label>
-                        <input th:field="*{freeSpots}" class="form-input" id="rd-search-form-input-free-spots"
-                               type="text" name="email" autocomplete="off">
-                    </div>
                     <div class="form-wrap mx-sm-3 mb-2">
                         <label>
                             <select class="form-control" th:field="*{sortBy}">
                                 <option value="">Sort By</option>
-                                <option value="freeSpots">Free spots</option>
                                 <option value="departureTime">Departure time</option>
                                 <option value="distanceKm">Distance</option>
                                 <option value="durationMinutes">Duration</option>
@@ -354,11 +296,11 @@
             </form>
 
         </div>
-        <div class="travel-is-empty" th:if="${travels.isEmpty()}">
+        <div class="travel-is-empty" th:if="${userTravels.isEmpty()}">
             <h2>No Travels Found</h2>
         </div>
     </section>
-    <section th:unless="${travels.isEmpty()}" class="section section-md">
+    <section th:unless="${userTravels.isEmpty()}" class="section section-mdDashboard">
         <div class="container">
             <div class="table-outer table-rounded table-responsive-lg">
                 <table class="table-custom table-custom-primary">
@@ -366,46 +308,29 @@
                     <tr>
                         <th>Start Point</th>
                         <th>End Point</th>
-                        <th>Free Seats</th>
-                        <th>Apply</th>
+                        <th>Departure time</th>
+                        <th>Status</th>
+                        <th>Give Feedback</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="travel : ${travels} ">
+                    <tr th:each="travel : ${userTravels} ">
                         <td th:href="@{/travels/{id}(id=${travel.id})}" th:text="${travel.startPoint}"></td>
                         <td th:text="${travel.endPoint}"></td>
-                        <td th:text="${travel.freeSpots}"></td>
+                        <td th:text="${travel.getDepartureTime()}"></td>
+                        <td th:text="${travel.getStatus().getStatus().name()}"></td>
                         <td>
-                            <form th:if="${isAdmin}" action="#" th:action="@{/travels/delete/{id}(id=${travel.id})}" class="user-action-form" method="post">
-                                <button  type="submit" th:method="post" th:action="@{/travels/delete/{id}(id=${travel.id})}" class="button button-gray-700 button-winona" th:text="Delete"></button>
-                            </form>
-                            <button th:unless="${isAdmin}" class="button button-sm button-primary button-winona" th:text="Apply"></button>
+                            <button class="button button-sm button-primary button-winona"
+                                    th:text="'Give Feedback'"></button>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
-            <!-- Pagination controls -->
-            <div th:if="${travels.totalPages > 1}" class="pagination-wrapper">
-                <ul class="paginationLogin">
-                    <li th:classappend="${travels.number == 0 ? 'disabled' : ''}">
-                        <a th:href="@{/travels/search-travels(travelPage=${travels.number - 1}, travelSize=${travelSize})}" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li th:each="pageNum : ${#numbers.sequence(0, travels.totalPages - 1)}"
-                        th:classappend="${pageNum == travels.number ? 'active' : ''}">
-                        <a th:href="@{/travels/search-travels(travelPage=${pageNum}, travelSize=${travelSize})}" th:text="${pageNum + 1}">1</a>
-                    </li>
-                    <li th:classappend="${travels.number + 1 == travels.totalPages ? 'disabled' : ''}">
-                        <a th:href="@{/travels/search-travels(travelPage=${travels.number + 1}, travelSize=${travelSize})}" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
         </div>
     </section>
+
+
     <!-- Page Footer-->
     <footer class="section footer-classic">
         <div class="footer-classic-main">
@@ -416,27 +341,27 @@
                             loading="lazy" srcset="/images/logo-222x66.png 2x"/></a>
                         <p><span
                                 style="max-width: 250px;">We provide the best taxi services for you all over the USA.</span>
-                        </p><a class="button button-sm button-default-outline button-winona"
-                               href="/templates/login.html">Order Now</a>
+                        </p><a class="button button-sm button-default-outline button-winona" href="login.html">Order
+                            Now</a>
                     </div>
                     <div class="col-sm-5 col-lg-3 col-xl-2">
                         <h5 class="footer-classic-title">About</h5>
                         <ul class="list footer-classic-list">
-                            <li><a href="/templates/about-us.html">About Us</a></li>
-                            <li><a href="/templates/careers.html">Careers</a></li>
+                            <li><a href="about-us.html">About Us</a></li>
+                            <li><a href="careers.html">Careers</a></li>
                             <li><a href="#">Press and media</a></li>
                         </ul>
                     </div>
                     <div class="col-sm-7 col-lg-5 col-xl-3">
                         <h5 class="footer-classic-title">Quick Links</h5>
                         <ul class="list footer-classic-list footer-classic-list_2-cols">
-                            <li><a href="/templates/login.html">Sign Up</a></li>
-                            <li><a href="/templates/services.html">Services</a></li>
-                            <li><a href="/templates/privacy-policy.html">Privacy policy</a></li>
+                            <li><a href="login.html">Sign Up</a></li>
+                            <li><a href="services.html">Services</a></li>
+                            <li><a href="privacy-policy.html">Privacy policy</a></li>
                             <li><a href="#">Blog</a></li>
-                            <li><a href="/templates/pricing.html">Pricing</a></li>
-                            <li><a href="/templates/faq.html">Online Help</a></li>
-                            <li><a href="/templates/faq.html">FAQ</a></li>
+                            <li><a href="pricing.html">Pricing</a></li>
+                            <li><a href="faq.html">Online Help</a></li>
+                            <li><a href="faq.html">FAQ</a></li>
                         </ul>
                     </div>
                     <div class="col-sm-5 col-lg-9 col-xl-2">

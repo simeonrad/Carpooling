@@ -80,9 +80,8 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public Page<Feedback> getMyReceivedFeedbacks(User user, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return feedbackRepository.getMyReceivedFeedbacks(user, pageable);
+    public Page<Feedback> getMyReceivedFeedbacks(FilterFeedbackOptions filterFeedbackOptions, Pageable pageable) {
+        return feedbackRepository.getMyReceivedFeedbacks(filterFeedbackOptions, pageable);
     }
 
     @Override

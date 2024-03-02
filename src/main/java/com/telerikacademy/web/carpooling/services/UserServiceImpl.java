@@ -10,6 +10,8 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.validation.Valid;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -184,6 +186,14 @@ public class UserServiceImpl implements UserService {
             throw new UnauthorizedOperationException(REGULAR_USERS_UNAUTHORIZED_OPERATION);
         }
         return userRepository.get(filterUserOptions);
+    }
+
+    @Override
+    public Page<User> get(FilterUserOptions filterUserOptions, User user, Pageable pageable) {
+        if (!user.getRole().getName().equals(ADMIN)) {
+            throw new UnauthorizedOperationException(REGULAR_USERS_UNAUTHORIZED_OPERATION);
+        }
+        return userRepository.get(filterUserOptions, pageable);
     }
 
     @Override
