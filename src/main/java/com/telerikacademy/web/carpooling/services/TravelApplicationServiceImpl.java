@@ -1,11 +1,9 @@
 package com.telerikacademy.web.carpooling.services;
 
+import com.telerikacademy.web.carpooling.exceptions.DuplicateExistsException;
 import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
 import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
-import com.telerikacademy.web.carpooling.models.FilterApplicationOptions;
-import com.telerikacademy.web.carpooling.models.FilterMyApplicationsOptions;
-import com.telerikacademy.web.carpooling.models.TravelApplication;
-import com.telerikacademy.web.carpooling.models.User;
+import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
 import com.telerikacademy.web.carpooling.repositories.StatusRepository;
 import com.telerikacademy.web.carpooling.repositories.TravelApplicationRepository;
@@ -26,6 +24,7 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
     private final TravelApplicationRepository applicationRepository;
     private final StatusRepository statusRepository;
 
+
     @Autowired
     public TravelApplicationServiceImpl(TravelApplicationRepository applicationRepository, StatusRepository statusRepository) {
         this.applicationRepository = applicationRepository;
@@ -38,8 +37,16 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
         if (application.getPassenger().equals(application.getTravel().getDriver())) {
             throw new ForbiddenOperationException("Travel organizer cannot apply for his own travel!");
         }
+
         application.setStatus(statusRepository.getByValue(ApplicationStatus.PENDING));
         applicationRepository.create(application);
+    }
+
+    @Override
+    public void checkIfCreated(Travel travel, User user) {
+        if (applicationRepository.isUserAppliedForTravel(travel.getId(), user.getId())) {
+            throw new DuplicateExistsException("User already applied for travel");
+        }
     }
 
     @Override

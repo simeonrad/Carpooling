@@ -1,9 +1,6 @@
 package com.telerikacademy.web.carpooling.services;
 
-import com.telerikacademy.web.carpooling.models.FilterApplicationOptions;
-import com.telerikacademy.web.carpooling.models.FilterMyApplicationsOptions;
-import com.telerikacademy.web.carpooling.models.TravelApplication;
-import com.telerikacademy.web.carpooling.models.User;
+import com.telerikacademy.web.carpooling.models.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,6 +8,8 @@ import java.util.List;
 
 public interface TravelApplicationService {
     void create(TravelApplication application);
+
+    void checkIfCreated(Travel travel, User user);
 
     void update(User user, TravelApplication application);
     void update(TravelApplication application);
