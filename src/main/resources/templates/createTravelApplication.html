@@ -2,7 +2,7 @@
 <!--<html class="wide wow-animation" lang="en" xmlns:th="http://www.thymeleaf.org">-->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Update Travel</title>
+    <title>Create Travel Application</title>
     <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -34,22 +34,28 @@
                         <div class="box-shadow-1"><a class="brand" href="index.html"><img
                                 class="brand-logo-dark" src="/images/logo-111x33.png" alt="" width="111"
                                 height="33" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a>
-                            <p class="text-gray-900"><span style="max-width: 400px">Update travel</span>
+                            <p class="text-gray-900"><span style="max-width: 400px">Create travel application</span>
                             </p>
                             <div class="box-shadow-1-main">
                                 <!-- RD Mailform -->
-                                <form th:action="@{/travels/update/{id}(id=${updateTravel.id})}" th:object="${updateTravel}" method="post">
-                                    <!-- Hidden ID Field -->
-                                    <input type="hidden" th:field="*{id}">
-
-                                    <!-- Free Spots Field -->
-                                    <div class="form-group">
-                                        <label for="freeSpots">Free Spots</label>
-                                        <input type="number" class="form-control" id="freeSpots" th:field="*{freeSpots}" required>
+                                <form th:action="@{/travels/applications/create/{travelId}(travelId=${travel.id})}" method="post" th:object="${applicationDto}">
+                                    <div>
+                                        <label>Travel Details:</label>
+                                        <p>Start Point: <span th:text="${travel.startPoint}"></span></p>
+                                        <p>End Point: <span th:text="${travel.endPoint}"></span></p>
+                                        <p>Departure Time: <span th:text="${#temporals.format(travel.departureTime, 'dd/MM/yyyy HH:mm')}"></span></p>
+                                    </div>
+                                    <div>
+                                        <label for="wantToSmoke">Want to Smoke:</label>
+                                        <input type="checkbox" id="wantToSmoke" name="wantToSmoke" th:field="*{wantToSmoke}">
+                                    </div>
+                                    <div>
+                                        <label for="hasBaggage">Has Baggage:</label>
+                                        <input type="checkbox" id="hasBaggage" name="hasBaggage" th:field="*{hasBaggage}">
                                     </div>
 
-                                    <!-- Submit Button -->
-                                    <button type="submit" class="btn btn-primary">Update</button>
+                                    <input type="hidden" name="travelId" th:value="${travel.id}">
+                                    <button type="submit">Submit</button>
                                 </form>
                             </div>
                         </div>

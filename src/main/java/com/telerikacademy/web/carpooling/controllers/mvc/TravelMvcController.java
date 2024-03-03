@@ -1,15 +1,18 @@
 package com.telerikacademy.web.carpooling.controllers.mvc;
 
 import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
+import com.telerikacademy.web.carpooling.helpers.TravelApplicationMapper;
 import com.telerikacademy.web.carpooling.helpers.TravelMapper;
 import com.telerikacademy.web.carpooling.exceptions.AuthenticationFailureException;
 import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
 import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.web.carpooling.models.*;
-import com.telerikacademy.web.carpooling.services.TravelApplicationService;
+import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
 import com.telerikacademy.web.carpooling.repositories.StatusRepository;
+import com.telerikacademy.web.carpooling.services.TravelApplicationService;
 import com.telerikacademy.web.carpooling.services.TravelService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +27,9 @@ public class TravelMvcController {
     private final TravelService travelService;
     private final AuthenticationHelper authenticationHelper;
     private final TravelMapper travelMapper;
+    private final TravelApplicationMapper travelApplicationMapper;
     private final TravelApplicationService travelApplicationService;
+    private final StatusRepository statusRepository;
 
     @ModelAttribute("isAdmin")
     public boolean populateIsAdmin(HttpSession session) {
@@ -44,11 +49,13 @@ public class TravelMvcController {
 
 
     @Autowired
-    public TravelMvcController(TravelService travelService, TravelApplicationService travelApplicationService, AuthenticationHelper authenticationHelper, TravelMapper travelMapper) {
+    public TravelMvcController(TravelService travelService, TravelApplicationService travelApplicationService, AuthenticationHelper authenticationHelper, TravelMapper travelMapper, TravelApplicationMapper travelApplicationMapper, StatusRepository statusRepository) {
         this.travelService = travelService;
         this.authenticationHelper = authenticationHelper;
         this.travelApplicationService = travelApplicationService;
         this.travelMapper = travelMapper;
+        this.travelApplicationMapper = travelApplicationMapper;
+        this.statusRepository = statusRepository;
     }
 
 
@@ -204,5 +211,50 @@ public class TravelMvcController {
         }
         return "redirect:/auth/login";
     }
+
+    @GetMapping("/applications/create/{travelId}")
+    public String showCreateApplicationForm(@PathVariable("travelId") int travelId, Model model, HttpSession session) {
+        TravelApplicationDto applicationDto = new TravelApplicationDto();
+        try {
+            User currentUser = authenticationHelper.tryGetUser(session);
+            Travel travel = travelService.getById(travelId);
+
+            applicationDto.setTravelId(travelId);
+            model.addAttribute("travel", travel);
+            model.addAttribute("applicationDto", applicationDto);
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error retrieving travel details: " + e.getMessage());
+            return "errorPage";
+        }
+        return "createTravelApplication";
+    }
+
+    @PostMapping("/applications/create/{travelId}")
+    public String handleCreateApplication(@PathVariable("travelId") int travelId,
+                                          @Valid @ModelAttribute("applicationDto") TravelApplicationDto applicationDto,
+                                          BindingResult bindingResult, HttpSession session, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("travelId", travelId);
+            return "createTravelApplication";
+        }
+        try {
+            User currentUser = authenticationHelper.tryGetUser(session);
+            applicationDto.setPassengerUsername(currentUser.getUsername());
+
+            TravelApplication application = travelApplicationMapper.fromDto(applicationDto, currentUser);
+            application.setPassenger(currentUser);
+            application.setTravel(travelService.getById(travelId));
+
+            application.setStatus(statusRepository.getByValue(ApplicationStatus.PENDING));
+
+            travelApplicationService.create(application);
+            return "redirect:/travels/search-travels";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error creating travel application: " + e.getMessage());
+            model.addAttribute("travelId", travelId);
+            return "createTravelApplication";
+        }
+    }
+
 
 }
