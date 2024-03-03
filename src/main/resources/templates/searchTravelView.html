@@ -371,15 +371,22 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="travel : ${travels} ">
-                        <td th:href="@{/travels/{id}(id=${travel.id})}" th:text="${travel.startPoint}"></td>
+                    <tr th:each="travel : ${travels}">
+                        <td th:text="${travel.startPoint}"></td>
                         <td th:text="${travel.endPoint}"></td>
                         <td th:text="${travel.freeSpots}"></td>
                         <td>
-                            <form th:if="${isAdmin}" action="#" th:action="@{/travels/delete/{id}(id=${travel.id})}" class="user-action-form" method="post">
-                                <button  type="submit" th:method="post" th:action="@{/travels/delete/{id}(id=${travel.id})}" class="button button-gray-700 button-winona" th:text="Delete"></button>
-                            </form>
-                            <button th:unless="${isAdmin}" class="button button-sm button-primary button-winona" th:text="Apply"></button>
+                            <!-- Conditional rendering for Admin -->
+                            <div th:if="${isAdmin}">
+                                <form th:action="@{/travels/delete/{id}(id=${travel.id})}" method="post" style="display:inline;">
+                                    <input type="hidden" name="_method" value="delete"/>
+                                    <button type="submit" class="button button-gray-700 button-winona">Delete</button>
+                                </form>
+                                <a th:href="@{/travels/applications/create/{id}(id=${travel.id})}" class="button button-primary button-winona">Apply</a>
+                            </div>
+
+                            <!-- Non-admin users see only the Apply button -->
+                            <a th:unless="${isAdmin}" th:href="@{/travels/applications/create/{id}(id=${travel.id})}" class="button button-sm button-primary button-winona">Apply</a>
                         </td>
                     </tr>
                     </tbody>
