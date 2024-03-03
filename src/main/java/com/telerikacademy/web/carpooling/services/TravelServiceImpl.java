@@ -4,6 +4,7 @@ import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
 import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.web.carpooling.models.FilterTravelOptions;
 import com.telerikacademy.web.carpooling.models.Travel;
+import com.telerikacademy.web.carpooling.models.TravelApplication;
 import com.telerikacademy.web.carpooling.models.User;
 import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
 import com.telerikacademy.web.carpooling.repositories.StatusRepository;
@@ -21,13 +22,15 @@ public class TravelServiceImpl implements TravelService {
     private final StatusRepository statusRepository;
     private final DistanceAndDuration distanceAndDuration;
     private final UserBlockService userBlockService;
+    private final TravelApplicationService travelApplicationService;
 
     @Autowired
-    public TravelServiceImpl(TravelRepository travelRepository, StatusRepository statusRepository, DistanceAndDuration distanceAndDuration, UserBlockService userBlockService) {
+    public TravelServiceImpl(TravelRepository travelRepository, StatusRepository statusRepository, DistanceAndDuration distanceAndDuration, UserBlockService userBlockService, TravelApplicationService travelApplicationService) {
         this.travelRepository = travelRepository;
         this.statusRepository = statusRepository;
         this.distanceAndDuration = distanceAndDuration;
         this.userBlockService = userBlockService;
+        this.travelApplicationService = travelApplicationService;
     }
 
     @Override
@@ -95,6 +98,10 @@ public class TravelServiceImpl implements TravelService {
     public void cancel(User user, Travel travel) {
         if (travel.getDriver().equals(user)) {
             travel.setStatus(statusRepository.getByValue(ApplicationStatus.CANCELLED));
+            for (TravelApplication application: travelApplicationService.getByTravelId(travel.getId())){
+                application.setStatus(statusRepository.getByValue(ApplicationStatus.DECLINED));
+                travelApplicationService.update(application);
+            }
             travelRepository.update(travel);
             if (travel.getDepartureTime().isBefore(LocalDateTime.now())){
                 throw new ForbiddenOperationException("You cannot cancel a travel after the departure time");

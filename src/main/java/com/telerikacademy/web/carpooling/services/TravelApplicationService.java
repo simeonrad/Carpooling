@@ -13,6 +13,7 @@ public interface TravelApplicationService {
     void create(TravelApplication application);
 
     void update(User user, TravelApplication application);
+    void update(TravelApplication application);
 
     void delete(User user, TravelApplication application);
 

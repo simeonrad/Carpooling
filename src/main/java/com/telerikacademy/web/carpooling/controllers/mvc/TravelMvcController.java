@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
 
+import java.util.ArrayList;
 import java.util.List;
 @Controller
 @RequestMapping("travels")
@@ -104,6 +105,32 @@ public class TravelMvcController {
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error creating travel: " + e.getMessage());
             return "createTravel";
+        }
+    }
+
+    @GetMapping("/{id}")
+    public String singleTravel(@PathVariable int id, Model model, HttpSession session) {
+        try {
+            User user = authenticationHelper.tryGetUser(session);
+            Travel travel = travelService.getById(id);
+            List<User> usersToFeedback = new ArrayList<>();
+            List<User> approvedUsersInTravel = new ArrayList<>();
+            for (TravelApplication application:travelApplicationService.getByTravelId(id)) {
+                if (application.getStatus().getStatus().equals(ApplicationStatus.APPROVED)) {
+                    approvedUsersInTravel.add(application.getPassenger());
+                }
+            }
+            if (travel.getDriver().equals(user)){
+                usersToFeedback.addAll(approvedUsersInTravel);
+            }
+            if (approvedUsersInTravel.contains(user)){
+                usersToFeedback.add(travel.getDriver());
+            }
+            model.addAttribute("travel" , travel);
+            model.addAttribute("usersToGiveFeedback" , usersToFeedback);
+            return "single-travel";
+        } catch (AuthenticationFailureException e) {
+            return "redirect:/auth/login";
         }
     }
 

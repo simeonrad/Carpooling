@@ -48,6 +48,11 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
     }
 
     @Override
+    public void update(TravelApplication application) {
+        applicationRepository.update(application);
+    }
+
+    @Override
     public void delete(User user, TravelApplication application) {
         if (application.getPassenger().equals(user))
             applicationRepository.delete(application);
