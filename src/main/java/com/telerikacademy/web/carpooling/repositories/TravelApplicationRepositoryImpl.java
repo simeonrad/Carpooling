@@ -85,7 +85,6 @@ public class TravelApplicationRepositoryImpl implements TravelApplicationReposit
     }
 
     @Override
-
     public List<TravelApplication> get(FilterApplicationOptions filterOptions) {
         try (Session session = sessionFactory.openSession()) {
             List<String> filters = new ArrayList<>();
@@ -223,6 +222,19 @@ public class TravelApplicationRepositoryImpl implements TravelApplicationReposit
         }
 
         return orderBy;
+    }
+
+    @Override
+    public boolean isUserAppliedForTravel(int travelId, int passengerId) {
+        try (Session session = sessionFactory.openSession()) {
+            String hql = "SELECT count(*) FROM TravelApplication ta WHERE ta.travel.id = :travelId AND ta.passenger.id = :passengerId";
+            Query<Long> query = session.createQuery(hql, Long.class);
+            query.setParameter("travelId", travelId);
+            query.setParameter("passengerId", passengerId);
+
+            long count = query.uniqueResult();
+            return count > 0;
+        }
     }
 
 }

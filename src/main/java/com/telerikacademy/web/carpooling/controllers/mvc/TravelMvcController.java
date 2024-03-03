@@ -1,5 +1,6 @@
 package com.telerikacademy.web.carpooling.controllers.mvc;
 
+import com.telerikacademy.web.carpooling.exceptions.DuplicateExistsException;
 import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
 import com.telerikacademy.web.carpooling.helpers.TravelApplicationMapper;
 import com.telerikacademy.web.carpooling.helpers.TravelMapper;
@@ -9,6 +10,7 @@ import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationExcepti
 import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
 import com.telerikacademy.web.carpooling.repositories.StatusRepository;
+import com.telerikacademy.web.carpooling.repositories.TravelApplicationRepository;
 import com.telerikacademy.web.carpooling.services.TravelApplicationService;
 import com.telerikacademy.web.carpooling.services.TravelService;
 import jakarta.servlet.http.HttpSession;
@@ -229,12 +231,14 @@ public class TravelMvcController {
             User currentUser = authenticationHelper.tryGetUser(session);
             Travel travel = travelService.getById(travelId);
 
+            travelApplicationService.checkIfCreated(travel, currentUser);
+
             applicationDto.setTravelId(travelId);
             model.addAttribute("travel", travel);
             model.addAttribute("applicationDto", applicationDto);
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error retrieving travel details: " + e.getMessage());
-            return "errorPage";
+        } catch (DuplicateExistsException e) {
+            model.addAttribute("status", e.getMessage());
+            return "404-page";
         }
         return "createTravelApplication";
     }
