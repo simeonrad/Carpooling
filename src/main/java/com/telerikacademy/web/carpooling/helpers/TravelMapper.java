@@ -1,11 +1,14 @@
 package com.telerikacademy.web.carpooling.helpers;
 
 import com.telerikacademy.web.carpooling.models.*;
+import com.telerikacademy.web.carpooling.services.TravelCommentService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TravelMapper {
-    public TravelMapper() {
+    private TravelCommentService travelCommentService;
+    public TravelMapper(TravelCommentService travelCommentService) {
+        this.travelCommentService = travelCommentService;
     }
 
     public Travel fromDto(TravelDto travelDto, User author) {
@@ -36,6 +39,10 @@ public class TravelMapper {
         travelDto.setStatus(travel.getStatus().getStatus().toString());
         travelDto.setDistanceKm(travel.getDistanceKm());
         travelDto.setDurationMinutes(travel.getDurationMinutes());
+        TravelComment comment = travelCommentService.findByTravelId(travel.getId());
+        if (comment != null) {
+            travelDto.setComment(comment.getComment());
+        }
        return travelDto;
     }
 }

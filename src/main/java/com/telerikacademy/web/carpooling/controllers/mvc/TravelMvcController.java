@@ -10,8 +10,8 @@ import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationExcepti
 import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
 import com.telerikacademy.web.carpooling.repositories.StatusRepository;
-import com.telerikacademy.web.carpooling.repositories.TravelApplicationRepository;
 import com.telerikacademy.web.carpooling.services.TravelApplicationService;
+import com.telerikacademy.web.carpooling.services.TravelCommentService;
 import com.telerikacademy.web.carpooling.services.TravelService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -36,6 +36,7 @@ public class TravelMvcController {
     private final TravelApplicationMapper travelApplicationMapper;
     private final TravelApplicationService travelApplicationService;
     private final StatusRepository statusRepository;
+    private final TravelCommentService travelCommentService;
 
     @ModelAttribute("isAdmin")
     public boolean populateIsAdmin(HttpSession session) {
@@ -55,13 +56,14 @@ public class TravelMvcController {
 
 
     @Autowired
-    public TravelMvcController(TravelService travelService, TravelApplicationService travelApplicationService, AuthenticationHelper authenticationHelper, TravelMapper travelMapper, TravelApplicationMapper travelApplicationMapper, StatusRepository statusRepository) {
+    public TravelMvcController(TravelService travelService, TravelApplicationService travelApplicationService, AuthenticationHelper authenticationHelper, TravelMapper travelMapper, TravelApplicationMapper travelApplicationMapper, StatusRepository statusRepository, TravelCommentService travelCommentService) {
         this.travelService = travelService;
         this.authenticationHelper = authenticationHelper;
         this.travelApplicationService = travelApplicationService;
         this.travelMapper = travelMapper;
         this.travelApplicationMapper = travelApplicationMapper;
         this.statusRepository = statusRepository;
+        this.travelCommentService = travelCommentService;
     }
 
 
@@ -103,6 +105,7 @@ public class TravelMvcController {
             Travel travel = travelMapper.fromDto(travelDto);
             travel.setDriver(user);
             travelService.create(travel, user);
+            travelCommentService.addOrUpdateComment(travel.getId(), travelDto.getComment());
             return "redirect:/travels/search-travels";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error creating travel: " + e.getMessage());
@@ -160,8 +163,6 @@ public class TravelMvcController {
 
     @PostMapping("/update/{id}")
     public String handleUpdateTravel(@PathVariable("id") int id, @ModelAttribute("updateTravel") TravelDto travelDto, BindingResult bindingResult, HttpSession session, Model model) {
-        System.out.println("Received ID for update: " + id);
-        travelDto.setId(id);
         if (bindingResult.hasErrors()) {
             return "updateTravel";
         }
@@ -174,8 +175,13 @@ public class TravelMvcController {
                 return "errorPage";
             }
 
-            existingTravel.setFreeSpots(travelDto.getFreeSpots());
             travelService.update(existingTravel, user);
+
+            if (travelDto.getComment() != null && !travelDto.getComment().trim().isEmpty()) {
+                travelCommentService.addOrUpdateComment(id, travelDto.getComment());
+            } else {
+                travelCommentService.deleteCommentByTravelId(id);
+            }
 
             return "redirect:/travels/search-travels";
         } catch (Exception e) {
@@ -183,6 +189,7 @@ public class TravelMvcController {
             return "updateTravel";
         }
     }
+
 
 
     @GetMapping("/applications/{id}")

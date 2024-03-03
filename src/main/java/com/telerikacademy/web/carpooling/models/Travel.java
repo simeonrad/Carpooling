@@ -28,6 +28,8 @@ public class Travel {
     private int durationMinutes;
     @Column(name = "distance_km", nullable = false)
     private int distanceKm;
+    @OneToOne(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private TravelComment comment;
 
     public Travel() {
     }
@@ -102,5 +104,13 @@ public class Travel {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public TravelComment getComment() {
+        return comment;
+    }
+
+    public void setComment(TravelComment comment) {
+        this.comment = comment;
     }
 }

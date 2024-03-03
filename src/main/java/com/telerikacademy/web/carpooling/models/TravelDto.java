@@ -12,6 +12,7 @@ public class TravelDto {
     private int distanceKm;
     private int durationMinutes;
     private String status;
+    private String comment;
 
     public TravelDto() {
     }
@@ -99,5 +100,13 @@ public class TravelDto {
                 ", freeSpots=" + freeSpots +
                 ", status='" + status + '\'' +
                 '}';
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }
