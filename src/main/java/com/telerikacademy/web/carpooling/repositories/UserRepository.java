@@ -1,6 +1,8 @@
 package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.models.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -17,6 +19,7 @@ public interface UserRepository {
     void update(User user);
 
     List<User> get(FilterUserOptions filterOptions);
+    Page<User> get(FilterUserOptions filterOptions, Pageable pageable);
     User getById(int id);
 
     IsDeleted getDeletedById(int userId);

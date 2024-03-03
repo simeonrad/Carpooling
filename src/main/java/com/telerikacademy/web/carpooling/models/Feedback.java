@@ -16,15 +16,15 @@ public class Feedback {
     @Column(name = "feedback_id")
     private int id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "travel_id", nullable = false, foreignKey = @ForeignKey(name = "feedbacks_ibfk_1"))
     private Travel travel;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "author_id", nullable = false, foreignKey = @ForeignKey(name = "feedbacks_ibfk_2"))
     private User author;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "recipient_id", nullable = false, foreignKey = @ForeignKey(name = "feedbacks_ibfk_3"))
     private User recipient;
 
@@ -34,8 +34,8 @@ public class Feedback {
     private int rating;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private Set<FeedbackComment> comments;
+    @OneToOne(mappedBy = "feedback", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private FeedbackComment comment;
 
     public Feedback() {
     }
@@ -80,12 +80,12 @@ public class Feedback {
         this.rating = rating;
     }
 
-    public Set<FeedbackComment> getComments() {
-        return comments;
+    public FeedbackComment getComment() {
+        return comment;
     }
 
-    public void setComments(Set<FeedbackComment> comments) {
-        this.comments = comments;
+    public void setComment(FeedbackComment comments) {
+        this.comment = comments;
     }
 
     @Override

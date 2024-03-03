@@ -14,6 +14,9 @@ import com.telerikacademy.web.carpooling.services.TravelService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -60,22 +63,31 @@ public class TravelMvcController {
 
 
     @GetMapping("/search-travels")
-    public String filterUsers(@ModelAttribute("filterOptions") FilterTravelDto filterTravelDto, Model model){
+    public String filterUsers(@ModelAttribute("filterOptions") FilterTravelDto filterTravelDto, Model model,
+                              @RequestParam(defaultValue = "0", name = "travelPage") int travelPage,
+                              @RequestParam(defaultValue = "5", name = "travelSize") int travelSize){
             FilterTravelOptions filterTravelOptions = new FilterTravelOptions(filterTravelDto.getAuthor(),
                     filterTravelDto.getStartPoint(), filterTravelDto.getEndPoint(),
                     filterTravelDto.getDepartureTime(), filterTravelDto.getFreeSpots(),
                     filterTravelDto.getTravelStatus(), filterTravelDto.getSortBy(),
                     filterTravelDto.getSortOrder());
-            List<Travel> travels = travelService.get(filterTravelOptions);
+        Pageable travelsPageable = PageRequest.of(travelPage, travelSize);
+        Page<Travel> travels = travelService.getMyTravels(filterTravelOptions, travelsPageable);
             model.addAttribute("filterOptions", filterTravelDto);
             model.addAttribute("travels", travels);
             return "searchTravelView";
     }
 
     @GetMapping("/create")
-    public String showCreateTravelForm(Model model) {
-        model.addAttribute("createTravel", new TravelDto());
-        return "createTravel";
+    public String showCreateTravelForm(Model model, HttpSession session) {
+        try {
+            authenticationHelper.tryGetUser(session);
+            model.addAttribute("createTravel", new TravelDto());
+            return "createTravel";
+        } catch (AuthenticationFailureException e){
+            return "redirect:/auth/login";
+        }
+
     }
 
     @PostMapping("/create")
@@ -85,11 +97,9 @@ public class TravelMvcController {
         }
         try {
             User user = authenticationHelper.tryGetUser(session);
-
             Travel travel = travelMapper.fromDto(travelDto);
             travel.setDriver(user);
             travelService.create(travel, user);
-
             return "redirect:/travels/search-travels";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Error creating travel: " + e.getMessage());

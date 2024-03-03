@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="wide wow-animation" lang="en">
 <head>
-    <title>Tables</title>
+    <title>My Travels</title>
     <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -245,25 +245,15 @@
     </div>
 
 
-<!--    <div class="breadcrumbs-custom-main context-dark">-->
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-xl-9">
-                    <h2 class="breadcrumbs-custom-title">My Organised Travels</h2>
-                </div>
-            </div>
-        </div>
-<!--    </div>-->
-<!--    <section class="breadcrumbs-custom">-->
 
-    <h3>My Organised Travels</h3>
+    <h3 style="text-align: center; margin-top: 20px;">My Organised Travels</h3>
 
 
-    <!-- Search results-->
+    <!-- Search results for My Organised Travels-->
     <section class="section section-mdDashboard">
         <div class="container">
             <!-- RD Search-->
-            <form class="rd-form rd-search" action="#" th:action="@{/profile/my-profile}" method="get"
+            <form class="rd-form rd-search" action="#" th:action="@{/profile/my-organised-travels}" method="get"
                   th:object="${travelFilterOptions}">
                 <div class="flex-container">
                     <div class="form-wrap" id="first-input-field"></div>
@@ -320,7 +310,7 @@
                         <th>End Point</th>
                         <th>Departure time</th>
                         <th>Status</th>
-                        <th>Give Feedback</th>
+                        <th>Manage applications</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -330,8 +320,10 @@
                         <td th:text="${travel.getDepartureTime()}"></td>
                         <td th:text="${travel.getStatus().getStatus().name()}"></td>
                         <td>
-                            <button class="button button-sm button-primary button-winona"
-                                    th:text="'Give Feedback'"></button>
+                            <form action="/" th:action="@{/travels/applications/{id}(id=${travel.id})}" >
+                            <button type="submit" class="button button-sm button-primary button-winona"
+                                    th:text="'Manage applications'"></button>
+                            </form>
                         </td>
                     </tr>
                     </tbody>
@@ -339,108 +331,8 @@
             </div>
         </div>
     </section>
-    <hr>
-    <section class="section section-md">
-        <div class="container">
-            <div class="table-outer table-rounded table-responsive-lg">
-                <table class="table-custom table-custom-bordered">
-                    <thead>
-                    <tr>
-                        <th>Column 1</th>
-                        <th>Column 2</th>
-                        <th>Column 3</th>
-                        <th>Column 4</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Item #1</td>
-                        <td>Description</td>
-                        <td>Subtotal</td>
-                        <td>$3.00</td>
-                    </tr>
-                    <tr>
-                        <td>Item #2</td>
-                        <td>Description</td>
-                        <td>Discount</td>
-                        <td>$3.00</td>
-                    </tr>
-                    <tr>
-                        <td>Item #3</td>
-                        <td>Description</td>
-                        <td>Shipping</td>
-                        <td>$3.00</td>
-                    </tr>
-                    <tr>
-                        <td>Item #4</td>
-                        <td>Description</td>
-                        <td>Tax</td>
-                        <td>$4.00</td>
-                    </tr>
-                    </tbody>
-                    <tfoot>
-                    <tr>
-                        <td>All Items</td>
-                        <td>Description</td>
-                        <td>Your Total</td>
-                        <td>$13.00</td>
-                    </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-    </section>
-    <hr>
-    <section class="section section-md">
-        <div class="container">
-            <div class="table-outer table-rounded table-responsive-lg">
-                <table class="table-custom table-custom-striped table-custom-secondary">
-                    <thead>
-                    <tr>
-                        <th>Column 1</th>
-                        <th>Column 2</th>
-                        <th>Column 3</th>
-                        <th>Column 4</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Item #1</td>
-                        <td>Description</td>
-                        <td>Subtotal</td>
-                        <td>$3.00</td>
-                    </tr>
-                    <tr>
-                        <td>Item #2</td>
-                        <td>Description</td>
-                        <td>Discount</td>
-                        <td>$3.00</td>
-                    </tr>
-                    <tr>
-                        <td>Item #3</td>
-                        <td>Description</td>
-                        <td>Shipping</td>
-                        <td>$3.00</td>
-                    </tr>
-                    <tr>
-                        <td>Item #4</td>
-                        <td>Description</td>
-                        <td>Tax</td>
-                        <td>$4.00</td>
-                    </tr>
-                    </tbody>
-                    <tfoot>
-                    <tr>
-                        <td>All Items</td>
-                        <td>Description</td>
-                        <td>Your Total</td>
-                        <td>$13.00</td>
-                    </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-    </section>
+
+
     <!-- Page Footer-->
     <footer class="section footer-classic">
         <div class="footer-classic-main">

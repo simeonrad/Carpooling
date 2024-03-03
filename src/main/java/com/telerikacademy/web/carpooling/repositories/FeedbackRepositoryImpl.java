@@ -2,7 +2,6 @@ package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.models.Feedback;
 import com.telerikacademy.web.carpooling.models.FilterFeedbackOptions;
-import com.telerikacademy.web.carpooling.models.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Session;
@@ -92,20 +91,52 @@ public class FeedbackRepositoryImpl implements FeedbackRepository{
     }
 
     @Override
-    public Page<Feedback> getMyReceivedFeedbacks(User user, Pageable pageable) {
-        String fetchQuery = "SELECT f FROM Feedback f WHERE f.recipient = :user ORDER BY f.id DESC";
-        List<Feedback> feedbacks = entityManager.createQuery(fetchQuery, Feedback.class)
-                .setParameter("user", user)
-                .setFirstResult((int) pageable.getOffset())
-                .setMaxResults(pageable.getPageSize())
-                .getResultList();
+    public Page<Feedback> getMyReceivedFeedbacks(FilterFeedbackOptions filterFeedbackOptions, Pageable pageable) {
+        try (Session session = sessionFactory.openSession()) {
+            List<String> filters = new ArrayList<>();
+            Map<String, Object> params = new HashMap<>();
 
-        String countQuery = "SELECT COUNT(f) FROM Feedback f WHERE f.recipient = :user";
-        long totalFeedbackCount = entityManager.createQuery(countQuery, Long.class)
-                .setParameter("user", user)
-                .getSingleResult();
+            filterFeedbackOptions.getAuthor().ifPresent(value -> {
+                if (!value.isBlank()) {
+                    filters.add("f.author.username like :authorUsername");
+                    params.put("authorUsername", "%" + value + "%");
+                }
+            });
 
-        return new PageImpl<>(feedbacks, pageable, totalFeedbackCount);    }
+            filterFeedbackOptions.getRecipient().ifPresent(value -> {
+                if (!value.isBlank()) {
+                    filters.add("f.recipient.username like :recipientUsername");
+                    params.put("recipientUsername", "%" + value + "%");
+                }
+            });
+
+            StringBuilder queryString = new StringBuilder("SELECT f FROM Feedback f");
+            if (!filters.isEmpty()) {
+                queryString.append(" WHERE ").append(String.join(" AND ", filters));
+            }
+            queryString.append(" ORDER BY f.id");
+
+            StringBuilder countQueryString = new StringBuilder("SELECT COUNT(f) FROM Feedback f");
+            if (!filters.isEmpty()) {
+                countQueryString.append(" WHERE ").append(String.join(" AND ", filters));
+            }
+
+            Query<Feedback> query = session.createQuery(queryString.toString(), Feedback.class);
+            query.setProperties(params);
+            query.setFirstResult((int) pageable.getOffset());
+            query.setMaxResults(pageable.getPageSize());
+
+            Query<Long> countQuery = session.createQuery(countQueryString.toString(), Long.class);
+            countQuery.setProperties(params);
+            long totalResults = countQuery.getSingleResult();
+
+            List<Feedback> feedbacks = query.getResultList();
+            return new PageImpl<>(feedbacks, pageable, totalResults);
+        }
+    }
+
+
+
 
     private String generateOrderBy(FilterFeedbackOptions filterOptions) {
         if (filterOptions.getSortBy().isEmpty()) {

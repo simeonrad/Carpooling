@@ -27,7 +27,6 @@ public class FeedbackController {
     private final FeedbackMapper feedbackMapper;
     private final FeedbackService feedbackService;
     private final FeedbackRepository feedbackRepository;
-
     private final UserRepository userRepository;
 
     public FeedbackController(AuthenticationHelper authenticationHelper, FeedbackMapper feedbackMapper, FeedbackService feedbackService, FeedbackRepository feedbackRepository, UserRepository userRepository) {
@@ -107,7 +106,7 @@ public class FeedbackController {
 
     public FeedbackDto convertToDto(Feedback feedback) {
         String recipientName = feedback.getRecipient().getFirstName() + " " + feedback.getRecipient().getLastName();
-        String comment = feedback.getComments().isEmpty() ? null : feedback.getComments().iterator().next().getComment();
+        String comment = feedback.getComment().getComment();
         return new FeedbackDto(feedback.getTravel().getId(), recipientName, feedback.getRating(), comment);
     }
 }

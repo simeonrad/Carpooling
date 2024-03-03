@@ -3,15 +3,16 @@ package com.telerikacademy.web.carpooling.controllers.mvc;
 import com.telerikacademy.web.carpooling.exceptions.DuplicateEmailExists;
 import com.telerikacademy.web.carpooling.exceptions.DuplicatePhoneNumberExists;
 import com.telerikacademy.web.carpooling.exceptions.InvalidPhoneNumberException;
-import com.telerikacademy.web.carpooling.models.FilterUserDto;
-import com.telerikacademy.web.carpooling.models.FilterUserOptions;
-import com.telerikacademy.web.carpooling.models.Role;
-import com.telerikacademy.web.carpooling.models.User;
+import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.repositories.RoleRepository;
+import com.telerikacademy.web.carpooling.services.FeedbackService;
 import com.telerikacademy.web.carpooling.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ public class UserMvcController {
 
     private final UserService userService;
     private final RoleRepository roleRepository;
+    private final FeedbackService feedbackService;
 
     @ModelAttribute("isAdmin")
     public boolean populateIsAdmin(HttpSession session) {
@@ -44,17 +46,21 @@ public class UserMvcController {
     }
 
     @Autowired
-    public UserMvcController(UserService userService, RoleRepository roleRepository) {
+    public UserMvcController(UserService userService, RoleRepository roleRepository, FeedbackService feedbackService) {
         this.userService = userService;
         this.roleRepository = roleRepository;
+        this.feedbackService = feedbackService;
     }
 
     @GetMapping()
-    public String filterUsers(@ModelAttribute("filterOptions") FilterUserDto filterUserDto, HttpSession session, Model model) {
+    public String filterUsers(@ModelAttribute("filterOptions") FilterUserDto filterUserDto, HttpSession session, Model model,
+                              @RequestParam(defaultValue = "0", name = "userPage") int userPage,
+                              @RequestParam(defaultValue = "5", name = "userSize") int userSize) {
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser != null) {
             FilterUserOptions filterUserOptions = new FilterUserOptions(filterUserDto.getUsername(), filterUserDto.getEmail(), filterUserDto.getPhoneNumber(), filterUserDto.getSortBy(), filterUserDto.getSortOrder());
-            List<User> users = userService.get(filterUserOptions, currentUser);
+            Pageable travelsPageable = PageRequest.of(userPage, userSize);
+            Page<User> users = userService.get(filterUserOptions, currentUser, travelsPageable);
             model.addAttribute("filterOptions", filterUserDto);
             model.addAttribute("allRoles", roleRepository.getAll());
             model.addAttribute("users", users);
@@ -100,6 +106,34 @@ public class UserMvcController {
         } catch (DuplicateEmailExists | DuplicatePhoneNumberExists | InvalidPhoneNumberException ignored) {
         }
         return "redirect:/users";
+    }
+
+    @GetMapping("/{id}")
+    public String showUserProfile(@PathVariable int id, Model model, HttpSession session,
+        @RequestParam(defaultValue = "0", name = "feedbackPage") int feedbackPage,
+        @RequestParam(defaultValue = "5", name = "feedbackSize") int feedbackSize,
+        @ModelAttribute ("feedbackFilterOptions") FilterFeedbackOptionsDto filterFeedbackOptionsDto) {
+            User currentUser = (User) session.getAttribute("currentUser");
+            if (currentUser == null) {
+                return "redirect:/auth/login";
+            }
+            filterFeedbackOptionsDto.setRecipient(currentUser.getUsername());
+            Pageable feedbacksPageable = PageRequest.of(feedbackPage, feedbackSize);
+            User user = userService.get(id);
+            String username = user.getFirstName() + " " + user.getLastName();
+            filterFeedbackOptionsDto.setRecipient(user.getUsername());
+            Page<Feedback> userFeedbacksReceived = feedbackService.getMyReceivedFeedbacks(
+                    new FilterFeedbackOptions(filterFeedbackOptionsDto.getAuthor(),
+                            filterFeedbackOptionsDto.getRecipient(),
+                            filterFeedbackOptionsDto.getComment(),
+                            filterFeedbackOptionsDto.getRating(),
+                            filterFeedbackOptionsDto.getSortBy(),
+                            filterFeedbackOptionsDto.getSortOrder()),
+                    feedbacksPageable);
+            model.addAttribute("feedbacks", userFeedbacksReceived);
+            model.addAttribute("profileUser", user);
+            model.addAttribute("username", username);
+            return "user-dashboard";
     }
 
 }

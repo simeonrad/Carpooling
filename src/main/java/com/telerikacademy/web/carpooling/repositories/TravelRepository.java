@@ -2,8 +2,6 @@ package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.models.FilterTravelOptions;
 import com.telerikacademy.web.carpooling.models.Travel;
-import com.telerikacademy.web.carpooling.models.TravelApplication;
-import com.telerikacademy.web.carpooling.models.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,8 +16,8 @@ public interface TravelRepository {
     void delete(Travel travel);
 
     List<Travel> get(FilterTravelOptions filterOptions);
+    Page<Travel> get(FilterTravelOptions filterOptions, Pageable pageable);
     Page<Travel> getMyTravels(FilterTravelOptions filterOptions, Pageable pageable);
-    Page<TravelApplication> getMyTravelApplications(User user, Pageable pageable);
     List<Travel> getAll();
 
     Travel getById(int id);

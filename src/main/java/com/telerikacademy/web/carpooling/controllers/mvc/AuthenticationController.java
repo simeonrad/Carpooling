@@ -130,7 +130,8 @@ public class AuthenticationController {
 
     @PostMapping("/recover_password/{id}")
     public String handleRecoveryPassword(@Valid @ModelAttribute("passwords") ForgottenPasswordDto passwordDto,
-                                         BindingResult bindingResult, RedirectAttributes redirectAttributes, @PathVariable String id) {
+                                         BindingResult bindingResult, RedirectAttributes redirectAttributes,
+                                         @PathVariable String id) {
         if (bindingResult.hasErrors()) {
             return "recover-password";
         }
