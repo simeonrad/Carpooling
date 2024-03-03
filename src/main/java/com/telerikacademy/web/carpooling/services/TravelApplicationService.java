@@ -12,6 +12,7 @@ public interface TravelApplicationService {
     void checkIfCreated(Travel travel, User user);
 
     void update(User user, TravelApplication application);
+    void update(TravelApplication application);
 
     void delete(User user, TravelApplication application);
 
