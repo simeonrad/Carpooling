@@ -4,11 +4,13 @@ import jakarta.persistence.Column;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 public class TravelApplicationDto {
+    private int id;
     private int travelId;
     private String passengerUsername;
     private String status;
-    private boolean wantToSmoke;
-    private boolean hasBaggage;
+    private Boolean smoke = false;
+    private Boolean luggage = false;
+    private Boolean pet = false;
 
     public TravelApplicationDto() {
     }
@@ -19,22 +21,6 @@ public class TravelApplicationDto {
 
     public void setTravelId(int travelId) {
         this.travelId = travelId;
-    }
-
-    public boolean isWantToSmoke() {
-        return wantToSmoke;
-    }
-
-    public void setWantToSmoke(boolean wantToSmoke) {
-        this.wantToSmoke = wantToSmoke;
-    }
-
-    public boolean isHasBaggage() {
-        return hasBaggage;
-    }
-
-    public void setHasBaggage(boolean hasBaggage) {
-        this.hasBaggage = hasBaggage;
     }
 
     public String getPassengerUsername() {
@@ -51,5 +37,37 @@ public class TravelApplicationDto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Boolean getSmoke() {
+        return smoke;
+    }
+
+    public void setSmoke(Boolean smoke) {
+        this.smoke = smoke;
+    }
+
+    public Boolean getLuggage() {
+        return luggage;
+    }
+
+    public void setLuggage(Boolean luggage) {
+        this.luggage = luggage;
+    }
+
+    public Boolean getPet() {
+        return pet;
+    }
+
+    public void setPet(Boolean pet) {
+        this.pet = pet;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

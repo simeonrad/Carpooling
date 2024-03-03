@@ -23,6 +23,15 @@ public class TravelApplication {
     @JoinColumn(name = "status")
     private Status status;
 
+    @Column(name = "smoke")
+    private Boolean smoke;
+
+    @Column(name = "luggage")
+    private Boolean luggage;
+
+    @Column(name = "pet")
+    private Boolean pet;
+
     public TravelApplication() {
     }
 
@@ -69,5 +78,29 @@ public class TravelApplication {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public Boolean getSmoke() {
+        return smoke;
+    }
+
+    public void setSmoke(Boolean smoke) {
+        this.smoke = smoke;
+    }
+
+    public Boolean getLuggage() {
+        return luggage;
+    }
+
+    public void setLuggage(Boolean luggage) {
+        this.luggage = luggage;
+    }
+
+    public Boolean getPet() {
+        return pet;
+    }
+
+    public void setPet(Boolean pet) {
+        this.pet = pet;
     }
 }

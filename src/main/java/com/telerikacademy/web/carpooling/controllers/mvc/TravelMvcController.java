@@ -304,5 +304,50 @@ public class TravelMvcController {
         }
     }
 
+    @GetMapping("/applications/update/{applicationId}")
+    public String showUpdateApplicationForm(@PathVariable("applicationId") int applicationId, Model model, HttpSession session) {
+        try {
+            User currentUser = authenticationHelper.tryGetUser(session);
+            TravelApplication application = travelApplicationService.getById(applicationId);
+            Travel travel = application.getTravel();
+
+            if (!application.getPassenger().equals(currentUser)) {
+                return "errorPage";
+            }
+
+            TravelApplicationDto applicationDto = travelApplicationMapper.toDto(application);
+            model.addAttribute("applicationDto", applicationDto);
+            model.addAttribute("travel", travel);
+            return "updateTravelApplication";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error retrieving application: " + e.getMessage());
+            return "errorPage";
+        }
+    }
+
+    @PostMapping("/applications/update/{applicationId}")
+    public String handleUpdateApplication(@PathVariable("applicationId") int applicationId,
+                                          @Valid @ModelAttribute("applicationDto") TravelApplicationDto applicationDto,
+                                          BindingResult bindingResult, HttpSession session, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "updateTravelApplication";
+        }
+        try {
+            User currentUser = authenticationHelper.tryGetUser(session);
+
+            applicationDto.setId(applicationId);
+            TravelApplication application = travelApplicationMapper.fromDto(applicationDto, currentUser);
+            application.setStatus(statusRepository.getByValue(ApplicationStatus.PENDING));
+            travelApplicationService.update(application);
+
+            return "redirect:/travels/search-travels";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error updating application: " + e.getMessage());
+            return "updateTravelApplication";
+        }
+    }
+
+
+
 
 }

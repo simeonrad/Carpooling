@@ -46,12 +46,16 @@
                                         <p>Departure Time: <span th:text="${#temporals.format(travel.departureTime, 'dd/MM/yyyy HH:mm')}"></span></p>
                                     </div>
                                     <div>
-                                        <label for="wantToSmoke">Want to Smoke:</label>
-                                        <input type="checkbox" id="wantToSmoke" name="wantToSmoke" th:field="*{wantToSmoke}">
+                                        <label for="smoke">Wants to smoke:</label>
+                                        <input type="checkbox" id="smoke" name="smoke" th:field="*{smoke}">
                                     </div>
                                     <div>
-                                        <label for="hasBaggage">Has Baggage:</label>
-                                        <input type="checkbox" id="hasBaggage" name="hasBaggage" th:field="*{hasBaggage}">
+                                        <label for="luggage">Has luggage:</label>
+                                        <input type="checkbox" id="luggage" name="luggage" th:field="*{luggage}">
+                                    </div>
+                                    <div>
+                                        <label for="pet">Wants to bring pet:</label>
+                                        <input type="checkbox" id="pet" name="pet" th:field="*{pet}">
                                     </div>
 
                                     <input type="hidden" name="travelId" th:value="${travel.id}">
