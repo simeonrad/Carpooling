@@ -6,7 +6,6 @@ import com.telerikacademy.web.carpooling.helpers.TravelApplicationMapper;
 import com.telerikacademy.web.carpooling.helpers.TravelMapper;
 import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
-import com.telerikacademy.web.carpooling.repositories.EngineRepository;
 import com.telerikacademy.web.carpooling.repositories.StatusRepository;
 import com.telerikacademy.web.carpooling.services.*;
 import jakarta.servlet.http.HttpSession;
@@ -38,6 +37,7 @@ public class TravelMvcController {
     private final MakeService makeService;
     private final ColourService colourService;
     private final CarService carService;
+    private final UserService userService;
 
     @ModelAttribute("isAdmin")
     public boolean populateIsAdmin(HttpSession session) {
@@ -57,7 +57,7 @@ public class TravelMvcController {
 
 
     @Autowired
-    public TravelMvcController(TravelService travelService, TravelApplicationService travelApplicationService, AuthenticationHelper authenticationHelper, TravelMapper travelMapper, TravelApplicationMapper travelApplicationMapper, StatusRepository statusRepository, TravelCommentService travelCommentService, EngineService engineService, MakeService makeService, ColourService colourService, CarService carService) {
+    public TravelMvcController(TravelService travelService, TravelApplicationService travelApplicationService, AuthenticationHelper authenticationHelper, TravelMapper travelMapper, TravelApplicationMapper travelApplicationMapper, StatusRepository statusRepository, TravelCommentService travelCommentService, EngineService engineService, MakeService makeService, ColourService colourService, CarService carService, UserService userService) {
         this.travelService = travelService;
         this.authenticationHelper = authenticationHelper;
         this.travelApplicationService = travelApplicationService;
@@ -69,6 +69,7 @@ public class TravelMvcController {
         this.makeService = makeService;
         this.colourService = colourService;
         this.carService = carService;
+        this.userService = userService;
     }
 
 
@@ -92,13 +93,16 @@ public class TravelMvcController {
     public String showCreateTravelForm(Model model, HttpSession session) {
         try {
            User user = authenticationHelper.tryGetUser(session);
+            userService.checkIfVerified(user);
             model.addAttribute("createTravel", new TravelDto());
             model.addAttribute("userCars", user.getCars());
             return "createTravel";
         } catch (AuthenticationFailureException e){
             return "redirect:/auth/login";
+        } catch (UnauthorizedOperationException e){
+            model.addAttribute("status", e.getMessage());
+            return "404-page";
         }
-
     }
 
     @PostMapping("/create")
@@ -146,7 +150,7 @@ public class TravelMvcController {
             car.setPlate(carDto.getPlate());
             carService.create(car, user);
             user.getCars().add(car);
-            return "redirect:/travels/create";
+            return "createTravel";
         } catch (AuthenticationFailureException e){
             return "redirect:/auth/login";
         }
@@ -305,6 +309,7 @@ public class TravelMvcController {
         TravelApplicationDto applicationDto = new TravelApplicationDto();
         try {
             User currentUser = authenticationHelper.tryGetUser(session);
+            userService.checkIfVerified(currentUser);
             Travel travel = travelService.getById(travelId);
 
             travelApplicationService.checkIfCreated(travel, currentUser);
@@ -312,7 +317,7 @@ public class TravelMvcController {
             applicationDto.setTravelId(travelId);
             model.addAttribute("travel", travel);
             model.addAttribute("applicationDto", applicationDto);
-        } catch (DuplicateExistsException e) {
+        } catch (DuplicateExistsException | UnauthorizedOperationException e) {
             model.addAttribute("status", e.getMessage());
             return "404-page";
         }

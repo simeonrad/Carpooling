@@ -1,6 +1,5 @@
 package com.telerikacademy.web.carpooling.models;
 
-import jakarta.persistence.*;
 
 public class CarDto {
     private int id;
