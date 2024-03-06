@@ -150,7 +150,7 @@ public class TravelMvcController {
             car.setPlate(carDto.getPlate());
             carService.create(car, user);
             user.getCars().add(car);
-            return "createTravel";
+            return "redirect:/travels/create";
         } catch (AuthenticationFailureException e){
             return "redirect:/auth/login";
         }
