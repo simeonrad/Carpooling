@@ -1,18 +1,14 @@
 package com.telerikacademy.web.carpooling.controllers.mvc;
 
-import com.telerikacademy.web.carpooling.exceptions.DuplicateExistsException;
+import com.telerikacademy.web.carpooling.exceptions.*;
 import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
 import com.telerikacademy.web.carpooling.helpers.TravelApplicationMapper;
 import com.telerikacademy.web.carpooling.helpers.TravelMapper;
-import com.telerikacademy.web.carpooling.exceptions.AuthenticationFailureException;
-import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
-import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
+import com.telerikacademy.web.carpooling.repositories.EngineRepository;
 import com.telerikacademy.web.carpooling.repositories.StatusRepository;
-import com.telerikacademy.web.carpooling.services.TravelApplicationService;
-import com.telerikacademy.web.carpooling.services.TravelCommentService;
-import com.telerikacademy.web.carpooling.services.TravelService;
+import com.telerikacademy.web.carpooling.services.*;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 @Controller
@@ -37,6 +34,10 @@ public class TravelMvcController {
     private final TravelApplicationService travelApplicationService;
     private final StatusRepository statusRepository;
     private final TravelCommentService travelCommentService;
+    private final EngineService engineService;
+    private final MakeService makeService;
+    private final ColourService colourService;
+    private final CarService carService;
 
     @ModelAttribute("isAdmin")
     public boolean populateIsAdmin(HttpSession session) {
@@ -56,7 +57,7 @@ public class TravelMvcController {
 
 
     @Autowired
-    public TravelMvcController(TravelService travelService, TravelApplicationService travelApplicationService, AuthenticationHelper authenticationHelper, TravelMapper travelMapper, TravelApplicationMapper travelApplicationMapper, StatusRepository statusRepository, TravelCommentService travelCommentService) {
+    public TravelMvcController(TravelService travelService, TravelApplicationService travelApplicationService, AuthenticationHelper authenticationHelper, TravelMapper travelMapper, TravelApplicationMapper travelApplicationMapper, StatusRepository statusRepository, TravelCommentService travelCommentService, EngineService engineService, MakeService makeService, ColourService colourService, CarService carService) {
         this.travelService = travelService;
         this.authenticationHelper = authenticationHelper;
         this.travelApplicationService = travelApplicationService;
@@ -64,6 +65,10 @@ public class TravelMvcController {
         this.travelApplicationMapper = travelApplicationMapper;
         this.statusRepository = statusRepository;
         this.travelCommentService = travelCommentService;
+        this.engineService = engineService;
+        this.makeService = makeService;
+        this.colourService = colourService;
+        this.carService = carService;
     }
 
 
@@ -86,8 +91,9 @@ public class TravelMvcController {
     @GetMapping("/create")
     public String showCreateTravelForm(Model model, HttpSession session) {
         try {
-            authenticationHelper.tryGetUser(session);
+           User user = authenticationHelper.tryGetUser(session);
             model.addAttribute("createTravel", new TravelDto());
+            model.addAttribute("userCars", user.getCars());
             return "createTravel";
         } catch (AuthenticationFailureException e){
             return "redirect:/auth/login";
@@ -104,6 +110,7 @@ public class TravelMvcController {
             User user = authenticationHelper.tryGetUser(session);
             Travel travel = travelMapper.fromDto(travelDto);
             travel.setDriver(user);
+            travel.setCar(carService.getById(travelDto.getCarId()));
             travelService.create(travel, user);
             travelCommentService.addOrUpdateComment(travel.getId(), travelDto.getComment());
             return "redirect:/travels/search-travels";
@@ -113,25 +120,60 @@ public class TravelMvcController {
         }
     }
 
+    @GetMapping("/car/create")
+    public String showCreateCarForm(Model model, HttpSession session) {
+        try {
+            authenticationHelper.tryGetUser(session);
+            model.addAttribute("CarDto", new CarDto());
+            model.addAttribute("engines", engineService.getAll());
+            return "createCar";
+        } catch (AuthenticationFailureException e){
+            return "redirect:/auth/login";
+        }
+
+    }
+    @PostMapping("/car/create")
+    public String createCar(@ModelAttribute(name = "carDto") CarDto carDto ,Model model, HttpSession session) {
+        try {
+            User user = authenticationHelper.tryGetUser(session);
+            Car car = new Car();
+            Colour colour = colourService.create(carDto.getColour());
+            Make make = makeService.create(carDto.getMake());
+            CarEngine engine = engineService.getByValue(carDto.getEngine());
+            car.setColour(colour);
+            car.setEngine(engine);
+            car.setMake(make);
+            car.setPlate(carDto.getPlate());
+            carService.create(car, user);
+            user.getCars().add(car);
+            return "redirect:/travels/create";
+        } catch (AuthenticationFailureException e){
+            return "redirect:/auth/login";
+        }
+
+    }
     @GetMapping("/{id}")
     public String singleTravel(@PathVariable int id, Model model, HttpSession session) {
         try {
             User user = authenticationHelper.tryGetUser(session);
             Travel travel = travelService.getById(id);
             List<User> usersToFeedback = new ArrayList<>();
-            List<User> approvedUsersInTravel = new ArrayList<>();
-            for (TravelApplication application:travelApplicationService.getByTravelId(id)) {
-                if (application.getStatus().getStatus().equals(ApplicationStatus.APPROVED)) {
-                    approvedUsersInTravel.add(application.getPassenger());
+            try {
+                List<User> approvedUsersInTravel = new ArrayList<>();
+                for (TravelApplication application : travelApplicationService.getByTravelId(id)) {
+                    if (application.getStatus().getStatus().equals(ApplicationStatus.APPROVED)) {
+                        approvedUsersInTravel.add(application.getPassenger());
+                    }
                 }
-            }
-            if (travel.getDriver().equals(user)){
-                usersToFeedback.addAll(approvedUsersInTravel);
-            }
-            if (approvedUsersInTravel.contains(user)){
-                usersToFeedback.add(travel.getDriver());
-            }
+                if (travel.getDriver().equals(user)) {
+                    usersToFeedback.addAll(approvedUsersInTravel);
+                }
+                if (approvedUsersInTravel.contains(user)) {
+                    usersToFeedback.add(travel.getDriver());
+                }
+            } catch (EntityNotFoundException ignored){}
             model.addAttribute("travel" , travel);
+            model.addAttribute("now" , LocalDateTime.now());
             model.addAttribute("usersToGiveFeedback" , usersToFeedback);
             return "single-travel";
         } catch (AuthenticationFailureException e) {

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+    <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<style>
+    .star-rating {
+        direction: rtl;
+        font-size: 0;
+    }
+    .star-rating input[type="radio"] {
+        display: none;
+    }
+    .star-rating label {
+        font-size: 30px;
+        color: #ccc;
+        cursor: pointer;
+    }
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input[type="radio"]:checked ~ label {
+        color: gold;
+    }
+    .form-control{
+        margin-bottom: 30px;
+    }
+</style>
+<body>
+<div class="pageLogin">
+    <section class="section section-layout-3-outer">
+        <div class="section-layout-3">
+            <div class="layout-2 section-layout-3-header">
+                <div class="layout-2-inner">
+                    <div class="layout-2-item"><a class="link link-icon link-icon-left" href="/"><span
+                            class="icon mdi mdi-arrow-left"></span><span>Back to Home</span></a></div>
+                    <div class="layout-2-item">
+                    </div>
+                </div>
+            </div>
+            <div class="section-layout-3-main">
+                <div class="section-1 text-center">
+                    <div class="container">
+                        <div class="box-shadow-1"><a class="brand" href="/"><img
+                                class="brand-logo-dark" src="/images/cut-logo-carpool.jpg" alt="" width="111"
+                                height="72" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a>
+                            <p class="text-gray-900"><span style="max-width: 400px">Add your car</span>
+                            </p>
+                            <div class="box-shadow-1-main">
+                                <!-- RD Mailform -->
+                                <form class="form-wrap rd-mailform" th:action="@{/travels/car/create}" th:object="${CarDto}" method="post">
+                                    <form action="/submit-feedback" method="post">
+                                        <div class="form-wrap">
+                                            <input class="form-input" id="colour" type="text" name="colour" th:field="*{colour}" placeholder="Colour" required>
+                                        </div>
+                                        <div class="form-wrap">
+                                            <label for="make"></label><input class="form-input" id="make" type="text" name="make" th:field="*{make}" placeholder="Make" required>
+                                        </div>
+                                        <div class="form-wrap">
+                                            <label for="plate"></label><input class="form-input" id="plate" type="text" name="make" th:field="*{plate}" placeholder="License plate" required>
+                                        </div>
+                                        <div class="form-wrap">
+                                            <label for="engine"></label><select class="form-control" id="engine" th:field="*{engine}" placeholder="Select Engine" required>
+                                                <option value="">Select an Engine</option>
+                                                <option th:each="engine : ${engines}" th:value="${engine.name}" th:text="${engine.name}"></option>
+                                            </select>
+
+                                            <div class="form-wrap">
+                                                <button class="button button-secondary button-winona wow clipInLeft" type="submit">Submit</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div class="snackbars" id="form-output-global"></div>
+</body>
+</html>

@@ -11,6 +11,12 @@
     <link rel="stylesheet" href="/css/fonts.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
+<style>
+    .button.button-secondary.button-winona.wow.clipInLeft{
+        padding: 5px;
+        margin: 5px;
+    }
+</style>
 <body>
 <div class="preloader" id="loading">
     <div class="preloader-body">
@@ -131,7 +137,7 @@
             <h3 class="text-center">Travel details</h3>
             <div class="row row-30">
                 <div class="col-md-6">
-                    <!-- Post Vacancy--><a class="post-vacancy" href="#">
+                    <!-- Post Vacancy--><a class="post-vacancy">
                     <p class="post-vacancy-title" th:text="'Made by ' + ${travel.driver.username}"></p>
                     <div class="post-vacancy-meta">
                         <ul class="list-objects-inline">
@@ -142,8 +148,17 @@
                             <li><span class="icon text-primary mdi mdi-calendar"></span>
                                 <time datetime="2023-01-01" th:text="${#temporals.format(travel.departureTime, 'dd MMMM yyyy HH:mm')}"></time>
                             </li>
+                            <li><span th:text="${travel.driver.firstName + ' will come with a ' + travel.car.colour.name + ' ' + travel.car.make.name + ' with licence plate ' + travel.car.plate}"></span></li>
+
                         </ul>
-                        <li th:each="user : ${usersToGiveFeedback}"><span class="icon text-primary mdi mdi-map-marker"></span><span th:text="${user.username}"></span></li>
+                        <ul>
+                            <li th:unless="${travel.departureTime.isAfter(now)}" th:each="user : ${usersToGiveFeedback}">
+                                <span>Give feedback to </span>
+                                <form th:action="@{/feedbacks/{recipientId}/travel/{travelId}(recipientId=${user.id}, travelId=${travel.id})}" method="get">
+                                    <button class="button button-secondary button-winona wow clipInLeft" type="submit" th:text="${user.username}"></button>
+                                </form>
+                            </li>
+                        </ul>
                     </div></a>
                 </div>
             </div>

@@ -1,3 +1,24 @@
+create table car_colours
+(
+    colour_id   int auto_increment
+        primary key,
+    colour_name varchar(15) not null
+);
+
+create table car_makes
+(
+    make_id int auto_increment
+        primary key,
+    make    varchar(20) not null
+);
+
+create table engine_types
+(
+    engine_type_id int auto_increment
+        primary key,
+    type           varchar(15) not null
+);
+
 create table roles
 (
     role_id   int auto_increment
@@ -34,6 +55,26 @@ create table users
         unique (username),
     constraint users_roles_role_id_fk
         foreign key (user_role) references roles (role_id)
+);
+
+create table cars
+(
+    car_id        int auto_increment
+        primary key,
+    make_id       int         not null,
+    licence_plate varchar(10) not null,
+    owner_id      int         not null,
+    colour_id     int         not null,
+    engine_type   int         not null,
+    constraint cars_car_colours_colour_id_fk
+        foreign key (colour_id) references car_colours (colour_id),
+    constraint cars_car_makes_make_id_fk
+        foreign key (make_id) references car_makes (make_id),
+    constraint cars_engine_types_engine_type_id_fk
+        foreign key (engine_type) references engine_types (engine_type_id),
+    constraint cars_users_user_id_fk
+        foreign key (owner_id) references users (user_id)
+            on delete cascade
 );
 
 create table forgottenpass_uis
@@ -75,6 +116,9 @@ create table travels
     travel_status    int default 1 null,
     duration_minutes int           not null,
     distance_km      int           not null,
+    car_id           int           not null,
+    constraint travels_cars_car_id_fk
+        foreign key (car_id) references cars (car_id),
     constraint travels_ibfk_1
         foreign key (organizer_id) references users (user_id),
     constraint travels_travel_statuses_status_id_fk
@@ -85,9 +129,12 @@ create table applications
 (
     application_id int auto_increment
         primary key,
-    travel_id      int           not null,
-    passenger_id   int           not null,
-    status         int default 6 not null,
+    travel_id      int                  not null,
+    passenger_id   int                  not null,
+    status         int        default 6 not null,
+    smoke          tinyint(1) default 0 not null,
+    luggage        tinyint(1) default 0 not null,
+    pet            tinyint(1) default 0 not null,
     constraint applications_ibfk_1
         foreign key (travel_id) references travels (travel_id),
     constraint applications_ibfk_2
@@ -167,3 +214,4 @@ create table user_blocks
         foreign key (user_id) references users (user_id)
             on delete cascade
 );
+

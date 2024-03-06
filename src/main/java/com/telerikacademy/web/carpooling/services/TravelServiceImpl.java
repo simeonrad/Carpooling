@@ -42,6 +42,9 @@ public class TravelServiceImpl implements TravelService {
             int[] travelDetails = distanceAndDuration.getRouteDetails(travel.getStartPoint(), travel.getEndPoint());
             travel.setDistanceKm(travelDetails[0]);
             travel.setDurationMinutes(travelDetails[1]);
+            if (!travel.getDriver().equals(travel.getCar().getOwner())){
+                throw new UnauthorizedOperationException("You cannot add someones else car to your travel!");
+            }
             travelRepository.create(travel);
         } else {
             throw new UnauthorizedOperationException("No create permission, user is blocked");

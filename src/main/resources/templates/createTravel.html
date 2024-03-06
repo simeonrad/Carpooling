@@ -49,10 +49,24 @@
                                         <input class="form-input" id="freeSpots" type="number" name="freeSpots" th:field="*{freeSpots}" placeholder="Free Spots" required>
                                     </div>
                                     <div class="form-wrap">
+                                        <select class="form-control" id="car" th:field="*{carId}" placeholder="Select Car" required>
+                                            <option value="">Select a Car</option>
+                                            <option th:each="car : ${userCars}" th:value="${car.id}" th:text="${car.plate}"></option>
+                                            <option value="addNewCar">Add a New Car</option>
+                                        </select>
+                                    </div>
+
+                                    <script>
+                                        document.getElementById('car').addEventListener('change', function() {
+                                            if (this.value === 'addNewCar') {
+                                                window.location.href = '/travels/car/create';
+                                            }
+                                        });
+                                    </script>
+                                    <div class="form-wrap">
                                         <label for="comment">Comment (Optional):</label>
                                         <textarea class="form-input" id="comment" name="comment" th:field="*{comment}" placeholder="Add a comment about your travel (optional)" rows="4"></textarea>
                                     </div>
-                                    <!-- Add more fields as necessary -->
                                     <div class="form-wrap">
                                         <button class="button" type="submit">Create Travel</button>
                                     </div>

@@ -57,6 +57,9 @@ public class User {
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "recipient_id")
     private List<Feedback> feedbacks;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner_id")
+    private List<Car> cars;
 
     public User() {
     }
@@ -187,6 +190,14 @@ public class User {
 
     public ForgottenPasswordUI getForgottenPasswordUI() {
         return forgottenPasswordUI;
+    }
+
+    public List<Car> getCars() {
+        return cars;
+    }
+
+    public void setCars(List<Car> cars) {
+        this.cars = cars;
     }
 
     public void setForgottenPasswordUI(ForgottenPasswordUI forgottenPasswordUI) {

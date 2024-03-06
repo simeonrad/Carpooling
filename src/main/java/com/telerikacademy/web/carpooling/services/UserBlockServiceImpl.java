@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Service
 public class UserBlockServiceImpl implements UserBlockService {
-    private UserBlocksRepository userBlocksRepository;
+    private final UserBlocksRepository userBlocksRepository;
     @Autowired
     public UserBlockServiceImpl(UserBlocksRepository userBlocksRepository) {
         this.userBlocksRepository = userBlocksRepository;

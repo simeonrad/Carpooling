@@ -13,8 +13,17 @@ public class TravelDto {
     private int durationMinutes;
     private String status;
     private String comment;
+    private Integer carId;
 
     public TravelDto() {
+    }
+
+    public Integer getCarId() {
+        return carId;
+    }
+
+    public void setCarId(int carId) {
+        this.carId = carId;
     }
 
     public int getId() {

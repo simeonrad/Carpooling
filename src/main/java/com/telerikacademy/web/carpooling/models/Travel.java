@@ -31,6 +31,10 @@ public class Travel {
     @OneToOne(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private TravelComment comment;
 
+    @ManyToOne
+    @JoinColumn(name = "car_id")
+    private Car car;
+
     public Travel() {
     }
 
@@ -112,5 +116,13 @@ public class Travel {
 
     public void setComment(TravelComment comment) {
         this.comment = comment;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
     }
 }
