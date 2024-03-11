@@ -43,10 +43,11 @@
                   </li>
                   <li class="rd-nav-item"><a class="rd-nav-link" href="/travels/search-travels">Travels</a>
                   </li>
-                  <li class="rd-nav-item"><a class="rd-nav-link" href="/profile">Profile</a>
+                  <li th:if="${isAuthenticated}" class="rd-nav-item">
+                    <a class="rd-nav-link" href="/profile">Profile</a>
                   </li>
-                  <li class="rd-nav-item"><a class="rd-nav-link" href="/profile/my-profile">Dashbord</a>
-                  </li>
+<!--                  <li class="rd-nav-item"><a class="rd-nav-link" href="/profile/my-profile">Dashbord</a>-->
+<!--                  </li>-->
 <!--                  <li class="rd-nav-item"><a class="rd-nav-link" href="#">Pages</a>-->
                       <!-- RD Navbar Megamenu-->
                     <div class="rd-menu rd-navbar-megamenu">
@@ -91,8 +92,16 @@
                   </li>
                 </ul>
               </div>
-              <div class="rd-navbar-element bg-accent"><a class="button button-sm button-default-outline button-winona" href="/auth/login">Log in</a>
-                <button class="rd-navbar-aside-open-toggle" data-multitoggle="#rd-navbar-aside" aria-label="Sidebar toggle"> <span></span><span></span><span></span></button>
+              <div class="rd-navbar-element bg-accent">
+                <div th:if="${!isAuthenticated}">
+                  <a class="button button-sm button-default-outline button-winona" href="/auth/login">Log in</a>
+                </div>
+                <div th:if="${isAuthenticated}">
+                  <a class="button button-sm button-default-outline button-winona" href="/auth/logout">Log out</a>
+                </div>
+                <button class="rd-navbar-aside-open-toggle" data-multitoggle="#rd-navbar-aside" aria-label="Sidebar toggle">
+                  <span></span><span></span><span></span>
+                </button>
               </div>
               <div class="rd-navbar-dummy"></div>
             </div>
@@ -103,7 +112,7 @@
               </div>
               <div class="rd-navbar-aside-main">
                 <div class="rd-navbar-aside-group navbar" data-navbar="{&quot;stuck&quot;: false, &quot;anchor&quot;: {&quot;offsetRef&quot;: &quot;.rd-navbar-main&quot;}}">
-                  <div class="navbar-inner"><a class="rd-navbar-aside-link" href="about-us.html">About Us</a><a class="rd-navbar-aside-link" href="faq.html">FAQ</a><a class="rd-navbar-aside-link" href="testimonials.html">Testimonials</a><a class="rd-navbar-aside-link" href="our-team.html">Our Team</a>
+                  <div class="navbar-inner"><a class="rd-navbar-aside-link" href="/profile/my-organised-travels">My Organised Travels</a><a class="rd-navbar-aside-link" href="profile/my-travel-applications">My Applications</a><a class="rd-navbar-aside-link" href="profile/my-feedbacks">My Feedbacks</a><a class="rd-navbar-aside-link" href="our-team.html">Our Team</a>
                   </div>
                 </div>
               </div>
@@ -147,15 +156,13 @@
 
                 <script>
                   document.getElementById('searchTravelsForm').addEventListener('submit', function(event) {
-                    event.preventDefault(); // Prevent the default form submission
+                    event.preventDefault();
 
                     var startPoint = document.getElementById('start-point').value;
                     var endPoint = document.getElementById('end-point').value;
 
-                    // Construct the URL with query parameters
                     var searchUrl = '/travels/search-travels?author=&startPoint=' + encodeURIComponent(startPoint) + '&endPoint=' + encodeURIComponent(endPoint) + '&freeSpots=&sortBy=&sortOrder=&filter=*.html';
 
-                    // Redirect the user to the constructed URL
                     window.location.href = searchUrl;
                   });
                 </script>

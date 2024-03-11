@@ -18,8 +18,11 @@ public interface TravelApplicationRepository {
     TravelApplication getById(int id);
 
     List<TravelApplication> getByTravelId(int id);
+
     Page<TravelApplication> getMyTravelApplications(FilterMyApplicationsOptions filterMyApplicationsOptions, Pageable pageable);
+
     List<TravelApplication> getAll();
+
     List<TravelApplication> get(FilterApplicationOptions filterApplicationOptions);
 
     boolean isUserAppliedForTravel(int travelId, int passengerId);
