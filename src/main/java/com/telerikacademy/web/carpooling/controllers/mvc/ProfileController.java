@@ -86,83 +86,6 @@ public class ProfileController {
         return "profile";
     }
 
-    @GetMapping("/my-organised-travels")
-    public String showMyOrganisedTravels(Model model, HttpSession session,
-                                @RequestParam(defaultValue = "0", name = "travelPage") int travelPage,
-                                @RequestParam(defaultValue = "5", name = "travelSize") int travelSize,
-                                @ModelAttribute("travelFilterOptions") FilterTravelDto filterTravelDto) {
-        User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser == null) {
-            return "redirect:/auth/login";
-        }
-        filterTravelDto.setAuthor(currentUser.getUsername());
-
-        Pageable travelPageable = PageRequest.of(travelPage, travelSize);
-
-        Page<Travel> userTravels = travelService.getMyTravels(
-                new FilterTravelOptions(filterTravelDto.getAuthor(),
-                        filterTravelDto.getStartPoint(), filterTravelDto.getEndPoint(),
-                        filterTravelDto.getDepartureTime(), filterTravelDto.getFreeSpots(),
-                        filterTravelDto.getTravelStatus(), filterTravelDto.getSortBy(),
-                        filterTravelDto.getSortOrder()), travelPageable);
-
-
-        model.addAttribute("travelFilterOptions", filterTravelDto);
-        model.addAttribute("userTravels", userTravels);
-        model.addAttribute("profileUser", currentUser);
-
-        return "my-travels-dashboard";
-    }
-
-    @GetMapping("/my-travel-applications")
-    public String showMyTravelApplications(Model model, HttpSession session,
-                                @RequestParam(defaultValue = "0", name = "travelApplicationPage") int travelApplicationPage,
-                                @RequestParam(defaultValue = "5", name = "travelApplicationSize") int travelApplicationSize,
-                                @ModelAttribute("travelApplicationFilterOptions") FilterMyApplicationsDto filterMyApplicationsDto) {
-        User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser == null) {
-            return "redirect:/auth/login";
-        }
-        Pageable travelApplicationPageable = PageRequest.of(travelApplicationPage, travelApplicationSize);
-        Page<TravelApplication> userTravelApplications = travelApplicationService.getMyTravelApplications(
-                new FilterMyApplicationsOptions(filterMyApplicationsDto.getStartPoint(),
-                        filterMyApplicationsDto.getEndPoint(), filterMyApplicationsDto.getDepartureTime(),
-                        filterMyApplicationsDto.getDriver(), filterMyApplicationsDto.getStatus(),
-                        filterMyApplicationsDto.getSortBy(), filterMyApplicationsDto.getSortOrder()),
-                travelApplicationPageable);
-
-        model.addAttribute("userTravelApplications", userTravelApplications);
-        model.addAttribute("profileUser", currentUser);
-
-        return "my-travel-applications-dashboard";
-    }
-
-    @GetMapping("/my-feedbacks")
-    public String showMyFeedbacks(Model model, HttpSession session,
-                                @RequestParam(defaultValue = "0", name = "feedbackPage") int feedbackPage,
-                                @RequestParam(defaultValue = "5", name = "feedbackSize") int feedbackSize,
-                                  @ModelAttribute ("feedbackFilterOptions") FilterFeedbackOptionsDto filterFeedbackOptionsDto) {
-        User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser == null) {
-            return "redirect:/auth/login";
-        }
-        filterFeedbackOptionsDto.setRecipient(currentUser.getUsername());
-        Pageable feedbacksPageable = PageRequest.of(feedbackPage, feedbackSize);
-        Page<Feedback> userFeedbacksReceived = feedbackService.getMyReceivedFeedbacks(
-                new FilterFeedbackOptions(filterFeedbackOptionsDto.getAuthor(),
-                        filterFeedbackOptionsDto.getRecipient(),
-                        filterFeedbackOptionsDto.getComment(),
-                        filterFeedbackOptionsDto.getRating(),
-                        filterFeedbackOptionsDto.getSortBy(),
-                        filterFeedbackOptionsDto.getSortOrder()),
-                feedbacksPageable);
-        model.addAttribute("feedbacks", userFeedbacksReceived);
-        model.addAttribute("profileUser", currentUser);
-
-        return "my-feedbacks-dashboard";
-    }
-
-
     @PostMapping("/update-password")
     public String updatePassword(@Valid @ModelAttribute("passwordDto") UserPasswordUpdateDto passwordDto,
                                  BindingResult bindingResult, Model model, HttpSession session,
@@ -346,5 +269,81 @@ public class ProfileController {
         model.addAttribute("successMessage", "Phone number updated successfully.");
         redirectAttributes.addFlashAttribute("phoneNumberUpdateSuccess", "Phone number updated successfully.");
         return "redirect:/profile";
+    }
+
+    @GetMapping("/my-organised-travels")
+    public String showMyOrganisedTravels(Model model, HttpSession session,
+                                         @RequestParam(defaultValue = "0", name = "travelPage") int travelPage,
+                                         @RequestParam(defaultValue = "5", name = "travelSize") int travelSize,
+                                         @ModelAttribute("travelFilterOptions") FilterTravelDto filterTravelDto) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/auth/login";
+        }
+        filterTravelDto.setAuthor(currentUser.getUsername());
+
+        Pageable travelPageable = PageRequest.of(travelPage, travelSize);
+
+        Page<Travel> userTravels = travelService.getMyTravels(
+                new FilterTravelOptions(filterTravelDto.getAuthor(),
+                        filterTravelDto.getStartPoint(), filterTravelDto.getEndPoint(),
+                        filterTravelDto.getDepartureTime(), filterTravelDto.getFreeSpots(),
+                        filterTravelDto.getTravelStatus(), filterTravelDto.getSortBy(),
+                        filterTravelDto.getSortOrder()), travelPageable);
+
+
+        model.addAttribute("travelFilterOptions", filterTravelDto);
+        model.addAttribute("userTravels", userTravels);
+        model.addAttribute("profileUser", currentUser);
+
+        return "my-travels-dashboard";
+    }
+
+    @GetMapping("/my-travel-applications")
+    public String showMyTravelApplications(Model model, HttpSession session,
+                                           @RequestParam(defaultValue = "0", name = "travelApplicationPage") int travelApplicationPage,
+                                           @RequestParam(defaultValue = "5", name = "travelApplicationSize") int travelApplicationSize,
+                                           @ModelAttribute("travelApplicationFilterOptions") FilterMyApplicationsDto filterMyApplicationsDto) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/auth/login";
+        }
+        Pageable travelApplicationPageable = PageRequest.of(travelApplicationPage, travelApplicationSize);
+        Page<TravelApplication> userTravelApplications = travelApplicationService.getMyTravelApplications(
+                new FilterMyApplicationsOptions(filterMyApplicationsDto.getStartPoint(),
+                        filterMyApplicationsDto.getEndPoint(), filterMyApplicationsDto.getDepartureTime(),
+                        filterMyApplicationsDto.getDriver(), filterMyApplicationsDto.getStatus(),
+                        filterMyApplicationsDto.getSortBy(), filterMyApplicationsDto.getSortOrder()),
+                travelApplicationPageable);
+
+        model.addAttribute("userTravelApplications", userTravelApplications);
+        model.addAttribute("profileUser", currentUser);
+
+        return "my-travel-applications-dashboard";
+    }
+
+    @GetMapping("/my-feedbacks")
+    public String showMyFeedbacks(Model model, HttpSession session,
+                                  @RequestParam(defaultValue = "0", name = "feedbackPage") int feedbackPage,
+                                  @RequestParam(defaultValue = "5", name = "feedbackSize") int feedbackSize,
+                                  @ModelAttribute ("feedbackFilterOptions") FilterFeedbackOptionsDto filterFeedbackOptionsDto) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/auth/login";
+        }
+        filterFeedbackOptionsDto.setRecipient(currentUser.getUsername());
+        Pageable feedbacksPageable = PageRequest.of(feedbackPage, feedbackSize);
+        Page<Feedback> userFeedbacksReceived = feedbackService.getMyReceivedFeedbacks(
+                new FilterFeedbackOptions(filterFeedbackOptionsDto.getAuthor(),
+                        filterFeedbackOptionsDto.getRecipient(),
+                        filterFeedbackOptionsDto.getComment(),
+                        filterFeedbackOptionsDto.getRating(),
+                        filterFeedbackOptionsDto.getSortBy(),
+                        filterFeedbackOptionsDto.getSortOrder()),
+                feedbacksPageable);
+        model.addAttribute("feedbacks", userFeedbacksReceived);
+        model.addAttribute("profileUser", currentUser);
+
+        return "my-feedbacks-dashboard";
     }
 }

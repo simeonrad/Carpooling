@@ -154,7 +154,7 @@
                         <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span>
                         </button>
                         <!-- RD Navbar Brand-->
-                        <div class="rd-navbar-brand"> <a class="brand" href="index.html"><img class="brand-logo-dark" src="/images/cut-logo-carpool.jpg" alt="" width="111" height="72" loading="lazy" srcset="/images/logo-111x33.png 2x"/></a></div>
+                        <div class="rd-navbar-brand"> <a class="brand" href="/"><img class="brand-logo-dark" src="/images/cut-logo-carpool.jpg" alt="" width="111" height="72" loading="lazy" srcset="/images/logo-111x33.png 2x"/></a></div>
                     </div>
                     <div class="rd-navbar-nav-wrap">
                         <!-- RD Navbar Nav-->
@@ -165,8 +165,8 @@
                             </li>
                             <li class="rd-nav-item"><a class="rd-nav-link" href="/profile">Profile</a>
                             </li>
-                            <li class="rd-nav-item"><a class="rd-nav-link" href="/profile/my-profile">Dashbord</a>
-                            </li>
+<!--                            <li class="rd-nav-item"><a class="rd-nav-link" href="/profile/my-profile">Dashbord</a>-->
+<!--                            </li>-->
                                 <!-- RD Navbar Megamenu-->
                                 <div class="rd-menu rd-navbar-megamenu">
                                     <ul class="rd-navbar-megamenu-inner">
@@ -245,10 +245,8 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="rd-navbar-element"><a class="button button-sm button-default-outline button-winona"
-                                                      href="auth/login">Log in</a>
-                        <button class="rd-navbar-aside-open-toggle" data-multitoggle="#rd-navbar-aside"
-                                aria-label="Sidebar toggle"><span></span><span></span><span></span></button>
+                    <div class="rd-navbar-element"><a class="button button-sm button-default-outline button-winona" href="/auth/logout">Log out</a>
+                        <button class="rd-navbar-aside-open-toggle" data-multitoggle="#rd-navbar-aside" aria-label="Sidebar toggle"> <span></span><span></span><span></span></button>
                     </div>
                     <div class="rd-navbar-dummy"></div>
                 </div>
@@ -262,10 +260,7 @@
                     <div class="rd-navbar-aside-main">
                         <div class="rd-navbar-aside-group navbar"
                              data-navbar="{&quot;stuck&quot;: false, &quot;anchor&quot;: {&quot;offsetRef&quot;: &quot;.rd-navbar-main&quot;}}">
-                            <div class="navbar-inner"><a class="rd-navbar-aside-link" href="about-us.html">About
-                                Us</a><a class="rd-navbar-aside-link" href="faq.html">FAQ</a><a
-                                    class="rd-navbar-aside-link" href="testimonials.html">Testimonials</a><a
-                                    class="rd-navbar-aside-link" href="our-team.html">Our Team</a>
+                            <div class="navbar-inner"><a class="rd-navbar-aside-link" href="my-organised-travels">My Organised Travels</a><a class="rd-navbar-aside-link" href="my-feedbacks">My Feedbacks</a><a class="rd-navbar-aside-link" href="our-team.html">Our Team</a>
                             </div>
                         </div>
                     </div>
@@ -392,14 +387,14 @@
             <div th:if="${userTravelApplications.totalPages > 1}" class="pagination-wrapper">
                 <ul class="paginationLogin">
                     <li th:classappend="${userTravelApplications.first ? 'disabled' : ''}">
-                        <a th:href="@{/my-travel-applications(travelApplicationPage=${userTravelApplications.number - 1}, travelApplicationSize=${userTravelApplications.size})}" aria-label="Previous">&laquo;</a>
+                        <a th:href="@{/profile/my-travel-applications(travelApplicationPage=${userTravelApplications.number - 1}, travelApplicationSize=${userTravelApplications.size})}" aria-label="Previous">&laquo;</a>
                     </li>
                     <li th:each="pageNum : ${#numbers.sequence(0, userTravelApplications.totalPages - 1)}"
                         th:classappend="${pageNum == userTravelApplications.number ? 'active' : ''}">
-                        <a th:href="@{/my-travel-applications(travelApplicationPage=${pageNum}, travelApplicationSize=${userTravelApplications.size})}" th:text="${pageNum + 1}"></a>
+                        <a th:href="@{/profile/my-travel-applications(travelApplicationPage=${pageNum}, travelApplicationSize=${userTravelApplications.size})}" th:text="${pageNum + 1}"></a>
                     </li>
                     <li th:classappend="${userTravelApplications.last ? 'disabled' : ''}">
-                        <a th:href="@{/my-travel-applications(travelApplicationPage=${userTravelApplications.number + 1}, travelApplicationSize=${userTravelApplications.size})}" aria-label="Next">&raquo;</a>
+                        <a th:href="@{/profile/my-travel-applications(travelApplicationPage=${userTravelApplications.number + 1}, travelApplicationSize=${userTravelApplications.size})}" aria-label="Next">&raquo;</a>
                     </li>
                 </ul>
             </div>
