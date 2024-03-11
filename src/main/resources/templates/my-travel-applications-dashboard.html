@@ -387,14 +387,14 @@
             <div th:if="${userTravelApplications.totalPages > 1}" class="pagination-wrapper">
                 <ul class="paginationLogin">
                     <li th:classappend="${userTravelApplications.first ? 'disabled' : ''}">
-                        <a th:href="@{/my-travel-applications(travelApplicationPage=${userTravelApplications.number - 1}, travelApplicationSize=${userTravelApplications.size})}" aria-label="Previous">&laquo;</a>
+                        <a th:href="@{/profile/my-travel-applications(travelApplicationPage=${userTravelApplications.number - 1}, travelApplicationSize=${userTravelApplications.size})}" aria-label="Previous">&laquo;</a>
                     </li>
                     <li th:each="pageNum : ${#numbers.sequence(0, userTravelApplications.totalPages - 1)}"
                         th:classappend="${pageNum == userTravelApplications.number ? 'active' : ''}">
-                        <a th:href="@{/my-travel-applications(travelApplicationPage=${pageNum}, travelApplicationSize=${userTravelApplications.size})}" th:text="${pageNum + 1}"></a>
+                        <a th:href="@{/profile/my-travel-applications(travelApplicationPage=${pageNum}, travelApplicationSize=${userTravelApplications.size})}" th:text="${pageNum + 1}"></a>
                     </li>
                     <li th:classappend="${userTravelApplications.last ? 'disabled' : ''}">
-                        <a th:href="@{/my-travel-applications(travelApplicationPage=${userTravelApplications.number + 1}, travelApplicationSize=${userTravelApplications.size})}" aria-label="Next">&raquo;</a>
+                        <a th:href="@{/profile/my-travel-applications(travelApplicationPage=${userTravelApplications.number + 1}, travelApplicationSize=${userTravelApplications.size})}" aria-label="Next">&raquo;</a>
                     </li>
                 </ul>
             </div>
