@@ -61,6 +61,72 @@
     }
 
 </style>
+
+<style>
+    .pagination-wrapper {
+        text-align: center;
+        padding: 20px 0;
+    }
+
+    .paginationLogin {
+        display: inline-block;
+        padding-left: 0;
+        margin: 20px 0;
+        border-radius: 4px;
+    }
+
+    .paginationLogin li {
+        display: inline;
+        margin: 0 2px;
+    }
+
+    .paginationLogin li a {
+        position: relative;
+        float: left;
+        padding: 6px 12px;
+        margin-left: -1px;
+        line-height: 1.42857143;
+        color: #337ab7;
+        text-decoration: none;
+        background-color: #fff;
+        border: 1px solid #ddd;
+    }
+
+    .paginationLogin li:first-child a {
+        margin-left: 0;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+
+    .paginationLogin li:last-child a {
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+
+    .paginationLogin li a:hover,
+    .paginationLogin li a:focus {
+        z-index: 2;
+        color: #23527c;
+        background-color: #eee;
+        border-color: #ddd;
+    }
+
+    .paginationLogin .active a {
+        z-index: 3;
+        color: #fff;
+        background-color: #337ab7;
+        border-color: #337ab7;
+        cursor: default;
+    }
+
+    .paginationLogin .disabled a {
+        color: #777;
+        cursor: not-allowed;
+        background-color: #fff;
+        border-color: #ddd;
+    }
+</style>
+
 <body>
 <div class="preloader" id="loading">
     <div class="preloader-body">
@@ -323,6 +389,22 @@
                     </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Pagination controls -->
+            <div th:if="${userTravels.totalPages > 1}" class="pagination-wrapper">
+                <ul class="paginationLogin">
+                    <li th:classappend="${userTravels.first ? 'disabled' : ''}">
+                        <a th:href="@{/profile/my-organised-travels(travelPage=${userTravels.number - 1}, travelSize=${userTravels.size})}" aria-label="Previous">&laquo;</a>
+                    </li>
+                    <li th:each="pageNum : ${#numbers.sequence(0, userTravels.totalPages - 1)}"
+                        th:classappend="${pageNum == userTravels.number ? 'active' : ''}">
+                        <a th:href="@{/profile/my-organised-travels(travelPage=${pageNum}, travelSize=${userTravels.size})}" th:text="${pageNum + 1}"></a>
+                    </li>
+                    <li th:classappend="${userTravels.last ? 'disabled' : ''}">
+                        <a th:href="@{/profile/my-organised-travels(travelPage=${userTravels.number + 1}, travelSize=${userTravels.size})}" aria-label="Next">&raquo;</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </section>

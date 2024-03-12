@@ -9,9 +9,7 @@ import java.util.List;
 
 public interface UserService {
     void create(User user);
-
     void checkIfVerified(User user);
-
     void delete(User user, User deletedBy);
     void delete(User user);
     void deleteUI(User user);

@@ -2,6 +2,8 @@ package com.telerikacademy.web.carpooling.models;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "travels")
@@ -34,6 +36,9 @@ public class Travel {
     @ManyToOne
     @JoinColumn(name = "car_id")
     private Car car;
+
+    @OneToMany(mappedBy = "travel", fetch = FetchType.LAZY)
+    private Set<TravelApplication> applications = new HashSet<>();
 
     public Travel() {
     }
@@ -124,5 +129,13 @@ public class Travel {
 
     public void setCar(Car car) {
         this.car = car;
+    }
+
+    public Set<TravelApplication> getApplications() {
+        return applications;
+    }
+
+    public void setApplications(Set<TravelApplication> applications) {
+        this.applications = applications;
     }
 }

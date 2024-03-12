@@ -112,8 +112,10 @@
               </div>
               <div class="rd-navbar-aside-main">
                 <div class="rd-navbar-aside-group navbar" data-navbar="{&quot;stuck&quot;: false, &quot;anchor&quot;: {&quot;offsetRef&quot;: &quot;.rd-navbar-main&quot;}}">
-                  <div class="navbar-inner"><a class="rd-navbar-aside-link" href="/profile/my-organised-travels">My Organised Travels</a><a class="rd-navbar-aside-link" href="profile/my-travel-applications">My Applications</a><a class="rd-navbar-aside-link" href="profile/my-feedbacks">My Feedbacks</a><a class="rd-navbar-aside-link" href="our-team.html">Our Team</a>
-                  </div>
+                  <a th:if="${isAuthenticated}" class="rd-navbar-aside-link" href="/profile/my-organised-travels">My Organised Travels</a>
+                  <a th:if="${isAuthenticated}" class="rd-navbar-aside-link" href="/profile/my-travel-applications">My Applications</a>
+                  <a th:if="${isAuthenticated}" class="rd-navbar-aside-link" href="/profile/my-feedbacks">My Feedbacks</a>
+                  <a th:unless="${isAuthenticated}" class="rd-navbar-aside-link" href="/auth/register">Register</a>
                 </div>
               </div>
             </div>
