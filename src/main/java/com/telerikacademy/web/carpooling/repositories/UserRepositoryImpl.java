@@ -334,7 +334,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public NonVerifiedUser getNonVerifiedById(int userId) {
         try (Session session = sessionFactory.openSession()) {
-            String queryString = "FROM NonVerifiedUser nv WHERE nv.id = :userId";
+            String queryString = "FROM NonVerifiedUser nv WHERE nv.id = :userId AND nv.isVerified = false";
             Query<NonVerifiedUser> query = session.createQuery(queryString, NonVerifiedUser.class);
             query.setParameter("userId", userId);
             return query.uniqueResult();
