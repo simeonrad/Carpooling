@@ -260,7 +260,10 @@
                     <div class="rd-navbar-aside-main">
                         <div class="rd-navbar-aside-group navbar"
                              data-navbar="{&quot;stuck&quot;: false, &quot;anchor&quot;: {&quot;offsetRef&quot;: &quot;.rd-navbar-main&quot;}}">
-                            <div class="navbar-inner"><a class="rd-navbar-aside-link" href="my-organised-travels">My Organised Travels</a><a class="rd-navbar-aside-link" href="my-feedbacks">My Feedbacks</a><a class="rd-navbar-aside-link" href="our-team.html">Our Team</a>
+                            <div class="navbar-inner">
+                                <a class="rd-navbar-aside-link" href="my-organised-travels">My Organised Travels</a>
+                                <a class="rd-navbar-aside-link" href="my-feedbacks">My Feedbacks</a>
+                                <a class="rd-navbar-aside-link" href="my-travels-as-passenger">My Travels As Passenger</a>
                             </div>
                         </div>
                     </div>
@@ -273,7 +276,7 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-xl-9">
-                        <h2 class="breadcrumbs-custom-title">My Dashboard</h2>
+                        <h2 class="breadcrumbs-custom-title">My Applications</h2>
                     </div>
                 </div>
             </div>
@@ -304,7 +307,7 @@
     </div>
 
 
-    <h3 style="text-align: center; margin-top: 20px;">My Applications</h3>
+<!--    <h3 style="text-align: center; margin-top: 20px;">My Applications</h3>-->
 
     <!-- Search results for My Applications-->
     <section class="section section-mdDashboard">
@@ -375,7 +378,9 @@
                         <td th:href="@{/travels/{id}(id=${travelApplication.travel.id})}" th:text="${travelApplication.travel.startPoint}"></td>
                         <td th:text="${travelApplication.travel.endPoint}"></td>
                         <td th:text="${travelApplication.travel.departureTime}"></td>
-                        <td th:text="${travelApplication.travel.driver.username}"></td>
+                        <td>
+                            <a th:href="@{/users/{id}(id=${travelApplication.travel.driver.id})}" th:text="${travelApplication.travel.driver.username}"></a>
+                        </td>
                         <td th:text="${travelApplication.status.status.name()}"></td>
                     </tr>
                     </tbody>

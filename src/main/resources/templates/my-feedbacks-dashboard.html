@@ -258,7 +258,10 @@
                     <div class="rd-navbar-aside-main">
                         <div class="rd-navbar-aside-group navbar"
                              data-navbar="{&quot;stuck&quot;: false, &quot;anchor&quot;: {&quot;offsetRef&quot;: &quot;.rd-navbar-main&quot;}}">
-                            <div class="navbar-inner"><a class="rd-navbar-aside-link" href="my-organised-travels">My Organised Travels</a><a class="rd-navbar-aside-link" href="my-travel-applications">My Applications</a><a class="rd-navbar-aside-link" href="our-team.html">Our Team</a>
+                            <div class="navbar-inner">
+                                <a class="rd-navbar-aside-link" href="my-organised-travels">My Organised Travels</a>
+                                <a class="rd-navbar-aside-link" href="my-travel-applications">My Applications</a>
+                                <a class="rd-navbar-aside-link" href="/profile/my-travels-as-passenger">My Travels As Passenger</a>
                             </div>
                             </div>
                     </div>
@@ -362,7 +365,9 @@
                     </tr>
                     </thead>
                     <tr th:each="feedback : ${feedbacks}">
-                        <td th:text="${feedback.author.username}"></td>
+                        <td>
+                            <a th:href="@{/users/{id}(id=${feedback.author.id})}" th:text="${feedback.author.username}"></a>
+                        </td>
                         <td th:text="${feedback.rating}"></td>
                         <td th:text="${feedback.comment != null ? feedback.comment.comment : 'No comment left by the user'}"></td>
                     </tr>

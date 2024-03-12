@@ -264,7 +264,6 @@
                                 <a class="rd-navbar-aside-link" href="my-travel-applications">My Applications</a>
                                 <a class="rd-navbar-aside-link" href="my-organised-travels">My Organised Travels</a>
                                 <a class="rd-navbar-aside-link" href="my-feedbacks">My Feedbacks</a>
-                                <a class="rd-navbar-aside-link" href="our-team.html">Our Team</a>
                             </div>
                             </div>
                     </div>
@@ -277,7 +276,7 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-xl-9">
-                        <h2 class="breadcrumbs-custom-title">My Dashboard</h2>
+                        <h2 class="breadcrumbs-custom-title">My Travels As Passenger</h2>
                     </div>
                 </div>
             </div>
@@ -309,7 +308,7 @@
 
 
 
-    <h3 style="text-align: center; margin-top: 20px;">My Travels As Passenger</h3>
+<!--    <h3 style="text-align: center; margin-top: 20px;">My Travels As Passenger</h3>-->
 
 
     <!-- Search results for My Organised Travels-->
@@ -380,7 +379,9 @@
                         <td th:href="@{/travels/{id}(id=${travel.id})}" th:text="${travel.startPoint}"></td>
                         <td th:text="${travel.endPoint}"></td>
                         <td th:text="${travel.getDepartureTime()}"></td>
-                        <td th:text="${travel.getDriver().getUsername()}"></td>
+                        <td>
+                            <a th:href="@{/users/{id}(id=${travel.driver.id})}" th:text="${travel.driver.username}"></a>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
