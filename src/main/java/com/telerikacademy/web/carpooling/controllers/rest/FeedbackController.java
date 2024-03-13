@@ -7,9 +7,10 @@ import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationExcepti
 import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
 import com.telerikacademy.web.carpooling.helpers.FeedbackMapper;
 import com.telerikacademy.web.carpooling.models.*;
-import com.telerikacademy.web.carpooling.repositories.FeedbackRepository;
-import com.telerikacademy.web.carpooling.repositories.UserRepository;
-import com.telerikacademy.web.carpooling.services.FeedbackService;
+import com.telerikacademy.web.carpooling.models.dtos.FeedbackDto;
+import com.telerikacademy.web.carpooling.repositories.contracts.FeedbackRepository;
+import com.telerikacademy.web.carpooling.repositories.contracts.UserRepository;
+import com.telerikacademy.web.carpooling.services.contracts.FeedbackService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -39,10 +40,10 @@ public class FeedbackController {
 
     @GetMapping
     public List<FeedbackDto> getFeedbacksForUser(@RequestParam(required = false) String author,
-                                              @RequestParam(required = false) String recipient,
-                                              @RequestParam(required = false) String sortBy,
-                                              @RequestParam(required = false) String sortOrder,
-                                              @RequestHeader HttpHeaders headers) {
+                                                 @RequestParam(required = false) String recipient,
+                                                 @RequestParam(required = false) String sortBy,
+                                                 @RequestParam(required = false) String sortOrder,
+                                                 @RequestHeader HttpHeaders headers) {
         try {
             User currentUser = authenticationHelper.tryGetUser(headers);
             FilterFeedbackOptions filterFeedbackOptions = new FilterFeedbackOptions(author, recipient, sortBy, sortOrder);

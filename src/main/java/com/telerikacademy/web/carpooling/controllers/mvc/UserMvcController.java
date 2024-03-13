@@ -5,9 +5,11 @@ import com.telerikacademy.web.carpooling.exceptions.DuplicatePhoneNumberExists;
 import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.carpooling.exceptions.InvalidPhoneNumberException;
 import com.telerikacademy.web.carpooling.models.*;
-import com.telerikacademy.web.carpooling.repositories.RoleRepository;
-import com.telerikacademy.web.carpooling.services.FeedbackService;
-import com.telerikacademy.web.carpooling.services.UserService;
+import com.telerikacademy.web.carpooling.models.dtos.FilterFeedbackOptionsDto;
+import com.telerikacademy.web.carpooling.models.dtos.FilterUserDto;
+import com.telerikacademy.web.carpooling.repositories.contracts.RoleRepository;
+import com.telerikacademy.web.carpooling.services.contracts.FeedbackService;
+import com.telerikacademy.web.carpooling.services.contracts.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +85,7 @@ public class UserMvcController {
                     userService.blockUser(userToToggle.getUsername(), currentUser);
                 }
             } catch (Exception e) {
-                model.addAttribute("error", "Error toggling user block status.");
+                model.addAttribute("status", "Error toggling user block status.");
             }
             String refererUrl = request.getHeader("Referer");
             return "redirect:" + refererUrl;

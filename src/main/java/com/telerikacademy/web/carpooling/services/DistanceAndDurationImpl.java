@@ -8,6 +8,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
 import com.telerikacademy.web.carpooling.exceptions.InvalidCityException;
+import com.telerikacademy.web.carpooling.services.contracts.DistanceAndDuration;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 

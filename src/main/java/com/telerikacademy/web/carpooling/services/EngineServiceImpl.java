@@ -1,7 +1,8 @@
 package com.telerikacademy.web.carpooling.services;
 
 import com.telerikacademy.web.carpooling.models.CarEngine;
-import com.telerikacademy.web.carpooling.repositories.EngineRepository;
+import com.telerikacademy.web.carpooling.repositories.contracts.EngineRepository;
+import com.telerikacademy.web.carpooling.services.contracts.EngineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

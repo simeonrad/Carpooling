@@ -2,13 +2,11 @@ package com.telerikacademy.web.carpooling.helpers;
 
 import com.telerikacademy.web.carpooling.models.Feedback;
 import com.telerikacademy.web.carpooling.models.FeedbackComment;
-import com.telerikacademy.web.carpooling.models.FeedbackDto;
+import com.telerikacademy.web.carpooling.models.dtos.FeedbackDto;
 import com.telerikacademy.web.carpooling.models.User;
-import com.telerikacademy.web.carpooling.repositories.TravelRepository;
-import com.telerikacademy.web.carpooling.repositories.UserRepository;
+import com.telerikacademy.web.carpooling.repositories.contracts.TravelRepository;
+import com.telerikacademy.web.carpooling.repositories.contracts.UserRepository;
 import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
 
 @Component
 public class FeedbackMapper {

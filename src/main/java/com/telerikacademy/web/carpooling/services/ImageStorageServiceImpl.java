@@ -1,5 +1,6 @@
 package com.telerikacademy.web.carpooling.services;
 
+import com.telerikacademy.web.carpooling.services.contracts.ImageStorageService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;

@@ -329,6 +329,11 @@
                         <input th:field="*{freeSpots}" class="form-input" id="rd-search-form-input-free-spots"
                                type="text" name="email" autocomplete="off">
                     </div>
+                    <div class="form-wrap">
+                        <label class="form-label" for="rd-search-form-input-status">Travel Status</label>
+                        <input th:field="*{travelStatus}" class="form-input" id="rd-search-form-input-status"
+                               type="text" name="email" autocomplete="off">
+                    </div>
                     <div class="form-wrap mx-sm-3 mb-2">
                         <label>
                             <select class="form-control" th:field="*{sortBy}">
@@ -373,28 +378,31 @@
                         <th>End Point</th>
                         <th>Free Seats</th>
                         <th>Departure Time</th>
+                        <th>Travel Status</th>
                         <th>Apply</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="travel : ${travels}">
+                        <th:block th:if="${travel.freeSpots > 0}">
                         <td th:text="${travel.startPoint}"></td>
                         <td th:text="${travel.endPoint}"></td>
                         <td th:text="${travel.freeSpots}"></td>
-                        <td th:text="${#temporals.format(travel.departureTime, 'dd-MM-yyyy HH:mm')}"></td>
-                        <td>
-                            <!-- Conditional rendering for Admin -->
+                        <td th:text="${#temporals.format(travel.departureTime, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${travel.status.status.toString().toLowerCase()}"></td>
+                          <td>  <!-- Conditional rendering for Admin -->
                             <div th:if="${isAdmin}">
                                 <form th:action="@{/travels/delete/{id}(id=${travel.id})}" method="post" style="display:inline;">
                                     <input type="hidden" name="_method" value="delete"/>
                                     <button type="submit" class="button button-gray-700 button-winona">Delete</button>
                                 </form>
-                                <a th:href="@{/travels/applications/create/{id}(id=${travel.id})}" class="button button-primary button-winona">Apply</a>
+                                <a th:unless="${travel.departureTime.isBefore(now)}" th:href="@{/travels/applications/create/{id}(id=${travel.id})}" class="button button-primary button-winona">Apply</a>
                             </div>
 
                             <!-- Non-admin users see only the Apply button -->
-                            <a th:unless="${isAdmin}" th:href="@{/travels/applications/create/{id}(id=${travel.id})}" class="button button-sm button-primary button-winona">Apply</a>
+                            <a th:if="${travel.departureTime.isAfter(now)}" th:unless="${isAdmin}" th:href="@{/travels/applications/create/{id}(id=${travel.id})}" class="button button-sm button-primary button-winona">Apply</a>
                         </td>
+                        </th:block>
                     </tr>
                     </tbody>
                 </table>

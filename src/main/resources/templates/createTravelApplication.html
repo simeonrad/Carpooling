@@ -38,7 +38,7 @@
                             </p>
                             <div class="box-shadow-1-main">
                                 <!-- RD Mailform -->
-                                <form th:action="@{/travels/applications/create/{travelId}(travelId=${travel.id})}" method="post" th:object="${applicationDto}">
+                                <form th:action="@{/travels/applications/create/{travelId}(travelId=${travelId})}" method="post" th:object="${applicationDto}">
                                     <div>
                                         <label>Travel Details:</label>
                                         <p>Start Point: <span th:text="${travel.startPoint}"></span></p>

@@ -1,6 +1,7 @@
 package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.models.TravelComment;
+import com.telerikacademy.web.carpooling.repositories.contracts.TravelCommentRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;

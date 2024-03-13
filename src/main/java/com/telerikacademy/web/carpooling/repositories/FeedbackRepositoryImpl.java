@@ -2,6 +2,7 @@ package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.models.Feedback;
 import com.telerikacademy.web.carpooling.models.FilterFeedbackOptions;
+import com.telerikacademy.web.carpooling.repositories.contracts.FeedbackRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Session;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class FeedbackRepositoryImpl implements FeedbackRepository{
+public class FeedbackRepositoryImpl implements FeedbackRepository {
 
     private final SessionFactory sessionFactory;
     @PersistenceContext
