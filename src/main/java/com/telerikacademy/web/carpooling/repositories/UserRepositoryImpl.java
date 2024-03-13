@@ -338,9 +338,6 @@ public class UserRepositoryImpl implements UserRepository {
             String queryString = "FROM NonVerifiedUser nv WHERE nv.id = :userId AND nv.isVerified = false";
             Query<NonVerifiedUser> query = session.createQuery(queryString, NonVerifiedUser.class);
             query.setParameter("userId", userId);
-            if (query.uniqueResult() == null) {
-                throw new EntityNotFoundException("Email was already verified!");
-            }
             return query.uniqueResult();
         }
     }

@@ -120,10 +120,13 @@ public class TravelApplicationRepositoryImpl implements TravelApplicationReposit
     }
 
     @Override
-    public Page<TravelApplication> getMyTravelApplications(FilterMyApplicationsOptions filterOptions, Pageable pageable) {
+    public Page<TravelApplication> getMyTravelApplications(FilterMyApplicationsOptions filterOptions, Pageable pageable, int currentUserId) {
         try (Session session = sessionFactory.openSession()) {
             List<String> filters = new ArrayList<>();
             Map<String, Object> params = new HashMap<>();
+
+            filters.add("t.passenger.id = :currentUserId");
+            params.put("currentUserId", currentUserId);
 
             filterOptions.getStartPoint().ifPresent(startPoint -> {
                 if (!startPoint.isBlank()) {
@@ -152,11 +155,10 @@ public class TravelApplicationRepositoryImpl implements TravelApplicationReposit
             });
 
 
-            StringBuilder queryString = new StringBuilder(
-                    "select t from TravelApplication t " +
-                            "join t.travel " +
-                            "join t.travel.driver driver " +
-                            "join t.status ");
+            StringBuilder queryString = new StringBuilder("select t from TravelApplication t " +
+                    "join t.travel " +
+                    "join t.travel.driver driver " +
+                    "join t.status ");
 
             StringBuilder countQueryString = new StringBuilder(
                     "select count(t) from TravelApplication t " +

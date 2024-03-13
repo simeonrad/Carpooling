@@ -3,7 +3,7 @@ package com.telerikacademy.web.carpooling.helpers;
 import com.telerikacademy.web.carpooling.exceptions.ForgottenPasswordEmailSentException;
 import com.telerikacademy.web.carpooling.models.ForgottenPasswordUI;
 import com.telerikacademy.web.carpooling.models.User;
-import com.telerikacademy.web.carpooling.repositories.UserRepository;
+import com.telerikacademy.web.carpooling.repositories.contracts.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
