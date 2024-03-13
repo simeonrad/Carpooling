@@ -16,7 +16,7 @@ public interface TravelService {
     void delete(Travel travel, User user);
     List<Travel> getAll();
     Page<Travel> getMyTravels(FilterTravelOptions filterTravelOptions, Pageable page);
-
+    Page<Travel> getTravelsIParticipatedIn(FilterTravelOptions filterTravelOptions, Pageable page, int currentUserId);
     Travel getById(int id);
     List<Travel> get(FilterTravelOptions filterTravelOptions);
     Page<Travel> get(FilterTravelOptions filterTravelOptions, Pageable pageable);

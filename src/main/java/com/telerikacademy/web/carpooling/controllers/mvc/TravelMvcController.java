@@ -26,6 +26,7 @@ import org.springframework.validation.BindingResult;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 @Controller
 @RequestMapping("travels")
 public class TravelMvcController {
@@ -54,6 +55,7 @@ public class TravelMvcController {
         }
         return isAdmin;
     }
+
     @ModelAttribute("isAuthenticated")
     public boolean populateIsAuthenticated(HttpSession session) {
         return session.getAttribute("currentUser") != null;
@@ -80,12 +82,12 @@ public class TravelMvcController {
     @GetMapping("/search-travels")
     public String filterUsers(@ModelAttribute("filterOptions") FilterTravelDto filterTravelDto, Model model,
                               @RequestParam(defaultValue = "0", name = "travelPage") int travelPage,
-                              @RequestParam(defaultValue = "5", name = "travelSize") int travelSize){
-            FilterTravelOptions filterTravelOptions = new FilterTravelOptions(filterTravelDto.getAuthor(),
-                    filterTravelDto.getStartPoint(), filterTravelDto.getEndPoint(),
-                    filterTravelDto.getDepartureTime(), filterTravelDto.getFreeSpots(),
-                    filterTravelDto.getTravelStatus(), filterTravelDto.getSortBy(),
-                    filterTravelDto.getSortOrder());
+                              @RequestParam(defaultValue = "5", name = "travelSize") int travelSize) {
+        FilterTravelOptions filterTravelOptions = new FilterTravelOptions(filterTravelDto.getAuthor(),
+                filterTravelDto.getStartPoint(), filterTravelDto.getEndPoint(),
+                filterTravelDto.getDepartureTime(), filterTravelDto.getFreeSpots(),
+                filterTravelDto.getTravelStatus(), filterTravelDto.getSortBy(),
+                filterTravelDto.getSortOrder());
         Pageable travelsPageable = PageRequest.of(travelPage, travelSize);
         Page<Travel> travels = travelService.getMyTravels(filterTravelOptions, travelsPageable);
             model.addAttribute("filterOptions", filterTravelDto);
@@ -97,14 +99,14 @@ public class TravelMvcController {
     @GetMapping("/create")
     public String showCreateTravelForm(Model model, HttpSession session) {
         try {
-           User user = authenticationHelper.tryGetUser(session);
+            User user = authenticationHelper.tryGetUser(session);
             userService.checkIfVerified(user);
             model.addAttribute("createTravel", new TravelDto());
             model.addAttribute("userCars", user.getCars());
             return "createTravel";
-        } catch (AuthenticationFailureException e){
+        } catch (AuthenticationFailureException e) {
             return "redirect:/auth/login";
-        } catch (UnauthorizedOperationException e){
+        } catch (UnauthorizedOperationException e) {
             model.addAttribute("status", e.getMessage());
             return "404-page";
         }
@@ -136,13 +138,14 @@ public class TravelMvcController {
             model.addAttribute("CarDto", new CarDto());
             model.addAttribute("engines", engineService.getAll());
             return "createCar";
-        } catch (AuthenticationFailureException e){
+        } catch (AuthenticationFailureException e) {
             return "redirect:/auth/login";
         }
 
     }
+
     @PostMapping("/car/create")
-    public String createCar(@ModelAttribute(name = "carDto") CarDto carDto ,Model model, HttpSession session) {
+    public String createCar(@ModelAttribute(name = "carDto") CarDto carDto, Model model, HttpSession session) {
         try {
             User user = authenticationHelper.tryGetUser(session);
             Car car = new Car();
@@ -156,11 +159,12 @@ public class TravelMvcController {
             carService.create(car, user);
             user.getCars().add(car);
             return "redirect:/travels/create";
-        } catch (AuthenticationFailureException e){
+        } catch (AuthenticationFailureException e) {
             return "redirect:/auth/login";
         }
 
     }
+
     @GetMapping("/{id}")
     public String singleTravel(@PathVariable int id, Model model, HttpSession session) {
         try {
@@ -180,10 +184,11 @@ public class TravelMvcController {
                 if (approvedUsersInTravel.contains(user)) {
                     usersToFeedback.add(travel.getDriver());
                 }
-            } catch (EntityNotFoundException ignored){}
-            model.addAttribute("travel" , travel);
-            model.addAttribute("now" , LocalDateTime.now());
-            model.addAttribute("usersToGiveFeedback" , usersToFeedback);
+            } catch (EntityNotFoundException ignored) {
+            }
+            model.addAttribute("travel", travel);
+            model.addAttribute("now", LocalDateTime.now());
+            model.addAttribute("usersToGiveFeedback", usersToFeedback);
             return "single-travel";
         } catch (AuthenticationFailureException e) {
             return "redirect:/auth/login";
@@ -244,35 +249,34 @@ public class TravelMvcController {
 
 
     @GetMapping("/applications/{id}")
-    public String travelApplications(@PathVariable int id, Model model, HttpSession session){
-    try {
-        User user = authenticationHelper.tryGetUser(session);
-        if (user.equals(travelService.getById(id).getDriver())) {
-            List<TravelApplication> applications = travelApplicationService.getByTravelId(id);
-            model.addAttribute("applications", applications);
-            return "travel-applications-view";
+    public String travelApplications(@PathVariable int id, Model model, HttpSession session) {
+        try {
+            User user = authenticationHelper.tryGetUser(session);
+            if (user.equals(travelService.getById(id).getDriver())) {
+                List<TravelApplication> applications = travelApplicationService.getByTravelId(id);
+                model.addAttribute("applications", applications);
+                return "travel-applications-view";
+            }
+        } catch (AuthenticationFailureException e) {
+            return "redirect:/auth/login";
         }
-    } catch (AuthenticationFailureException e){
-        return "redirect:/auth/login";
-    }
         return "redirect:/auth/login";
     }
     @PostMapping("/applications/approve/{id}")
-    public String approveApplications(@PathVariable int id,Model model, HttpSession session){
-    try {
-        User user = authenticationHelper.tryGetUser(session);
-        if (user.equals(travelService.getById(id).getDriver())) {
-        TravelApplication travelApplication = travelApplicationService.getById(id);
-        travelApplicationService.approve(user, travelApplication);
-            return "travel-applications-view";
+    public String approveApplications(@PathVariable int id, Model model, HttpSession session) {
+        try {
+            User user = authenticationHelper.tryGetUser(session);
+            if (user.equals(travelService.getById(id).getDriver())) {
+                TravelApplication travelApplication = travelApplicationService.getById(id);
+                travelApplicationService.approve(user, travelApplication);
+                return "travel-applications-view";
+            }
+        } catch (AuthenticationFailureException e) {
+            return "redirect:/auth/login";
+        } catch (ForbiddenOperationException | UnauthorizedOperationException e) {
+            model.addAttribute("error-message", e.getMessage());
+            return "redirect:/404-page";
         }
-    } catch (AuthenticationFailureException e){
-        return "redirect:/auth/login";
-    }
-    catch (ForbiddenOperationException | UnauthorizedOperationException e){
-        model.addAttribute("error-message",e.getMessage());
-        return "redirect:/404-page";
-    }
         return "redirect:/auth/login";
     }
     @PostMapping("/delete/{id}")
@@ -286,8 +290,8 @@ public class TravelMvcController {
             return "redirect:/auth/login";
         }
         catch (ForbiddenOperationException | UnauthorizedOperationException e){
-            model.addAttribute("error-message",e.getMessage());
-            return "redirect:/404-page";
+            model.addAttribute("status",e.getMessage());
+            return "404-page";
         }
     }
     @PostMapping("/applications/decline/{id}")
@@ -299,12 +303,11 @@ public class TravelMvcController {
                 travelApplicationService.decline(user, travelApplication);
                 return "travel-applications-view";
             }
-        } catch (AuthenticationFailureException e){
+        } catch (AuthenticationFailureException e) {
             return "redirect:/auth/login";
-        }
-        catch (ForbiddenOperationException | UnauthorizedOperationException e){
-            model.addAttribute("error-message",e.getMessage());
-            return "redirect:/404-page";
+        } catch (ForbiddenOperationException | UnauthorizedOperationException e) {
+            model.addAttribute("status", e.getMessage());
+            return "404-page";
         }
         return "redirect:/auth/login";
     }

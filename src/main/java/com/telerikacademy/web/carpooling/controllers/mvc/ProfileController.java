@@ -300,6 +300,34 @@ public class ProfileController {
         return "my-travels-dashboard";
     }
 
+    @GetMapping("/my-travels-as-passenger")
+    public String showMyTravelsAsPassenger(Model model, HttpSession session,
+                                         @RequestParam(defaultValue = "0", name = "travelPage") int travelPage,
+                                         @RequestParam(defaultValue = "5", name = "travelSize") int travelSize,
+                                         @ModelAttribute("travelFilterOptions") FilterTravelDto filterTravelDto) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/auth/login";
+        }
+        int currentUserId = currentUser.getId();
+
+        Pageable travelPageable = PageRequest.of(travelPage, travelSize);
+
+        Page<Travel> userTravels = travelService.getTravelsIParticipatedIn(
+                new FilterTravelOptions(filterTravelDto.getAuthor(),
+                        filterTravelDto.getStartPoint(), filterTravelDto.getEndPoint(),
+                        filterTravelDto.getDepartureTime(), filterTravelDto.getFreeSpots(),
+                        filterTravelDto.getTravelStatus(), filterTravelDto.getSortBy(),
+                        filterTravelDto.getSortOrder()), travelPageable, currentUserId);
+
+
+        model.addAttribute("travelFilterOptions", filterTravelDto);
+        model.addAttribute("userTravels", userTravels);
+        model.addAttribute("profileUser", currentUser);
+
+        return "my-travels-as-passenger-dashboard";
+    }
+
     @GetMapping("/my-travel-applications")
     public String showMyTravelApplications(Model model, HttpSession session,
                                            @RequestParam(defaultValue = "0", name = "travelApplicationPage") int travelApplicationPage,

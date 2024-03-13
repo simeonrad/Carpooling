@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="wide wow-animation" lang="en">
 <head>
-    <title>Tables</title>
+    <title>My Travels As Passenger</title>
     <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,70 +11,6 @@
     <link rel="stylesheet" href="/css/fonts.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/userSectionStyle.css">
-    <style>
-        .pagination-wrapper {
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        .paginationLogin {
-            display: inline-block;
-            padding-left: 0;
-            margin: 20px 0;
-            border-radius: 4px;
-        }
-
-        .paginationLogin li {
-            display: inline;
-            margin: 0 2px;
-        }
-
-        .paginationLogin li a {
-            position: relative;
-            float: left;
-            padding: 6px 12px;
-            margin-left: -1px;
-            line-height: 1.42857143;
-            color: #337ab7;
-            text-decoration: none;
-            background-color: #fff;
-            border: 1px solid #ddd;
-        }
-
-        .paginationLogin li:first-child a {
-            margin-left: 0;
-            border-top-left-radius: 4px;
-            border-bottom-left-radius: 4px;
-        }
-
-        .paginationLogin li:last-child a {
-            border-top-right-radius: 4px;
-            border-bottom-right-radius: 4px;
-        }
-
-        .paginationLogin li a:hover,
-        .paginationLogin li a:focus {
-            z-index: 2;
-            color: #23527c;
-            background-color: #eee;
-            border-color: #ddd;
-        }
-
-        .paginationLogin .active a {
-            z-index: 3;
-            color: #fff;
-            background-color: #337ab7;
-            border-color: #337ab7;
-            cursor: default;
-        }
-
-        .paginationLogin .disabled a {
-            color: #777;
-            cursor: not-allowed;
-            background-color: #fff;
-            border-color: #ddd;
-        }
-    </style>
 </head>
 <style>
     .flex-container {
@@ -124,6 +60,70 @@
         width: 100%;
     }
 
+</style>
+<style>
+    .pagination-wrapper {
+        text-align: center;
+        padding: 20px 0;
+    }
+
+    .paginationLogin {
+        display: inline-block;
+        padding-left: 0;
+        margin: 20px 0;
+        border-radius: 4px;
+    }
+
+    .paginationLogin li {
+        display: inline;
+        margin: 0 2px;
+    }
+
+    .paginationLogin li a {
+        position: relative;
+        float: left;
+        padding: 6px 12px;
+        margin-left: -1px;
+        line-height: 1.42857143;
+        color: #337ab7;
+        text-decoration: none;
+        background-color: #fff;
+        border: 1px solid #ddd;
+    }
+
+    .paginationLogin li:first-child a {
+        margin-left: 0;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+
+    .paginationLogin li:last-child a {
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+
+    .paginationLogin li a:hover,
+    .paginationLogin li a:focus {
+        z-index: 2;
+        color: #23527c;
+        background-color: #eee;
+        border-color: #ddd;
+    }
+
+    .paginationLogin .active a {
+        z-index: 3;
+        color: #fff;
+        background-color: #337ab7;
+        border-color: #337ab7;
+        cursor: default;
+    }
+
+    .paginationLogin .disabled a {
+        color: #777;
+        cursor: not-allowed;
+        background-color: #fff;
+        border-color: #ddd;
+    }
 </style>
 <body>
 <div class="preloader" id="loading">
@@ -261,11 +261,11 @@
                         <div class="rd-navbar-aside-group navbar"
                              data-navbar="{&quot;stuck&quot;: false, &quot;anchor&quot;: {&quot;offsetRef&quot;: &quot;.rd-navbar-main&quot;}}">
                             <div class="navbar-inner">
+                                <a class="rd-navbar-aside-link" href="my-travel-applications">My Applications</a>
                                 <a class="rd-navbar-aside-link" href="my-organised-travels">My Organised Travels</a>
                                 <a class="rd-navbar-aside-link" href="my-feedbacks">My Feedbacks</a>
-                                <a class="rd-navbar-aside-link" href="my-travels-as-passenger">My Travels As Passenger</a>
                             </div>
-                        </div>
+                            </div>
                     </div>
                 </div>
             </nav>
@@ -276,7 +276,7 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-xl-9">
-                        <h2 class="breadcrumbs-custom-title">My Applications</h2>
+                        <h2 class="breadcrumbs-custom-title">My Travels As Passenger</h2>
                     </div>
                 </div>
             </div>
@@ -307,29 +307,27 @@
     </div>
 
 
-<!--    <h3 style="text-align: center; margin-top: 20px;">My Applications</h3>-->
 
-    <!-- Search results for My Applications-->
+<!--    <h3 style="text-align: center; margin-top: 20px;">My Travels As Passenger</h3>-->
+
+
+    <!-- Search results for My Organised Travels-->
     <section class="section section-mdDashboard">
         <div class="container">
-            <form class="rd-form rd-search" action="#" th:action="@{/profile/my-travel-applications}" method="get" th:object="${travelApplicationFilterOptions}">
+            <!-- RD Search-->
+            <form class="rd-form rd-search" action="#" th:action="@{/profile/my-travels-as-passenger}" method="get"
+                  th:object="${travelFilterOptions}">
                 <div class="flex-container">
-                    <div class="form-wrap" id="application-first-input-field"></div>
+                    <div class="form-wrap" id="first-input-field"></div>
                     <div class="form-wrap">
-                        <label class="form-label" for="application-start-point">Start point</label>
-                        <input th:field="*{startPoint}" class="form-input" id="application-start-point" type="text" name="startPoint" autocomplete="off">
+                        <label class="form-label" for="rd-search-form-input-phone-number">Start point</label>
+                        <input th:field="*{startPoint}" class="form-input" id="rd-search-form-input-phone-number"
+                               type="text" name="start-point" autocomplete="off">
                     </div>
                     <div class="form-wrap">
-                        <label class="form-label" for="application-end-point">End point</label>
-                        <input th:field="*{endPoint}" class="form-input" id="application-end-point" type="text" name="endPoint" autocomplete="off">
-                    </div>
-                    <div class="form-wrap">
-                        <label class="form-label" for="application-departure-time">Departure Time</label>
-                        <input th:field="*{departureTime}" class="form-input" id="application-departure-time" type="text" name="departureTime" autocomplete="off">
-                    </div>
-                    <div class="form-wrap">
-                        <label class="form-label" for="application-driver">Driver</label>
-                        <input th:field="*{driver}" class="form-input" id="application-driver" type="text" name="driver" autocomplete="off">
+                        <label class="form-label" for="rd-search-form-input-email">End point</label>
+                        <input th:field="*{endPoint}" class="form-input" id="rd-search-form-input-email" type="text"
+                               name="email" autocomplete="off">
                     </div>
                     <div class="form-wrap mx-sm-3 mb-2">
                         <label>
@@ -341,6 +339,8 @@
                             </select>
                         </label>
                     </div>
+
+                    <!-- Sort Order Select -->
                     <div class="form-wrap mx-sm-3 mb-2">
                         <label>
                             <select class="form-control" th:field="*{sortOrder}">
@@ -353,14 +353,16 @@
                 </div>
                 <div class="form-wrap form-button">
                     <button class="button button-secondary button-shadow" type="submit">Search</button>
+                    <div class="rd-search-results"></div>
                 </div>
             </form>
+
         </div>
-        <div class="travel-is-empty" th:if="${userTravelApplications.isEmpty()}">
-            <h2>No Applications Found</h2>
+        <div class="travel-is-empty" th:if="${userTravels.isEmpty()}">
+            <h2>No Travels Found</h2>
         </div>
     </section>
-    <section th:unless="${userTravelApplications.isEmpty()}" class="section section-mdDashboard">
+    <section th:unless="${userTravels.isEmpty()}" class="section section-mdDashboard">
         <div class="container">
             <div class="table-outer table-rounded table-responsive-lg">
                 <table class="table-custom table-custom-primary">
@@ -370,40 +372,36 @@
                         <th>End Point</th>
                         <th>Departure time</th>
                         <th>Driver</th>
-                        <th>Status</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="travelApplication : ${userTravelApplications}">
-                        <td th:href="@{/travels/{id}(id=${travelApplication.travel.id})}" th:text="${travelApplication.travel.startPoint}"></td>
-                        <td th:text="${travelApplication.travel.endPoint}"></td>
-                        <td th:text="${travelApplication.travel.departureTime}"></td>
+                    <tr th:each="travel : ${userTravels} ">
+                        <td th:href="@{/travels/{id}(id=${travel.id})}" th:text="${travel.startPoint}"></td>
+                        <td th:text="${travel.endPoint}"></td>
+                        <td th:text="${travel.getDepartureTime()}"></td>
                         <td>
-                            <a th:href="@{/users/{id}(id=${travelApplication.travel.driver.id})}" th:text="${travelApplication.travel.driver.username}"></a>
+                            <a th:href="@{/users/{id}(id=${travel.driver.id})}" th:text="${travel.driver.username}"></a>
                         </td>
-                        <td th:text="${travelApplication.status.status.name()}"></td>
                     </tr>
                     </tbody>
                 </table>
             </div>
 
             <!-- Pagination controls -->
-
-            <div th:if="${userTravelApplications.totalPages > 1}" class="pagination-wrapper">
+            <div th:if="${userTravels.totalPages > 1}" class="pagination-wrapper">
                 <ul class="paginationLogin">
-                    <li th:classappend="${userTravelApplications.first ? 'disabled' : ''}">
-                        <a th:href="@{/profile/my-travel-applications(travelApplicationPage=${userTravelApplications.number - 1}, travelApplicationSize=${userTravelApplications.size})}" aria-label="Previous">&laquo;</a>
+                    <li th:classappend="${userTravels.first ? 'disabled' : ''}">
+                        <a th:href="@{/profile/my-travels-as-passenger(travelPage=${userTravels.number - 1}, travelSize=${userTravels.size})}" aria-label="Previous">&laquo;</a>
                     </li>
-                    <li th:each="pageNum : ${#numbers.sequence(0, userTravelApplications.totalPages - 1)}"
-                        th:classappend="${pageNum == userTravelApplications.number ? 'active' : ''}">
-                        <a th:href="@{/profile/my-travel-applications(travelApplicationPage=${pageNum}, travelApplicationSize=${userTravelApplications.size})}" th:text="${pageNum + 1}"></a>
+                    <li th:each="pageNum : ${#numbers.sequence(0, userTravels.totalPages - 1)}"
+                        th:classappend="${pageNum == userTravels.number ? 'active' : ''}">
+                        <a th:href="@{/profile/my-travels-as-passenger(travelPage=${pageNum}, travelSize=${userTravels.size})}" th:text="${pageNum + 1}"></a>
                     </li>
-                    <li th:classappend="${userTravelApplications.last ? 'disabled' : ''}">
-                        <a th:href="@{/profile/my-travel-applications(travelApplicationPage=${userTravelApplications.number + 1}, travelApplicationSize=${userTravelApplications.size})}" aria-label="Next">&raquo;</a>
+                    <li th:classappend="${userTravels.last ? 'disabled' : ''}">
+                        <a th:href="@{/profile/my-travels-as-passenger(travelPage=${userTravels.number + 1}, travelSize=${userTravels.size})}" aria-label="Next">&raquo;</a>
                     </li>
                 </ul>
             </div>
-
         </div>
     </section>
 

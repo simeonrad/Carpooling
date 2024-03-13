@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -146,10 +147,10 @@ public class TravelRepositoryImpl implements TravelRepository {
                 }
             });
 
-            filterOptions.getDepartureTime().ifPresent(departureTime -> {
-                filters.add("departureTime = :departureTime");
-                params.put("departureTime", departureTime);
-            });
+            LocalDateTime currentTime = LocalDateTime.now();
+            filters.add("departureTime >= :currentTime");
+            params.put("currentTime", currentTime);
+
 
             filterOptions.getFreeSpots().ifPresent(freeSpots -> {
                 filters.add("freeSpots = :freeSpots");
@@ -197,6 +198,77 @@ public class TravelRepositoryImpl implements TravelRepository {
             return new PageImpl<>(travels, pageable, total);
         }
     }
+
+    @Override
+    public Page<Travel> getTravelsIParticipatedIn(FilterTravelOptions filterOptions, Pageable pageable, int currentUserId) {
+        try (Session session = sessionFactory.openSession()) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("currentUserId", currentUserId);
+            params.put("travelStatusId", 2);
+
+            StringBuilder queryString = new StringBuilder("select t from Travel t ");
+            queryString.append("inner join t.applications a ");
+            queryString.append("where a.passenger.id = :currentUserId ");
+
+            List<String> filters = new ArrayList<>();
+
+            filterOptions.getAuthor().ifPresent(author -> {
+                if (!author.isBlank()) {
+                    filters.add("t.driver.username like :author");
+                    params.put("author", "%" + author + "%");
+                }
+            });
+
+            filterOptions.getStartPoint().ifPresent(startPoint -> {
+                if (!startPoint.isBlank()) {
+                    filters.add("t.startPoint like :startPoint");
+                    params.put("startPoint", "%" + startPoint + "%");
+                }
+            });
+
+            filterOptions.getEndPoint().ifPresent(endPoint -> {
+                if (!endPoint.isBlank()) {
+                    filters.add("t.endPoint like :endPoint");
+                    params.put("endPoint", "%" + endPoint + "%");
+                }
+            });
+
+            filterOptions.getDepartureTime().ifPresent(departureTime -> {
+                filters.add("t.departureTime = :departureTime");
+                params.put("departureTime", departureTime);
+            });
+
+            filterOptions.getFreeSpots().ifPresent(freeSpots -> {
+                filters.add("t.freeSpots = :freeSpots");
+                params.put("freeSpots", freeSpots);
+            });
+
+            filters.add("t.status.id = :travelStatusId");
+
+            if (!filters.isEmpty()) {
+                queryString.append("and ").append(String.join(" and ", filters)).append(" ");
+            }
+
+            filterOptions.getSortBy().ifPresent(sortBy -> {
+                String sortOrder = filterOptions.getSortOrder().orElse("asc").toLowerCase();
+                queryString.append("order by t.").append(sortBy).append(" ").append(sortOrder);
+            });
+
+            Query<Travel> query = session.createQuery(queryString.toString(), Travel.class);
+            params.forEach(query::setParameter);
+            query.setFirstResult((int) pageable.getOffset());
+            query.setMaxResults(pageable.getPageSize());
+            List<Travel> travels = query.getResultList();
+
+            String countQueryString = queryString.toString().replaceFirst("select t", "select count(t)");
+            Query<Long> countQuery = session.createQuery(countQueryString, Long.class);
+            params.forEach(countQuery::setParameter);
+            long total = countQuery.getSingleResult();
+
+            return new PageImpl<>(travels, pageable, total);
+        }
+    }
+
 
     @Override
     public Page<Travel> get(FilterTravelOptions filterOptions, Pageable pageable) {

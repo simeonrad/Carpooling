@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void checkIfPhoneNumberExists(User user) {
+    public void checkIfPhoneNumberExists(User user) {
         phoneNumberValidator(user.getPhoneNumber());
         boolean phoneNumberExists = userRepository.telephoneExists(user.getPhoneNumber(), user.getId());
         if (phoneNumberExists) {
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @NotNull
-    private User checkIfEmailExists(User user) {
+    public User checkIfEmailExists(User user) {
         emailValidator(user.getEmail());
         boolean emailExists = true;
         try {
@@ -107,14 +107,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void checkIfVerified(User user){
-           if (userRepository.getNonVerifiedById(user.getId()) != null){
-               throw new UnauthorizedOperationException("Unverified users cannot create travels.");
-           }
-
-
+    public void checkIfVerified(User user) {
+        if (userRepository.getNonVerifiedById(user.getId()) != null) {
+            throw new UnauthorizedOperationException("Unverified users cannot create travels.");
+        }
     }
-    private void sendVerificationEmail(User user) {
+
+    public void sendVerificationEmail(User user) {
         User savedUser = userRepository.getByUsername(user.getUsername());
         NonVerifiedUser nonVerified = new NonVerifiedUser();
         nonVerified.setUserId(savedUser.getId());
@@ -183,12 +182,12 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(isDeleted);
     }
 
-    public void unmarkUserAsDeleted(int userId) {
-        IsDeleted isDeleted = userRepository.getDeletedById(userId);
-        if (isDeleted != null) {
-            userRepository.unmarkAsDeleted(isDeleted);
-        }
-    }
+//    public void unmarkUserAsDeleted(int userId) {
+//        IsDeleted isDeleted = userRepository.getDeletedById(userId);
+//        if (isDeleted != null) {
+//            userRepository.unmarkAsDeleted(isDeleted);
+//        }
+//    }
 
     @Override
     public List<User> get(FilterUserOptions filterUserOptions, User user) {
