@@ -1,7 +1,8 @@
 package com.telerikacademy.web.carpooling.helpers;
 
 import com.telerikacademy.web.carpooling.models.*;
-import com.telerikacademy.web.carpooling.services.TravelCommentService;
+import com.telerikacademy.web.carpooling.models.dtos.TravelDto;
+import com.telerikacademy.web.carpooling.services.contracts.TravelCommentService;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -2,8 +2,9 @@ package com.telerikacademy.web.carpooling.controllers.mvc;
 
 import com.telerikacademy.web.carpooling.exceptions.*;
 import com.telerikacademy.web.carpooling.models.*;
-import com.telerikacademy.web.carpooling.repositories.UserRepository;
-import com.telerikacademy.web.carpooling.services.*;
+import com.telerikacademy.web.carpooling.models.dtos.*;
+import com.telerikacademy.web.carpooling.repositories.contracts.UserRepository;
+import com.telerikacademy.web.carpooling.services.contracts.*;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

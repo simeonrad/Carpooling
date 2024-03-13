@@ -2,8 +2,9 @@ package com.telerikacademy.web.carpooling.services;
 
 import com.telerikacademy.web.carpooling.models.Travel;
 import com.telerikacademy.web.carpooling.models.TravelComment;
-import com.telerikacademy.web.carpooling.repositories.TravelCommentRepository;
-import com.telerikacademy.web.carpooling.repositories.TravelRepository;
+import com.telerikacademy.web.carpooling.repositories.contracts.TravelCommentRepository;
+import com.telerikacademy.web.carpooling.repositories.contracts.TravelRepository;
+import com.telerikacademy.web.carpooling.services.contracts.TravelCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

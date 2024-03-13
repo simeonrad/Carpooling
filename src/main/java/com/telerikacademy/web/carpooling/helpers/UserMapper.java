@@ -1,13 +1,13 @@
 package com.telerikacademy.web.carpooling.helpers;
 
 import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
-import com.telerikacademy.web.carpooling.models.RegisterDto;
+import com.telerikacademy.web.carpooling.models.dtos.RegisterDto;
 import com.telerikacademy.web.carpooling.models.Role;
 import com.telerikacademy.web.carpooling.models.User;
-import com.telerikacademy.web.carpooling.models.UserDto;
-import com.telerikacademy.web.carpooling.repositories.RoleRepository;
-import com.telerikacademy.web.carpooling.repositories.UserRepository;
-import com.telerikacademy.web.carpooling.services.UserBlockService;
+import com.telerikacademy.web.carpooling.models.dtos.UserDto;
+import com.telerikacademy.web.carpooling.repositories.contracts.RoleRepository;
+import com.telerikacademy.web.carpooling.repositories.contracts.UserRepository;
+import com.telerikacademy.web.carpooling.services.contracts.UserBlockService;
 import org.springframework.stereotype.Component;
 
 @Component

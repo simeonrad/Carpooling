@@ -7,9 +7,9 @@ import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationExcepti
 import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
 import com.telerikacademy.web.carpooling.helpers.TravelApplicationMapper;
 import com.telerikacademy.web.carpooling.models.TravelApplication;
-import com.telerikacademy.web.carpooling.models.TravelApplicationDto;
+import com.telerikacademy.web.carpooling.models.dtos.TravelApplicationDto;
 import com.telerikacademy.web.carpooling.models.User;
-import com.telerikacademy.web.carpooling.services.TravelApplicationService;
+import com.telerikacademy.web.carpooling.services.contracts.TravelApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

@@ -2,7 +2,8 @@ package com.telerikacademy.web.carpooling.services;
 
 import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.carpooling.models.Make;
-import com.telerikacademy.web.carpooling.repositories.MakeRepository;
+import com.telerikacademy.web.carpooling.repositories.contracts.MakeRepository;
+import com.telerikacademy.web.carpooling.services.contracts.MakeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

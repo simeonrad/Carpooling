@@ -2,6 +2,7 @@ package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.carpooling.models.UserBlock;
+import com.telerikacademy.web.carpooling.repositories.contracts.UserBlocksRepository;
 import jakarta.persistence.EntityManager;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

@@ -3,11 +3,11 @@ package com.telerikacademy.web.carpooling.services;
 import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
 import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.web.carpooling.models.*;
-import com.telerikacademy.web.carpooling.repositories.FeedbackRepository;
-import com.telerikacademy.web.carpooling.repositories.TravelRepository;
+import com.telerikacademy.web.carpooling.repositories.contracts.FeedbackRepository;
+import com.telerikacademy.web.carpooling.repositories.contracts.TravelRepository;
+import com.telerikacademy.web.carpooling.services.contracts.FeedbackService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 

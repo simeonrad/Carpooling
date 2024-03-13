@@ -3,6 +3,7 @@ package com.telerikacademy.web.carpooling.repositories;
 import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.carpooling.models.Status;
 import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
+import com.telerikacademy.web.carpooling.repositories.contracts.StatusRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;

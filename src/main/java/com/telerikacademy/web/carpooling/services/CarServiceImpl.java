@@ -3,7 +3,8 @@ package com.telerikacademy.web.carpooling.services;
 import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.web.carpooling.models.Car;
 import com.telerikacademy.web.carpooling.models.User;
-import com.telerikacademy.web.carpooling.repositories.CarRepository;
+import com.telerikacademy.web.carpooling.repositories.contracts.CarRepository;
+import com.telerikacademy.web.carpooling.services.contracts.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

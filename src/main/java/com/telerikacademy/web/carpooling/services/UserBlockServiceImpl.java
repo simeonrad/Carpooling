@@ -2,7 +2,8 @@ package com.telerikacademy.web.carpooling.services;
 
 import com.telerikacademy.web.carpooling.models.User;
 import com.telerikacademy.web.carpooling.models.UserBlock;
-import com.telerikacademy.web.carpooling.repositories.UserBlocksRepository;
+import com.telerikacademy.web.carpooling.repositories.contracts.UserBlocksRepository;
+import com.telerikacademy.web.carpooling.services.contracts.UserBlockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
