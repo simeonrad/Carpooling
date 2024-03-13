@@ -45,6 +45,7 @@
                                     </div>
                                     <div class="form-wrap">
                                         <input class="form-input" id="register-password" type="password" name="password" th:field="*{password}"
+                                               th:classappend="${#fields.hasErrors('password')}"
                                                minlength="8"
                                                required placeholder="Password">
                                         <label class="error" th:errors="*{password}">Password error placeholder</label>

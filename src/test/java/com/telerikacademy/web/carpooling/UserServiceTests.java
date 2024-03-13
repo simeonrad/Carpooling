@@ -1,8 +1,10 @@
 package com.telerikacademy.web.carpooling;
 
 import com.telerikacademy.web.carpooling.exceptions.*;
+import com.telerikacademy.web.carpooling.helpers.EmailSenderHelper;
 import com.telerikacademy.web.carpooling.helpers.UIMapper;
 import com.telerikacademy.web.carpooling.helpers.UserMapper;
+import com.telerikacademy.web.carpooling.helpers.ValidationHelper;
 import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.repositories.RoleRepository;
 import com.telerikacademy.web.carpooling.repositories.UserRepository;
@@ -48,11 +50,17 @@ public class UserServiceTests {
     @InjectMocks
     private UserServiceImpl userService;
 
+    @InjectMocks
+    private ValidationHelper validationHelper;
+
+    @InjectMocks
+    private EmailSenderHelper emailSenderHelper;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSender,
-                userBlockService, uiMapper);
+                userBlockService, uiMapper, validationHelper, emailSenderHelper);
         when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
     }
 
@@ -87,7 +95,7 @@ public class UserServiceTests {
         when(userRepository.telephoneExists("0123456789", 1)).thenReturn(false);
 
         UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSender,
-                userBlockService, uiMapper);
+                userBlockService, uiMapper, validationHelper, emailSenderHelper);
 
         assertDoesNotThrow(() -> userService.checkIfPhoneNumberExists(user));
     }
@@ -102,11 +110,17 @@ public class UserServiceTests {
         UserRepository userRepository = mock(UserRepository.class);
         when(userRepository.telephoneExists("0123456789", 1)).thenReturn(true);
 
+        ValidationHelper validationHelper = mock(ValidationHelper.class);
+
         UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSender,
-                userBlockService, uiMapper);
+                userBlockService, uiMapper, validationHelper, emailSenderHelper);
+
         // Act & Assert
         assertThrows(DuplicatePhoneNumberExists.class, () -> userService.checkIfPhoneNumberExists(user));
     }
+
+
+
 
     @Test
     void whenEmailDoesNotExist_thenReturnOriginalUser() {
@@ -118,7 +132,7 @@ public class UserServiceTests {
         when(userRepository.getByEmail("test@example.com")).thenThrow(new EntityNotFoundException("User", "email", "test@example.com"));
 
         UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSender,
-                userBlockService, uiMapper);
+                userBlockService, uiMapper, validationHelper, emailSenderHelper);
         // Act
         User result = userService.checkIfEmailExists(user);
 
@@ -137,7 +151,7 @@ public class UserServiceTests {
         when(userRepository.getByEmail("existing@example.com")).thenReturn(new User());
 
         UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSender,
-                userBlockService, uiMapper);
+                userBlockService, uiMapper, validationHelper, emailSenderHelper);
         // Act & Assert
         assertThrows(DuplicateEmailExists.class, () -> userService.checkIfEmailExists(user));
     }
@@ -180,7 +194,7 @@ public class UserServiceTests {
         when(mailSenderMock.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
 
         UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSenderMock,
-                userBlockService, uiMapper);
+                userBlockService, uiMapper, validationHelper, emailSenderHelper);
         // Act
         userService.sendVerificationEmail(user);
 
@@ -194,7 +208,7 @@ public class UserServiceTests {
         // Arrange
         User userToBeDeleted = new User();
         userToBeDeleted.setUsername("userToDelete");
-        userToBeDeleted.setId(1); // Assume an ID to mock getById behavior
+        userToBeDeleted.setId(1);
 
         User adminUser = new User();
         Role adminRole = new Role();
@@ -207,7 +221,7 @@ public class UserServiceTests {
         doThrow(new EntityNotFoundException("User", userToBeDeleted.getId())).when(userRepositoryMock).getDeletedById(userToBeDeleted.getId());
 
         UserServiceImpl userService = new UserServiceImpl(userRepositoryMock, userMapper, roleRepository, mailSender,
-                userBlockService, uiMapper);
+                userBlockService, uiMapper, validationHelper, emailSenderHelper);
         // Act
         userService.delete(userToBeDeleted, adminUser);
 
@@ -234,7 +248,7 @@ public class UserServiceTests {
         when(userRepositoryMock.getByUsername("targetUser")).thenReturn(targetUser);
 
         UserServiceImpl userService = new UserServiceImpl(userRepositoryMock, userMapper, roleRepository, mailSender,
-                userBlockService, uiMapper);
+                userBlockService, uiMapper, validationHelper, emailSenderHelper);
         // Act & Assert
         assertThrows(UnauthorizedOperationException.class, () -> userService.delete(targetUser, regularUser));
     }
@@ -250,7 +264,7 @@ public class UserServiceTests {
         when(userRepositoryMock.getById(userId)).thenReturn(mockUser);
 
         UserServiceImpl userService = new UserServiceImpl(userRepositoryMock, userMapper, roleRepository, mailSender,
-                userBlockService, uiMapper);
+                userBlockService, uiMapper, validationHelper, emailSenderHelper);
         // Act
         userService.delete(mockUser);
 
@@ -268,7 +282,7 @@ public class UserServiceTests {
 
         UserRepository userRepositoryMock = mock(UserRepository.class);
         UserServiceImpl userService = new UserServiceImpl(userRepositoryMock, userMapper, roleRepository, mailSender,
-                userBlockService, uiMapper);
+                userBlockService, uiMapper, validationHelper, emailSenderHelper);
         // Act
         userService.deleteUI(mockUser);
 
@@ -282,7 +296,7 @@ public class UserServiceTests {
         // Arrange
         UserRepository userRepositoryMock = mock(UserRepository.class);
         UserServiceImpl userService = new UserServiceImpl(userRepositoryMock, userMapper, roleRepository, mailSender,
-                userBlockService, uiMapper);
+                userBlockService, uiMapper, validationHelper, emailSenderHelper);
         User user = new User();
         user.setId(1);
         user.setUsername("user");
@@ -304,7 +318,7 @@ public class UserServiceTests {
         // Arrange
         UserRepository userRepositoryMock = mock(UserRepository.class);
         UserServiceImpl userService = new UserServiceImpl(userRepositoryMock, userMapper, roleRepository, mailSender,
-                userBlockService, uiMapper);
+                userBlockService, uiMapper, validationHelper, emailSenderHelper);
         User user = new User();
         user.setId(1);
         user.setUsername("user");
@@ -335,7 +349,7 @@ public class UserServiceTests {
         when(userRepositoryMock.getById(userId)).thenReturn(user);
 
         UserServiceImpl userService = new UserServiceImpl(userRepositoryMock, userMapper, roleRepository, mailSender,
-                userBlockService, uiMapper);
+                userBlockService, uiMapper, validationHelper, emailSenderHelper);
         // Act
         userService.markUserAsDeleted(userId);
 
@@ -644,4 +658,56 @@ public class UserServiceTests {
 
         assertThrows(UnauthorizedOperationException.class, () -> userService.makeAdmin("anyUser", regularUser));
     }
+
+    @Test
+    void givenUsername_whenVerifyUser_thenUserVerified() {
+        // Arrange
+        String username = "testUser";
+        User mockUser = new User();
+        mockUser.setId(1);
+        mockUser.setUsername(username);
+
+        ArgumentCaptor<NonVerifiedUser> nonVerifiedUserArgumentCaptor = ArgumentCaptor.forClass(NonVerifiedUser.class);
+
+        NonVerifiedUser mockNonVerifiedUser = new NonVerifiedUser();
+        mockNonVerifiedUser.setUserId(mockUser.getId());
+        mockNonVerifiedUser.setVerified(false);
+
+        when(userRepository.getByUsername(username)).thenReturn(mockUser);
+        when(userRepository.getNonVerifiedById(mockUser.getId())).thenReturn(mockNonVerifiedUser);
+
+        // Act
+        userService.verifyUser(username);
+
+        // Assert
+        verify(userRepository).verify(nonVerifiedUserArgumentCaptor.capture());
+        NonVerifiedUser captured = nonVerifiedUserArgumentCaptor.getValue();
+        assertTrue(captured.isVerified());
+    }
+
+    @Test
+    void givenPhotoUrlAndUser_whenAddProfilePhoto_thenPhotoUrlIsUpdated() {
+        // Arrange
+        String photoUrl = "http://example.com/photo.jpg";
+        User user = new User();
+        user.setId(1);
+        user.setUsername("testUser");
+
+        UserRepository userRepository = mock(UserRepository.class);
+
+        // Ensure userService is using the mocked userRepository
+        UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSender,
+                userBlockService, uiMapper, validationHelper, emailSenderHelper);
+
+        // Act
+        userService.addProfilePhoto(photoUrl, user);
+
+        // Assert
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).update(userCaptor.capture());
+        User capturedUser = userCaptor.getValue();
+        assertEquals(photoUrl, capturedUser.getPhotoUrl());
+    }
+
+
 }

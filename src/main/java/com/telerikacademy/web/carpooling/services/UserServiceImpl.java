@@ -1,8 +1,10 @@
 package com.telerikacademy.web.carpooling.services;
 
 import com.telerikacademy.web.carpooling.exceptions.*;
+import com.telerikacademy.web.carpooling.helpers.EmailSenderHelper;
 import com.telerikacademy.web.carpooling.helpers.UIMapper;
 import com.telerikacademy.web.carpooling.helpers.UserMapper;
+import com.telerikacademy.web.carpooling.helpers.ValidationHelper;
 import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.repositories.RoleRepository;
 import com.telerikacademy.web.carpooling.repositories.UserRepository;
@@ -38,17 +40,20 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final JavaMailSender mailSender;
     private final UserBlockService userBlockService;
-
+    private final ValidationHelper validationHelper;
+    private final EmailSenderHelper emailSenderHelper;
     private final UIMapper UIMapper;
 
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository, JavaMailSender mailSender, UserBlockService userBlockService, UIMapper UIMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleRepository roleRepository, JavaMailSender mailSender, UserBlockService userBlockService, UIMapper UIMapper, ValidationHelper validationHelper, EmailSenderHelper emailSenderHelper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.roleRepository = roleRepository;
         this.mailSender = mailSender;
         this.userBlockService = userBlockService;
         this.UIMapper = UIMapper;
+        this.validationHelper = validationHelper;
+        this.emailSenderHelper = emailSenderHelper;
     }
 
     @Override
@@ -75,14 +80,14 @@ public class UserServiceImpl implements UserService {
             user = checkIfEmailExists(user);
             checkIfPhoneNumberExists(user);
             user.setPhotoUrl(DEFAULT_IMAGE_URL);
-            passwordValidator(user.getPassword());
+            validationHelper.passwordValidator(user.getPassword());
             userRepository.create(user);
             sendVerificationEmail(user);
         }
     }
 
     public void checkIfPhoneNumberExists(User user) {
-        phoneNumberValidator(user.getPhoneNumber());
+        validationHelper.phoneNumberValidator(user.getPhoneNumber());
         boolean phoneNumberExists = userRepository.telephoneExists(user.getPhoneNumber(), user.getId());
         if (phoneNumberExists) {
             throw new DuplicatePhoneNumberExists("User", "phone number", user.getPhoneNumber());
@@ -91,7 +96,7 @@ public class UserServiceImpl implements UserService {
 
     @NotNull
     public User checkIfEmailExists(User user) {
-        emailValidator(user.getEmail());
+        validationHelper.emailValidator(user.getEmail());
         boolean emailExists = true;
         try {
             user = userRepository.getByEmail(user.getEmail());
@@ -116,7 +121,7 @@ public class UserServiceImpl implements UserService {
         NonVerifiedUser nonVerified = new NonVerifiedUser();
         nonVerified.setUserId(savedUser.getId());
         userRepository.create(nonVerified);
-        sendVerificationEmail(user, "http://localhost:8080");
+        emailSenderHelper.sendVerificationEmail(user, "http://localhost:8080");
     }
 
     @Override
@@ -156,20 +161,20 @@ public class UserServiceImpl implements UserService {
         if (emailExists) {
             throw new DuplicateExistsException("User", "email", user.getEmail());
         }
-        emailValidator(user.getEmail());
-        passwordValidator(user.getPassword());
+        validationHelper.emailValidator(user.getEmail());
+        validationHelper.passwordValidator(user.getPassword());
         userRepository.update(user);
     }
 
     @Override
     public void update(User user) {
         boolean emailExists = userRepository.updateEmail(user.getEmail(), user.getId());
-        emailValidator(user.getEmail());
+        validationHelper.emailValidator(user.getEmail());
         if (emailExists) {
             throw new DuplicateExistsException("User", "email", user.getEmail());
         }
         checkIfPhoneNumberExists(user);
-        passwordValidator(user.getPassword());
+        validationHelper.passwordValidator(user.getPassword());
         userRepository.update(user);
     }
 
@@ -303,121 +308,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAllNotDeleted() {
         return userRepository.getAllNotDeleted();
-    }
-
-    public String emailValidator(String email) {
-        String MAIL_REGEX = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z]+\\.[a-z]+$";
-        Pattern MAIL_PATTERN = Pattern.compile(MAIL_REGEX);
-
-        Matcher matcher = MAIL_PATTERN.matcher(email);
-        if (matcher.matches()) {
-            return email;
-        } else {
-            throw new InvalidEmailException(email);
-        }
-    }
-
-    public String phoneNumberValidator(String phoneNumber) {
-        String PHONE_REGEX = "^0[0-9]{9}$";
-        Pattern PHONE_PATTERN = Pattern.compile(PHONE_REGEX);
-
-        Matcher matcher = PHONE_PATTERN.matcher(phoneNumber);
-        if (matcher.matches()) {
-            return phoneNumber;
-        } else {
-            throw new InvalidPhoneNumberException(phoneNumber);
-        }
-    }
-
-
-    public String passwordValidator(String password) {
-        String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[+\\-*&^._|\\\\]).{8,}$";
-        Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEX);
-
-        Matcher matcher = PASSWORD_PATTERN.matcher(password);
-        if (matcher.matches() && password.length() >= 8) {
-            return password;
-        } else {
-            throw new InvalidPasswordException(PASSWORD_VALIDATION_ERROR_MESSAGE);
-        }
-    }
-
-    public void sendVerificationEmail(User user, String siteURL) {
-        String subject = "Please verify your registration";
-        String senderName = "Carpooling A56";
-
-        String senderEmail = "car.pooling.a56@gmail.com";
-
-        String mailContent = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>";
-        mailContent += "<p>Please click the link below to verify your registration:</p>";
-
-        String verifyURL = siteURL + "/api/users/verify-email?username=" + user.getUsername();
-
-        mailContent += "<h3><a href=\"" + verifyURL + "\">VERIFY</a></h3>";
-        mailContent += "<p>Thank you<br>The Carpooling A56 Team</p>";
-
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
-
-        try {
-            helper.setFrom(senderEmail, senderName);
-            helper.setTo(user.getEmail());
-            helper.setSubject(subject);
-            helper.setText(mailContent, true);
-        } catch (MessagingException | UnsupportedEncodingException e) {
-            throw new UnsupportedOperationException("Sending verification email was not possible! Please try again!");
-        }
-        mailSender.send(message);
-    }
-
-    @Override
-    public String generateUI() {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!-_+";
-        StringBuilder result = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < 20; i++) {
-            int index = random.nextInt(characters.length());
-            result.append(characters.charAt(index));
-        }
-        return result.toString();
-    }
-
-    @Override
-    public void sendForgottenPasswordEmail(User user) {
-        String url = generateUI();
-        ForgottenPasswordUI FPUI = UIMapper.toFPUI(user, url);
-        if (userRepository.passwordEmailAlreadySent(user)) {
-            throw new ForgottenPasswordEmailSentException();
-        }
-        userRepository.setNewUI(FPUI);
-        sendForgottenPasswordEmail(user, "http://localhost:8080", url);
-    }
-
-    public void sendForgottenPasswordEmail(User user, String siteURL, String endpoint) {
-        String subject = "Forgotten Password";
-        String senderName = "Carpooling A56";
-
-        String senderEmail = "car.pooling.a56@gmail.com";
-
-        String mailContent = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>";
-        mailContent += "<p>Please click the link below to change your password:</p>";
-
-        String forgottenPassURL = siteURL + "/auth/recover_password/" + endpoint;
-
-        mailContent += "<h3><a href=\"" + forgottenPassURL + "\">FORGOTTEN PASSWORD CHANGE</a></h3>";
-        mailContent += "<p>Thank you<br>The Carpooling A56 Team</p>";
-
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
-
-        try {
-            helper.setFrom(senderEmail, senderName);
-            helper.setTo(user.getEmail());
-            helper.setSubject(subject);
-            helper.setText(mailContent, true);
-        } catch (MessagingException | UnsupportedEncodingException e) {
-            throw new UnsupportedOperationException("Sending email was not possible! Please try again!");
-        }
-        mailSender.send(message);
     }
 }
