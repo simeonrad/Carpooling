@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="wide wow-animation" lang="en">
 <head>
-    <title>My Travels</title>
+    <title>My Organised Travels</title>
     <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -286,9 +286,9 @@
         <div class="breadcrumbs-custom-aside">
             <div class="container">
                 <ul class="breadcrumbs-custom-path">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="#">Pages</a></li>
-                    <li class="active">Tables</li>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/travels/search-travels">All Travels</a></li>
+                    <li class="active">My Organised Travels</li>
                 </ul>
             </div>
         </div>
@@ -418,32 +418,24 @@
         <div class="footer-classic-main">
             <div class="container">
                 <div class="row row-50 justify-content-lg-between">
-                    <div class="col-sm-7 col-lg-3 col-xl-2"><a class="brand" href="/"><img
-                            class="brand-logo-dark" src="/images/logo-111x33.png" alt="" width="111" height="33"
-                            loading="lazy" srcset="/images/logo-222x66.png 2x"/></a>
-                        <p><span
-                                style="max-width: 250px;">We provide the best taxi services for you all over the USA.</span>
-                        </p><a class="button button-sm button-default-outline button-winona" href="login.html">Order
-                            Now</a>
+                    <div class="col-sm-7 col-lg-3 col-xl-2"><a class="brand" href="/"><img class="brand-logo-dark" src="/images/cut-logo-carpool.jpg" alt="" width="111" height="72" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a>
+                        <p><span style="max-width: 250px;">We provide the best taxi services for you.</span></p>
                     </div>
                     <div class="col-sm-5 col-lg-3 col-xl-2">
                         <h5 class="footer-classic-title">About</h5>
                         <ul class="list footer-classic-list">
-                            <li><a href="about-us.html">About Us</a></li>
-                            <li><a href="careers.html">Careers</a></li>
-                            <li><a href="#">Press and media</a></li>
+                            <li><a href="/about-us">About Us</a></li>
                         </ul>
                     </div>
                     <div class="col-sm-7 col-lg-5 col-xl-3">
                         <h5 class="footer-classic-title">Quick Links</h5>
                         <ul class="list footer-classic-list footer-classic-list_2-cols">
-                            <li><a href="login.html">Sign Up</a></li>
-                            <li><a href="services.html">Services</a></li>
-                            <li><a href="privacy-policy.html">Privacy policy</a></li>
-                            <li><a href="#">Blog</a></li>
-                            <li><a href="pricing.html">Pricing</a></li>
-                            <li><a href="faq.html">Online Help</a></li>
-                            <li><a href="faq.html">FAQ</a></li>
+                            <li th:unless="${isAuthenticated}"><a href="/auth/register">Register</a></li>
+                            <li th:unless="${isAuthenticated}"><a href="/auth/login">Log in</a></li>
+                            <li th:unless="${isAuthenticated}"><a href="/travels/search-travels">All Travels</a></li>
+                            <li th:if="${isAuthenticated}"><a href="/travels/create">Create A Travel</a></li>
+                            <li th:if="${isAuthenticated}"><a href="/travels/search-travels">All Travels</a></li>
+                            <li th:if="${isAuthenticated}"><a href="/profile">Profile</a></li>
                         </ul>
                     </div>
                     <div class="col-sm-5 col-lg-9 col-xl-2">
@@ -451,15 +443,8 @@
                         <div class="row row-20 row-sm-35">
                             <div class="col-6 col-sm-12 col-lg-8 col-xl-12">
                                 <div class="row row-10 text-black">
-                                    <div class="col-lg-6 col-xl-12"><a href="mailto:#">info@demolink.org</a></div>
-                                    <div class="col-lg-6 col-xl-12"><a href="tel:#">+1-800-123-1234</a></div>
+                                    <div class="col-lg-6 col-xl-12"><a href="mailto:#">car.pooling.a56@gmail.com</a></div>
                                 </div>
-                            </div>
-                            <div class="col-6 col-sm-12 col-lg-4 col-xl-12 text-end text-sm-start">
-                                <div class="group group-xs"><a class="link link-social-1 mdi mdi-twitter"
-                                                               href="#"></a><a
-                                        class="link link-social-1 mdi mdi-facebook" href="#"></a><a
-                                        class="link link-social-1 mdi mdi-instagram" href="#"></a></div>
                             </div>
                         </div>
                     </div>
@@ -468,8 +453,7 @@
         </div>
         <div class="footer-classic-aside">
             <div class="container">
-                <p class="rights"><span>&copy;&nbsp; </span><span class="copyright-year"></span><span>. All Rights Reserved</span><span>.</span><span> Design&nbsp;by&nbsp;<a
-                        href="https://zemez.io/">Zemez</a></span></p>
+                <p class="rights"><span>&copy;&nbsp; </span><span class="copyright-year"></span><span>. All Rights Reserved</span><span>.</span><span> Design&nbsp;by&nbsp;Alex, Dani & Simo</span></p>
             </div>
         </div>
     </footer>

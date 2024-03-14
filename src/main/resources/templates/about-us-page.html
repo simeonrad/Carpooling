@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html class="wide wow-animation" lang="en" xmlns:th="http://www.thymeleaf.org">
+<html class="wide wow-animation" lang="en"> 
   <head>
-    <title>Home</title>
+    <title>About Us</title>
     <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,7 +24,7 @@
     </div>
     <div class="page">
       <!-- Page Header-->
-      <header class="section page-header page-header-1">
+      <header class="section page-header page-header-4">
         <!-- RD Navbar-->
         <div class="rd-navbar-wrap">
           <nav class="rd-navbar rd-navbar-modern" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-fixed" data-lg-device-layout="rd-navbar-fixed" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-xxl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static" data-lg-stick-up-offset="10px" data-xl-stick-up-offset="10px" data-xxl-stick-up-offset="10px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
@@ -34,7 +34,7 @@
                 <!-- RD Navbar Toggle-->
                 <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
                 <!-- RD Navbar Brand-->
-                <div class="rd-navbar-brand"> <a class="brand" href="/"><img class="brand-logo-dark" src="/images/cut-logo-carpool.jpg" alt="" width="111" height="72" loading="lazy" srcset="/images/logo-111x33.png 2x"/></a></div>
+                <div class="rd-navbar-brand"> <a class="brand" href="/"><img class="brand-logo-dark" src="/images/cut-logo-carpool.jpg" alt="" width="111" height="72" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a></div>
               </div>
               <div class="rd-navbar-nav-wrap">
                 <!-- RD Navbar Nav-->
@@ -46,10 +46,7 @@
                   <li th:if="${isAuthenticated}" class="rd-nav-item">
                     <a class="rd-nav-link" href="/profile">Profile</a>
                   </li>
-<!--                  <li class="rd-nav-item"><a class="rd-nav-link" href="/profile/my-profile">Dashbord</a>-->
-<!--                  </li>-->
-<!--                  <li class="rd-nav-item"><a class="rd-nav-link" href="#">Pages</a>-->
-                      <!-- RD Navbar Megamenu-->
+                    <!-- RD Navbar Megamenu-->
                     <div class="rd-menu rd-navbar-megamenu">
                       <ul class="rd-navbar-megamenu-inner">
                         <li class="rd-megamenu-item">
@@ -92,7 +89,7 @@
                   </li>
                 </ul>
               </div>
-              <div class="rd-navbar-element bg-accent">
+              <div class="rd-navbar-element">
                 <div th:if="${!isAuthenticated}">
                   <a class="button button-sm button-default-outline button-winona" href="/auth/login">Log in</a>
                 </div>
@@ -122,212 +119,52 @@
             </div>
           </nav>
         </div>
-        <!-- FScreen-->
-        <div class="layout-4">
-          <div class="layout-4-item-right">
-            <div class="box-custom-2 bg-accent">
-              <div class="box-custom-2-bg">
-                <div class="box-custom-2-bg-inner">
-                  <div class="box-custom-2-bg-image" style="background-image: url(/images/index-2-1397x1397.png);"></div>
-                </div>
-              </div>
-              <div class="box-custom-2-inner">
-                <h2 class="wow fadeIn">Find your travel now</h2>
-                <div class="contacts-default">
-                  <div class="unit align-items-center">
-                    <div class="unit-left">
-                    </div>
-                  </div>
-                </div>
-                <p class="big wow fadeIn" data-wow-delay=".2s">Trips have never been<br>so fun and budget friendly.</p>
-                <!-- RD Mailform-->
-                <form class="rd-form rd-mailform form-style-1" id="searchTravelsForm">
-                  <div class="form-wrap">
-                    <input class="form-input" id="start-point" type="text" name="pickup-address" data-constraints="@Required">
-                    <label class="form-label" for="start-point">Start Point</label><span class="form-icon mdi mdi-map-marker"></span>
-                  </div>
-                  <div class="form-wrap">
-                    <input class="form-input" id="end-point" type="text" name="destination-address" data-constraints="@Required">
-                    <label class="form-label" for="end-point">End Point</label><span class="form-icon mdi mdi-map-marker"></span>
-                  </div>
-                </form>
-
-                <script>
-                  document.getElementById('searchTravelsForm').addEventListener('submit', function(event) {
-                    event.preventDefault();
-
-                    var startPoint = document.getElementById('start-point').value;
-                    var endPoint = document.getElementById('end-point').value;
-
-                    var searchUrl = '/travels/search-travels?author=&startPoint=' + encodeURIComponent(startPoint) + '&endPoint=' + encodeURIComponent(endPoint) + '&freeSpots=&sortBy=&sortOrder=&filter=*.html';
-
-                    window.location.href = searchUrl;
-                  });
-                </script>
-              </div>
-            </div>
-          </div>
-          <div class="layout-4-item-left"><img src="/images/home-screen-car.png" alt="" width="747" height="597" loading="lazy"/>
-          </div>
-        </div>
       </header>
-      <!-- Messenger of The Next Generation-->
-      <section class="section section-md bg-gray-100 text-center" id="features">
-        <div class="container">
-          <h3 class="wow fadeIn" data-wow-delay=".1s">The benefits</h3>
-          <div class="row row-30 row-md-50 row-xl-60">
-            <div class="col-sm-6 col-lg-4 wow fadeIn">
-              <!-- Box Modern-->
-              <article class="box-modern" data-anime="circles-1">
-                <div class="box-modern-media">
-                  <div class="box-modern-icon mdi mdi-account-plus"></div>
-                  <div class="box-modern-circle box-modern-circle-1"></div>
-                  <div class="box-modern-circle box-modern-circle-2"></div>
-                </div>
-                <p class="box-modern-title">Fun Traveling</p>
-                <div class="box-modern-text">
-                  <p>Find new people and get to your destination with new friends</p>
-                </div>
-              </article>
-            </div>
-            <div class="col-sm-6 col-lg-4 wow fadeIn" data-wow-delay=".1s">
-              <!-- Box Modern-->
-              <article class="box-modern box-modern_alternate" data-anime="circles-2">
-                <div class="box-modern-media">
-                  <div class="box-modern-icon mdi mdi-airplane"></div>
-                  <div class="box-modern-circle box-modern-circle-1"></div>
-                  <div class="box-modern-circle box-modern-circle-2"></div>
-                </div>
-                <p class="box-modern-title">Budget Friendly</p>
-                <div class="box-modern-text">
-                  <p>Enjoy the comfort of a car ride and skip public transportation.</p>
-                </div>
-              </article>
-            </div>
-            <div class="col-sm-6 col-lg-4 wow fadeIn" data-wow-delay=".2s">
-              <!-- Box Modern-->
-              <article class="box-modern" data-anime="circles-1">
-                <div class="box-modern-media">
-                  <div class="box-modern-icon mdi mdi-briefcase-check"></div>
-                  <div class="box-modern-circle box-modern-circle-1"></div>
-                  <div class="box-modern-circle box-modern-circle-2"></div>
-                </div>
-                <p class="box-modern-title">Get the most of your drive</p>
-                <div class="box-modern-text">
-                  <p>You are going there anyway why don't you lower your costs.</p>
-                </div>
-              </article>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Stickers-->
-      <section class="section section-1 text-center" id="stickers">
-        <div class="container">
-          <div class="row justify-content-center align-items-center bordered-1">
-            <div class="col-sm-4">
-              <div class="box-default">
-                <p class="box-default-title">Total Users</p>
-                <p class="box-default-text" th:text="${totalUsers}"></p>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="box-default">
-                <p class="box-default-title">Organised Travels</p>
-                <p class="box-default-text" th:text="${totalTravels}"></p>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="box-default">
-                <p class="box-default-title">Applications For Travels</p>
-                <p class="box-default-text" th:text="${totalApplications}"></p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- Testimonials-->
-      <section class="section section-lg bg-gray-100 text-center">
-        <div class="container">
-          <h3>Testimonials</h3>
-          <!-- Isotope-->
-          <div class="isotope-outer isotope-wrap">
-            <div class="row row-30 row-xl-40 isotope" data-isotope-layout="masonry">
-              <div class="col-md-6 col-lg-4 isotope-item wow fadeInUpSmall">
-                <!-- Quote Modern-->
-                <blockquote class="quote-modern">
-                  <div class="quote-modern-header">
-                    <div class="quote-modern-info"><img class="quote-modern-avatar" src="/images/testimonials-1-74x74.jpg" alt="" width="74" height="74" loading="lazy"/>
-                      <div class="quote-modern-info-main">
-                        <cite class="quote-modern-cite">Jane Williams</cite>
-                        <p class="quote-modern-position">Regular Client</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="quote-modern-main">
-                    <div class="quote-modern-text">
-                      <p>I found your service to be a 5-star experience. The driver was waiting at the arrivals hall for us. All the people we communicated with were pleasant and cheerful.</p>
-                    </div>
-                  </div>
-                </blockquote>
-              </div>
-              <div class="col-md-6 col-lg-4 isotope-item wow fadeInUpSmall" data-wow-delay=".1s">
-                <!-- Quote Modern-->
-                <blockquote class="quote-modern">
-                  <div class="quote-modern-header">
-                    <div class="quote-modern-info"><img class="quote-modern-avatar" src="/images/testimonials-2-74x74.jpg" alt="" width="74" height="74" loading="lazy"/>
-                      <div class="quote-modern-info-main">
-                        <cite class="quote-modern-cite">John Doe</cite>
-                        <p class="quote-modern-position">Regular Driver</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="quote-modern-main">
-                    <div class="quote-modern-text">
-                      <p>Everything went perfectly! I saved 70% of my costs and the travel was way more fun!</p>
-                    </div>
-                  </div>
-                </blockquote>
-              </div>
-              <div class="col-md-6 col-lg-4 isotope-item wow fadeInUpSmall" data-wow-delay=".3s">
-                <!-- Quote Modern-->
-                <blockquote class="quote-modern">
-                  <div class="quote-modern-header">
-                    <div class="quote-modern-info"><img class="quote-modern-avatar" src="/images/testimonials-3-74x74.jpg" alt="" width="74" height="74" loading="lazy"/>
-                      <div class="quote-modern-info-main">
-                        <cite class="quote-modern-cite">Kate Peterson</cite>
-                        <p class="quote-modern-position">Regular Client</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="quote-modern-main">
-                    <div class="quote-modern-text">
-                      <p>The service was excellent, thank you. My driver was waiting at Arrivals for me with a clear sign. He introduced himself, was very polite and friendly.</p>
-                    </div>
-                  </div>
-                </blockquote>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </section>
-      <!-- CTA-->
-      <section class="section parallax-container section-lg bg-accent bg-overlay-1 text-center" data-parallax-img="images/bg-image-5.jpg">
-        <div class="parallax-content">
+      <section class="breadcrumbs-custom">
+        <div class="breadcrumbs-custom-main context-dark">
           <div class="container">
-            <div class="row row-50 justify-content-end">
-              <div class="col-md-6 col-lg-5">
-                <h1 class="wow clipInLeft"><span class="fw-light">Up to -80%</span> on travel costs</h1>
-                <p class="big wow clipInLeft" data-wow-delay=".1s">Create a travel approve other users applications and save on your next trip</p><a class="button button-secondary button-winona wow clipInLeft" href="/travels/create" data-wow-delay=".1s">Create your travel</a>
+            <div class="row justify-content-center">
+              <div class="col-xl-9">
+                <h2 class="breadcrumbs-custom-title">About Us</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="breadcrumbs-custom-aside">
+          <div class="container">
+            <ul class="breadcrumbs-custom-path">
+              <li><a href="/">Home</a></li>
+              <li class="active">About Us</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <!-- Who we Are-->
+      <section class="section section-md">
+        <div class="container">
+          <div class="row row-50 align-items-center">
+            <div class="col-md-8 col-lg-7 col-xl-6">
+              <h3>About Us</h3>
+              <p>Welcome to our journey towards sustainable and shared mobility. Our platform, born from a shared vision and a commitment to environmental stewardship, revolutionizes the way we think about travel. By seamlessly connecting drivers with open seats to passengers looking for a ride, we're not just facilitating journeys; we're fostering connections and reducing our carbon footprint, one shared mile at a time.</p>
+              <!-- Quote Light-->
+              <blockquote class="quote-light quote-light_1">
+                <div class="quote-light-mark linearicons-quote-open"></div>
+                <div class="quote-light-text">
+                  <p>Behind this vision are three programming enthusiasts with a passion for innovation and a better future. Aleksander, Danail, and Simeon, students at Telerik Academy, brought together their skills, creativity, and dedication to turn a simple idea into a vibrant community of travelers.</p>
+                </div>
+              </blockquote>
+            </div>
+            <div class="col-md-4 col-lg-5 col-xl-6">
+              <div class="inset-xl-left-40">
+                <div class="thumbnail-classy">
+                  <div class="thumbnail-classy-image bg-image" style="background-image: url(/images/web-app-1-650x500.jpg);"></div>
+                  <div class="thumbnail-classy-caption"><a class="thumbnail-classy-button mdi mdi-play" href="https://www.youtube.com/watch?v=YC8NBxo4S68&ab_channel=WANNURULAIDAHUSNABINTIWANHASBULLAH%2FUPM" data-lightgallery="item"></a></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-
       <!-- Page Footer-->
       <footer class="section footer-classic">
         <div class="footer-classic-main">
