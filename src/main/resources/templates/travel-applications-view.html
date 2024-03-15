@@ -189,7 +189,6 @@
                                 </form>
                         </td>
                         <td>
-
                             <form th:unless="${applicationObject.status.status.toString() == 'DECLINED'}" th:action="@{/travels/applications/decline/{id}(id=${applicationObject.id})}" method="post" style="display:inline;">
                                 <button type="submit" class="button button-gray-700 button-winona" th:text="Decline"></button>
                             </form>

@@ -1,9 +1,7 @@
 package com.telerikacademy.web.carpooling.models.dtos;
 
-import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 public class FilterTravelDto {
 
@@ -16,9 +14,7 @@ public class FilterTravelDto {
     private String sortBy;
     private String sortOrder;
 
-    public FilterTravelDto(String author, String startPoint, String endPoint,
-                           LocalDateTime departureTime, Integer freeSpots,
-                           String travelStatus, String sortBy, String sortOrder) {
+    public FilterTravelDto(String author, String startPoint, String endPoint, LocalDateTime departureTime, Integer freeSpots, String travelStatus, String sortBy, String sortOrder) {
         this.author = author;
         this.startPoint = startPoint;
         this.endPoint = endPoint;

@@ -6,6 +6,6 @@ public enum ApplicationStatus {
     DECLINED,
     CANCELLED,
     PLANNED,
-    COMPLETED;
+    COMPLETED
 
 }

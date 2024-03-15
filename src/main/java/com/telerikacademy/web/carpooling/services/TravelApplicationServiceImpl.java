@@ -9,7 +9,6 @@ import com.telerikacademy.web.carpooling.repositories.contracts.StatusRepository
 import com.telerikacademy.web.carpooling.repositories.contracts.TravelApplicationRepository;
 import com.telerikacademy.web.carpooling.repositories.contracts.TravelRepository;
 import com.telerikacademy.web.carpooling.services.contracts.TravelApplicationService;
-import com.telerikacademy.web.carpooling.services.contracts.TravelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +23,7 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
     public static final String ONLY_THE_CREATOR_OF_AN_APPLICATION_CAN_DELETE_IT = "Only the creator of an application can delete it!";
     public static final String ONLY_THE_CREATOR_OF_AN_APPLICATION_CAN_CANCEL_IT = "Only the creator of an application can cancel it!";
     public static final String ONLY_THE_DRIVER_CAN = "Only the driver of an application can approve or decline it!";
+    public static final String CANCELLED_APPLICATIONS_ERR = "Cancelled applications cannot be approved or declined";
     private final TravelApplicationRepository applicationRepository;
     private final TravelRepository travelRepository;
     private final StatusRepository statusRepository;
@@ -94,6 +94,10 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
         if (!application.getTravel().getDriver().equals(user)) {
             throw new UnauthorizedOperationException(ONLY_THE_DRIVER_CAN);
         }
+         if (application.getStatus().getStatus().equals(ApplicationStatus.CANCELLED)) {
+            throw new ForbiddenOperationException(CANCELLED_APPLICATIONS_ERR);
+        }
+
         if (application.getTravel().getDepartureTime().isBefore(LocalDateTime.now())) {
             throw new ForbiddenOperationException("You cannot approve an application after the departure time");
         }
@@ -111,6 +115,9 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
         }
         if (application.getTravel().getDepartureTime().isBefore(LocalDateTime.now())) {
             throw new ForbiddenOperationException("You cannot decline an application after the departure time");
+        }
+        if (application.getStatus().getStatus().equals(ApplicationStatus.CANCELLED)) {
+            throw new ForbiddenOperationException(CANCELLED_APPLICATIONS_ERR);
         }
         Travel travel = application.getTravel();
         if (application.getStatus().getStatus().equals(ApplicationStatus.APPROVED)){

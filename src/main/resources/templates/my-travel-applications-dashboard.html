@@ -371,6 +371,7 @@
                         <th>Departure time</th>
                         <th>Driver</th>
                         <th>Status</th>
+                        <th>Cancel</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -381,7 +382,12 @@
                         <td>
                             <a th:href="@{/users/{id}(id=${travelApplication.travel.driver.id})}" th:text="${travelApplication.travel.driver.username}"></a>
                         </td>
-                        <td th:text="${travelApplication.status.status.name()}"></td>
+                        <td th:text="${travelApplication.status.status.name().toLowerCase()}"></td>
+                        <td>
+                            <form th:unless="${travelApplication.status.status.toString() == 'CANCELLED'}" th:action="@{/travels/applications/cancel/{id}(id=${travelApplication.id})}" method="post" style="display:inline;">
+                                <button type="submit" class="button button-gray-700 button-winona" th:text="Cancel"></button>
+                            </form>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
