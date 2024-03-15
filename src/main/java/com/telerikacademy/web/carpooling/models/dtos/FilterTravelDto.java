@@ -1,5 +1,7 @@
 package com.telerikacademy.web.carpooling.models.dtos;
 
+import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
+
 import java.time.LocalDateTime;
 import java.util.Optional;
 

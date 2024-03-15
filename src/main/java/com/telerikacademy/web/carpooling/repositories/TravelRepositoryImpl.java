@@ -2,6 +2,7 @@ package com.telerikacademy.web.carpooling.repositories;
 
 import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.carpooling.models.*;
+import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
 import com.telerikacademy.web.carpooling.repositories.contracts.TravelRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -91,7 +92,7 @@ public class TravelRepositoryImpl implements TravelRepository {
             });
 
             filterOptions.getTravelStatus().ifPresent(travelStatus -> {
-                filters.add("status.status like :travelStatus");
+                filters.add("status.status = :travelStatus");
                 params.put("travelStatus", "%" + travelStatus + "%");
             });
 
@@ -125,7 +126,6 @@ public class TravelRepositoryImpl implements TravelRepository {
         try (Session session = sessionFactory.openSession()) {
             List<String> filters = new ArrayList<>();
             Map<String, Object> params = new HashMap<>();
-
             filterOptions.getAuthor().ifPresent(author -> {
                 if (!author.isBlank()) {
                     filters.add("driver.username like :author");
@@ -157,10 +157,13 @@ public class TravelRepositoryImpl implements TravelRepository {
                 params.put("freeSpots", freeSpots);
             });
 
-            filterOptions.getTravelStatus().ifPresent(travelStatus -> {
-                filters.add("status.status like :travelStatus");
-                params.put("travelStatus", "%" + travelStatus + "%");
-            });
+            filterOptions.getTravelStatus()
+                    .filter(travelStatus -> !travelStatus.isBlank())
+                    .ifPresent(travelStatus -> {
+                        ApplicationStatus travelStatusEnum = ApplicationStatus.valueOf(travelStatus.toUpperCase());
+                        filters.add("status.status = :travelStatus");
+                        params.put("travelStatus", travelStatusEnum);
+                    });
 
             StringBuilder queryString = new StringBuilder("from Travel t ");
             StringBuilder countQueryString = new StringBuilder("select count(t) from Travel t ");

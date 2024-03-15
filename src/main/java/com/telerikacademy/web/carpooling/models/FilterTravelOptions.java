@@ -1,5 +1,7 @@
 package com.telerikacademy.web.carpooling.models;
 
+import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
+
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -57,4 +59,5 @@ public class FilterTravelOptions {
     public Optional<String> getSortOrder() {
         return sortOrder;
     }
+
 }

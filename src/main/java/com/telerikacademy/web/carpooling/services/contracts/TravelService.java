@@ -12,6 +12,7 @@ public interface TravelService {
     void create(Travel travel, User user);
 
     void update(Travel travel, User user);
+    void update(Travel travel);
 
     void delete(Travel travel, User user);
     List<Travel> getAll();

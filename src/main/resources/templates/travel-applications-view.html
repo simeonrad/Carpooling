@@ -184,14 +184,15 @@
                             th:text="${applicationObject.passenger.username}"></td>
                         <td th:text="${applicationObject.status.status.toString().toLowerCase()}"></td>
                         <td>
-                            <button th:action="@{/travels/applications/approve/{id}(id=${applicationObject.id})}"
-                                    class="button button-sm button-primary button-winona" th:text="Approve"></button>
-
+                                <form th:unless="${applicationObject.status.status.toString() == 'APPROVED'}" th:action="@{/travels/applications/approve/{id}(id=${applicationObject.id})}" method="post" style="display:inline;">
+                                    <button type="submit" class="button button-sm button-primary button-winona">Approve</button>
+                                </form>
                         </td>
                         <td>
-                            <button type="submit" th:method="post"
-                                    th:action="@{/travels/applications/decline/{id}(id=${applicationObject.id})}"
-                                    class="button button-gray-700 button-winona" th:text="Decline"></button>
+
+                            <form th:unless="${applicationObject.status.status.toString() == 'DECLINED'}" th:action="@{/travels/applications/decline/{id}(id=${applicationObject.id})}" method="post" style="display:inline;">
+                                <button type="submit" class="button button-gray-700 button-winona" th:text="Decline"></button>
+                            </form>
                         </td>
                     </tr>
                     </tbody>

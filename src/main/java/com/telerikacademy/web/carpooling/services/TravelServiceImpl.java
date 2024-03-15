@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 @Service
 public class TravelServiceImpl implements TravelService {
     private final TravelRepository travelRepository;
@@ -46,7 +47,7 @@ public class TravelServiceImpl implements TravelService {
             int[] travelDetails = distanceAndDuration.getRouteDetails(travel.getStartPoint(), travel.getEndPoint());
             travel.setDistanceKm(travelDetails[0]);
             travel.setDurationMinutes(travelDetails[1]);
-            if (!travel.getDriver().equals(travel.getCar().getOwner())){
+            if (!travel.getDriver().equals(travel.getCar().getOwner())) {
                 throw new UnauthorizedOperationException("You cannot add someones else car to your travel!");
             }
             travelRepository.create(travel);
@@ -58,7 +59,7 @@ public class TravelServiceImpl implements TravelService {
 
     @Override
     public void update(Travel travel, User user) {
-        if(user.equals(travel.getDriver())) {
+        if (user.equals(travel.getDriver())) {
             travelRepository.update(travel);
         } else {
             throw new UnauthorizedOperationException("No update permission, user isn't driver");
@@ -67,8 +68,13 @@ public class TravelServiceImpl implements TravelService {
     }
 
     @Override
+    public void update(Travel travel) {
+        travelRepository.update(travel);
+    }
+
+    @Override
     public void delete(Travel travel, User user) {
-        if(user.getRole().getName().equals("Admin")) {
+        if (user.getRole().getName().equals("Admin")) {
             travelRepository.delete(travel);
         } else {
             throw new UnauthorizedOperationException("No delete permission, user isn't admin");
@@ -109,12 +115,12 @@ public class TravelServiceImpl implements TravelService {
     public void cancel(User user, Travel travel) {
         if (travel.getDriver().equals(user)) {
             travel.setStatus(statusRepository.getByValue(ApplicationStatus.CANCELLED));
-            for (TravelApplication application: travelApplicationService.getByTravelId(travel.getId())){
+            for (TravelApplication application : travelApplicationService.getByTravelId(travel.getId())) {
                 application.setStatus(statusRepository.getByValue(ApplicationStatus.DECLINED));
                 travelApplicationService.update(application);
             }
             travelRepository.update(travel);
-            if (travel.getDepartureTime().isBefore(LocalDateTime.now())){
+            if (travel.getDepartureTime().isBefore(LocalDateTime.now())) {
                 throw new ForbiddenOperationException("You cannot cancel a travel after the departure time");
             }
         } else {
@@ -128,7 +134,7 @@ public class TravelServiceImpl implements TravelService {
             if (travel.getStatus().getStatus().toString().equals("CANCELLED")) {
                 throw new ForbiddenOperationException("Travel that was already cancelled cannot be marked as complete!");
             }
-            if (travel.getDepartureTime().isAfter(LocalDateTime.now())){
+            if (travel.getDepartureTime().isAfter(LocalDateTime.now())) {
                 throw new ForbiddenOperationException("You cannot complete a travel before the departure time");
             }
             travel.setStatus(statusRepository.getByValue(ApplicationStatus.COMPLETED));

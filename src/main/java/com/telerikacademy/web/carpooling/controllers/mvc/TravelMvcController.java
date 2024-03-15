@@ -266,15 +266,15 @@ public class TravelMvcController {
     public String approveApplications(@PathVariable int id, Model model, HttpSession session) {
         try {
             User user = authenticationHelper.tryGetUser(session);
-            if (user.equals(travelService.getById(id).getDriver())) {
-                TravelApplication travelApplication = travelApplicationService.getById(id);
+            TravelApplication travelApplication = travelApplicationService.getById(id);
+            if (user.equals(travelService.getById(travelApplication.getTravel().getId()).getDriver())) {
                 travelApplicationService.approve(user, travelApplication);
-                return "travel-applications-view";
+                return "redirect:/travels/applications/" + travelApplication.getTravel().getId();
             }
         } catch (AuthenticationFailureException e) {
             return "redirect:/auth/login";
         } catch (ForbiddenOperationException | UnauthorizedOperationException e) {
-            model.addAttribute("error-message", e.getMessage());
+            model.addAttribute("status", e.getMessage());
             return "redirect:/404-page";
         }
         return "redirect:/auth/login";
@@ -298,10 +298,10 @@ public class TravelMvcController {
     public String declineApplications(@PathVariable int id,Model model, HttpSession session){
         try {
             User user = authenticationHelper.tryGetUser(session);
-            if (user.equals(travelService.getById(id).getDriver())) {
-                TravelApplication travelApplication = travelApplicationService.getById(id);
+            TravelApplication travelApplication = travelApplicationService.getById(id);
+            if (user.equals(travelService.getById(travelApplication.getTravel().getId()).getDriver())) {
                 travelApplicationService.decline(user, travelApplication);
-                return "travel-applications-view";
+                return "redirect:/travels/applications/" + travelApplication.getTravel().getId();
             }
         } catch (AuthenticationFailureException e) {
             return "redirect:/auth/login";

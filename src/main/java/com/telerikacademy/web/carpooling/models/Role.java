@@ -2,6 +2,7 @@ package com.telerikacademy.web.carpooling.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -44,6 +45,7 @@ public class Role {
         this.name = name;
     }
 
+    //TODO
     public Set<User> getUsers() {
         return users;
     }

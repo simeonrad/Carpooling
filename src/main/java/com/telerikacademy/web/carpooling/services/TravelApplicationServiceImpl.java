@@ -7,7 +7,9 @@ import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
 import com.telerikacademy.web.carpooling.repositories.contracts.StatusRepository;
 import com.telerikacademy.web.carpooling.repositories.contracts.TravelApplicationRepository;
+import com.telerikacademy.web.carpooling.repositories.contracts.TravelRepository;
 import com.telerikacademy.web.carpooling.services.contracts.TravelApplicationService;
+import com.telerikacademy.web.carpooling.services.contracts.TravelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,12 +25,14 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
     public static final String ONLY_THE_CREATOR_OF_AN_APPLICATION_CAN_CANCEL_IT = "Only the creator of an application can cancel it!";
     public static final String ONLY_THE_DRIVER_CAN = "Only the driver of an application can approve or decline it!";
     private final TravelApplicationRepository applicationRepository;
+    private final TravelRepository travelRepository;
     private final StatusRepository statusRepository;
 
 
     @Autowired
-    public TravelApplicationServiceImpl(TravelApplicationRepository applicationRepository, StatusRepository statusRepository) {
+    public TravelApplicationServiceImpl(TravelApplicationRepository applicationRepository, TravelRepository travelRepository, StatusRepository statusRepository) {
         this.applicationRepository = applicationRepository;
+        this.travelRepository = travelRepository;
         this.statusRepository = statusRepository;
     }
 
@@ -77,6 +81,10 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
         if (application.getTravel().getDepartureTime().isBefore(LocalDateTime.now())) {
             throw new ForbiddenOperationException("You cannot cancel an application after the departure time");
         }
+        Travel travel = application.getTravel();
+        if (application.getStatus().getStatus().equals(ApplicationStatus.APPROVED)){
+            travel.setFreeSpots(travel.getFreeSpots() + 1);
+            travelRepository.update(travel);}
         application.setStatus(statusRepository.getByValue(ApplicationStatus.CANCELLED));
         applicationRepository.update(application);
     }
@@ -89,6 +97,9 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
         if (application.getTravel().getDepartureTime().isBefore(LocalDateTime.now())) {
             throw new ForbiddenOperationException("You cannot approve an application after the departure time");
         }
+        Travel travel = application.getTravel();
+        travel.setFreeSpots(travel.getFreeSpots() - 1);
+        travelRepository.update(travel);
         application.setStatus(statusRepository.getByValue(ApplicationStatus.APPROVED));
         applicationRepository.update(application);
     }
@@ -101,6 +112,10 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
         if (application.getTravel().getDepartureTime().isBefore(LocalDateTime.now())) {
             throw new ForbiddenOperationException("You cannot decline an application after the departure time");
         }
+        Travel travel = application.getTravel();
+        if (application.getStatus().getStatus().equals(ApplicationStatus.APPROVED)){
+        travel.setFreeSpots(travel.getFreeSpots() + 1);
+        travelRepository.update(travel);}
         application.setStatus(statusRepository.getByValue(ApplicationStatus.DECLINED));
         applicationRepository.update(application);
     }
