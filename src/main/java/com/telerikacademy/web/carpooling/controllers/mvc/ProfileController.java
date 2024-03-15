@@ -343,7 +343,7 @@ public class ProfileController {
                         filterMyApplicationsDto.getEndPoint(), filterMyApplicationsDto.getDepartureTime(),
                         filterMyApplicationsDto.getDriver(), filterMyApplicationsDto.getStatus(),
                         filterMyApplicationsDto.getSortBy(), filterMyApplicationsDto.getSortOrder()),
-                travelApplicationPageable);
+                travelApplicationPageable, currentUser.getId());
 
         model.addAttribute("userTravelApplications", userTravelApplications);
         model.addAttribute("profileUser", currentUser);

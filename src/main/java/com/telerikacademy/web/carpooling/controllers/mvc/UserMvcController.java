@@ -2,6 +2,7 @@ package com.telerikacademy.web.carpooling.controllers.mvc;
 
 import com.telerikacademy.web.carpooling.exceptions.DuplicateEmailExists;
 import com.telerikacademy.web.carpooling.exceptions.DuplicatePhoneNumberExists;
+import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.carpooling.exceptions.InvalidPhoneNumberException;
 import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.models.dtos.FilterFeedbackOptionsDto;
@@ -136,6 +137,18 @@ public class UserMvcController {
             model.addAttribute("profileUser", user);
             model.addAttribute("username", username);
             return "user-dashboard";
+    }
+
+    @GetMapping("/verify-email")
+    public String verifyEmail(@RequestParam("username") String username, Model model) {
+        try {
+            userService.verifyUser(username);
+            model.addAttribute("status", "Email successfully verified");
+            return "verification-page";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("status", e.getMessage());
+            return "verification-page";
+        }
     }
 
 }

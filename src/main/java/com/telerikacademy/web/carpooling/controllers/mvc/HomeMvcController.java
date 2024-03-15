@@ -54,4 +54,9 @@ public class HomeMvcController {
         model.addAttribute("totalApplications", totalApplications);
         return "index";
     }
+
+    @GetMapping("/about-us")
+    public String showAboutUsPage() {
+        return "about-us-page";
+    }
 }

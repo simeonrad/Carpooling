@@ -30,6 +30,4 @@ public interface UserService {
     boolean isUIExisting(String UI);
     List<User> getAllNotDeleted();
     void verifyUser(String username);
-    void sendForgottenPasswordEmail(User user);
-    String generateUI();
     }

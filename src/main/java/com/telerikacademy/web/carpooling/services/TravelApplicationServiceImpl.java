@@ -116,8 +116,8 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
     }
 
     @Override
-    public Page<TravelApplication> getMyTravelApplications(FilterMyApplicationsOptions filterMyApplicationsOptions, Pageable pageable) {
-        return applicationRepository.getMyTravelApplications(filterMyApplicationsOptions, pageable);
+    public Page<TravelApplication> getMyTravelApplications(FilterMyApplicationsOptions filterMyApplicationsOptions, Pageable pageable, int userId) {
+        return applicationRepository.getMyTravelApplications(filterMyApplicationsOptions, pageable, userId);
     }
 
     @Override

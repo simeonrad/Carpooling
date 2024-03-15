@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="wide wow-animation" lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Careers</title>
+    <title>Travel</title>
     <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -40,58 +40,21 @@
                         <!-- RD Navbar Toggle-->
                         <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
                         <!-- RD Navbar Brand-->
-                        <div class="rd-navbar-brand"> <a class="brand" href="index.html"><img class="brand-logo-dark" src="/images/logo-111x33.png" alt="" width="111" height="33" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a></div>
+                        <div class="rd-navbar-brand"> <a class="brand" href="/"><img class="brand-logo-dark" src="/images/cut-logo-carpool.jpg" alt="" width="111" height="72" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a></div>
                     </div>
                     <div class="rd-navbar-nav-wrap">
                         <!-- RD Navbar Nav-->
                         <ul class="rd-navbar-nav">
-                            <li class="rd-nav-item"><a class="rd-nav-link" href="#">Get Our App</a>
+                            <li class="rd-nav-item"><a class="rd-nav-link" href="/travels/create">Create a travel</a>
                             </li>
-                            <li class="rd-nav-item active"><a class="rd-nav-link" href="#">Pages</a>
-                                <!-- RD Navbar Megamenu-->
-                                <div class="rd-menu rd-navbar-megamenu">
-                                    <ul class="rd-navbar-megamenu-inner">
-                                        <li class="rd-megamenu-item">
-                                            <ul class="rd-megamenu-list">
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="typography.html">Typography</a></li>
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="buttons.html">Buttons</a></li>
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="forms.html">Forms</a></li>
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="tabs-and-accordions.html">Tabs and Accordions</a></li>
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="progress-bars.html">Progress bars</a></li>
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="tables.html">Tables</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="rd-megamenu-item">
-                                            <ul class="rd-megamenu-list">
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="gallery.html">Gallery</a></li>
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="services.html">Services</a></li>
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="services-2.html">Services 2</a></li>
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="pricing.html">Pricing</a></li>
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="careers.html">Careers</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="rd-megamenu-item">
-                                            <ul class="rd-megamenu-list">
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="grid-system.html">Grid system</a></li>
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="privacy-policy.html">Privacy policy</a></li>
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="404-page.html">404 Page</a></li>
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="coming-soon.html">Coming Soon</a></li>
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="search-results.html">Search results</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="rd-megamenu-item">
-                                            <ul class="rd-megamenu-list">
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="contact-us.html">Contact Us</a></li>
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="login.html">Login</a></li>
-                                                <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link" href="../templates/register.html">Register</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </div>
+                            <li class="rd-nav-item"><a class="rd-nav-link" href="/travels/search-travels">Travels</a>
+                            </li>
+                            <li th:if="${isAuthenticated}" class="rd-nav-item">
+                                <a class="rd-nav-link" href="/profile">Profile</a>
                             </li>
                         </ul>
                     </div>
-                    <div class="rd-navbar-element"><a class="button button-sm button-default-outline button-winona" href="careers.html">Join Us</a>
+                    <div class="rd-navbar-element"><a class="button button-sm button-default-outline button-winona" href="/auth/logout">Log out</a>
                         <button class="rd-navbar-aside-open-toggle" data-multitoggle="#rd-navbar-aside" aria-label="Sidebar toggle"> <span></span><span></span><span></span></button>
                     </div>
                     <div class="rd-navbar-dummy"></div>
@@ -103,7 +66,11 @@
                     </div>
                     <div class="rd-navbar-aside-main">
                         <div class="rd-navbar-aside-group navbar" data-navbar="{&quot;stuck&quot;: false, &quot;anchor&quot;: {&quot;offsetRef&quot;: &quot;.rd-navbar-main&quot;}}">
-                            <div class="navbar-inner"><a class="rd-navbar-aside-link" href="about-us.html">About Us</a><a class="rd-navbar-aside-link" href="faq.html">FAQ</a><a class="rd-navbar-aside-link" href="testimonials.html">Testimonials</a><a class="rd-navbar-aside-link" href="our-team.html">Our Team</a>
+                            <div class="navbar-inner">
+                                <a class="rd-navbar-aside-link" href="/profile/my-organised-travels">My Organised Travels</a>
+                                <a class="rd-navbar-aside-link" href="/profile/my-travels-as-passenger">My Travels As Passenger</a>
+                                <a class="rd-navbar-aside-link" href="/profile/my-travel-applications">My Applications</a>
+                                <a class="rd-navbar-aside-link" href="/profile/my-feedbacks">My Feedbacks</a>
                             </div>
                         </div>
                     </div>
@@ -116,7 +83,7 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-xl-9">
-                        <h2 class="breadcrumbs-custom-title">Careers</h2>
+                        <h2 class="breadcrumbs-custom-title">Travel Details</h2>
                     </div>
                 </div>
             </div>
@@ -124,9 +91,9 @@
         <div class="breadcrumbs-custom-aside">
             <div class="container">
                 <ul class="breadcrumbs-custom-path">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="#">Pages</a></li>
-                    <li class="active">Careers</li>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/travels/search-travels">All Travels</a></li>
+                    <li class="active">Travel Details</li>
                 </ul>
             </div>
         </div>
@@ -134,7 +101,7 @@
     <!-- Available Vacancies-->
     <section class="section section-md bg-gray-100">
         <div class="container">
-            <h3 class="text-center">Travel details</h3>
+<!--            <h3 class="text-center">Travel details</h3>-->
             <div class="row row-30">
                 <div class="col-md-6">
                     <!-- Post Vacancy--><a class="post-vacancy">
@@ -164,32 +131,31 @@
             </div>
         </div>
     </section>
+
+
     <!-- Page Footer-->
     <footer class="section footer-classic">
         <div class="footer-classic-main">
             <div class="container">
                 <div class="row row-50 justify-content-lg-between">
-                    <div class="col-sm-7 col-lg-3 col-xl-2"><a class="brand" href="index.html"><img class="brand-logo-dark" src="/images/logo-111x33.png" alt="" width="111" height="33" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a>
-                        <p><span style="max-width: 250px;">We provide the best taxi services for you all over the USA.</span></p><a class="button button-sm button-default-outline button-winona" href="login.html">Order Now</a>
+                    <div class="col-sm-7 col-lg-3 col-xl-2"><a class="brand" href="/"><img class="brand-logo-dark" src="/images/cut-logo-carpool.jpg" alt="" width="111" height="72" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a>
+                        <p><span style="max-width: 250px;">We provide the best taxi services for you.</span></p>
                     </div>
                     <div class="col-sm-5 col-lg-3 col-xl-2">
                         <h5 class="footer-classic-title">About</h5>
                         <ul class="list footer-classic-list">
-                            <li><a href="about-us.html">About Us</a></li>
-                            <li><a href="careers.html">Careers</a></li>
-                            <li><a href="#">Press and media</a></li>
+                            <li><a href="/about-us">About Us</a></li>
                         </ul>
                     </div>
                     <div class="col-sm-7 col-lg-5 col-xl-3">
                         <h5 class="footer-classic-title">Quick Links</h5>
                         <ul class="list footer-classic-list footer-classic-list_2-cols">
-                            <li><a href="login.html">Sign Up</a></li>
-                            <li><a href="services.html">Services</a></li>
-                            <li><a href="privacy-policy.html">Privacy policy</a></li>
-                            <li><a href="#">Blog</a></li>
-                            <li><a href="pricing.html">Pricing</a></li>
-                            <li><a href="faq.html">Online Help</a></li>
-                            <li><a href="faq.html">FAQ</a></li>
+                            <li th:unless="${isAuthenticated}"><a href="/auth/register">Register</a></li>
+                            <li th:unless="${isAuthenticated}"><a href="/auth/login">Log in</a></li>
+                            <li th:unless="${isAuthenticated}"><a href="/travels/search-travels">All Travels</a></li>
+                            <li th:if="${isAuthenticated}"><a href="/travels/create">Create A Travel</a></li>
+                            <li th:if="${isAuthenticated}"><a href="/travels/search-travels">All Travels</a></li>
+                            <li th:if="${isAuthenticated}"><a href="/profile">Profile</a></li>
                         </ul>
                     </div>
                     <div class="col-sm-5 col-lg-9 col-xl-2">
@@ -197,12 +163,8 @@
                         <div class="row row-20 row-sm-35">
                             <div class="col-6 col-sm-12 col-lg-8 col-xl-12">
                                 <div class="row row-10 text-black">
-                                    <div class="col-lg-6 col-xl-12"><a href="mailto:#">info@demolink.org</a></div>
-                                    <div class="col-lg-6 col-xl-12"><a href="tel:#">+1-800-123-1234</a></div>
+                                    <div class="col-lg-6 col-xl-12"><a href="mailto:#">car.pooling.a56@gmail.com</a></div>
                                 </div>
-                            </div>
-                            <div class="col-6 col-sm-12 col-lg-4 col-xl-12 text-end text-sm-start">
-                                <div class="group group-xs"><a class="link link-social-1 mdi mdi-twitter" href="#"></a><a class="link link-social-1 mdi mdi-facebook" href="#"></a><a class="link link-social-1 mdi mdi-instagram" href="#"></a></div>
                             </div>
                         </div>
                     </div>
@@ -211,7 +173,7 @@
         </div>
         <div class="footer-classic-aside">
             <div class="container">
-                <p class="rights"><span>&copy;&nbsp; </span><span class="copyright-year"></span><span>. All Rights Reserved</span><span>.</span><span> Design&nbsp;by&nbsp;<a href="https://zemez.io/">Zemez</a></span></p>
+                <p class="rights"><span>&copy;&nbsp; </span><span class="copyright-year"></span><span>. All Rights Reserved</span><span>.</span><span> Design&nbsp;by&nbsp;Alex, Dani & Simo</span></p>
             </div>
         </div>
     </footer>

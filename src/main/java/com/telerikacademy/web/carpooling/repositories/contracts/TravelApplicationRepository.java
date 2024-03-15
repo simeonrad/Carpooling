@@ -19,7 +19,7 @@ public interface TravelApplicationRepository {
 
     List<TravelApplication> getByTravelId(int id);
 
-    Page<TravelApplication> getMyTravelApplications(FilterMyApplicationsOptions filterMyApplicationsOptions, Pageable pageable);
+    Page<TravelApplication> getMyTravelApplications(FilterMyApplicationsOptions filterMyApplicationsOptions, Pageable pageable, int userId);
 
     List<TravelApplication> getAll();
 

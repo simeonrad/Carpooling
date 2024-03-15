@@ -25,9 +25,7 @@ public interface TravelApplicationService {
     List<TravelApplication> getAll();
 
     List<TravelApplication> get(FilterApplicationOptions filterApplicationOptions);
-    Page<TravelApplication> getMyTravelApplications(FilterMyApplicationsOptions filterMyApplicationsOptions, Pageable pageable);
-
-
+    Page<TravelApplication> getMyTravelApplications(FilterMyApplicationsOptions filterMyApplicationsOptions, Pageable pageable, int userId);
     TravelApplication getById(int id);
 
     List<TravelApplication> getByTravelId(int id);

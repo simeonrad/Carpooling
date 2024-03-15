@@ -2,6 +2,7 @@ package com.telerikacademy.web.carpooling.controllers.mvc;
 
 import com.telerikacademy.web.carpooling.exceptions.*;
 import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
+import com.telerikacademy.web.carpooling.helpers.EmailSenderHelper;
 import com.telerikacademy.web.carpooling.helpers.UserMapper;
 import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.models.dtos.ForgottenPasswordDto;
@@ -24,11 +25,14 @@ public class AuthenticationController {
     private final UserMapper userMapper;
     private final UserService userService;
 
+    private final EmailSenderHelper emailSenderHelper;
 
-    public AuthenticationController(AuthenticationHelper authenticationHelper, UserMapper userMapper, UserService userService) {
+
+    public AuthenticationController(AuthenticationHelper authenticationHelper, UserMapper userMapper, UserService userService, EmailSenderHelper emailSenderHelper) {
         this.authenticationHelper = authenticationHelper;
         this.userMapper = userMapper;
         this.userService = userService;
+        this.emailSenderHelper = emailSenderHelper;
     }
 
     @GetMapping("/login")
@@ -94,6 +98,9 @@ public class AuthenticationController {
         } catch (DuplicatePhoneNumberExists e) {
             bindingResult.rejectValue("phoneNumber", "phoneNumber-error", e.getMessage());
             return "register";
+        } catch (InvalidPasswordException e) {
+            bindingResult.rejectValue("password", "password-error", e.getMessage());
+            return "register";
         }
     }
 
@@ -111,7 +118,7 @@ public class AuthenticationController {
         }
         try {
             User user = userService.get(passwordDto.getUsername());
-            userService.sendForgottenPasswordEmail(user);
+            emailSenderHelper.sendForgottenPasswordEmail(user);
             redirectAttributes.addFlashAttribute("successMessage", "Email sent. Please check your inbox.");
             return "redirect:/auth/forgotten_password";
         } catch (EntityNotFoundException e) {
