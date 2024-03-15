@@ -329,10 +329,15 @@
                         <input th:field="*{freeSpots}" class="form-input" id="rd-search-form-input-free-spots"
                                type="text" name="email" autocomplete="off">
                     </div>
-                    <div class="form-wrap">
-                        <label class="form-label" for="rd-search-form-input-status">Travel Status</label>
-                        <input th:field="*{travelStatus}" class="form-input" id="rd-search-form-input-status"
-                               type="text" name="email" autocomplete="off">
+                    <div class="form-wrap mx-sm-3 mb-2">
+                        <label>
+                            <select class="form-control" th:field="*{travelStatus}">
+                                <option value="">Status</option>
+                                <option value="PLANNED">planned</option>
+                                <option value="COMPLETED">completed</option>
+                                <option value="CANCELED">canceled</option>
+                            </select>
+                        </label>
                     </div>
                     <div class="form-wrap mx-sm-3 mb-2">
                         <label>

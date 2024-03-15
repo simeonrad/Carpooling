@@ -8,6 +8,7 @@ import com.telerikacademy.web.carpooling.helpers.AuthenticationHelper;
 import com.telerikacademy.web.carpooling.helpers.TravelMapper;
 import com.telerikacademy.web.carpooling.models.*;
 import com.telerikacademy.web.carpooling.models.dtos.TravelDto;
+import com.telerikacademy.web.carpooling.models.enums.ApplicationStatus;
 import com.telerikacademy.web.carpooling.services.contracts.TravelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -44,7 +45,8 @@ public class TravelController {
             @RequestParam(required = false) String sortOrder
     ){
         try{
-            FilterTravelOptions filterTravelOptions = new FilterTravelOptions(driverUsername,startPoint,endPoint,departureTime,freeSpots,status,sortBy,sortOrder);
+            FilterTravelOptions filterTravelOptions = new FilterTravelOptions(driverUsername,startPoint,
+                    endPoint,departureTime,freeSpots,status,sortBy,sortOrder);
             return travelService.get(filterTravelOptions).stream()
                     .map(travelMapper::toDto)
                     .collect(Collectors.toList());

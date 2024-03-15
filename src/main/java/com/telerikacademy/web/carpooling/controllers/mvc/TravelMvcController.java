@@ -202,7 +202,7 @@ public class TravelMvcController {
             Travel travel = travelService.getById(id);
 
             if (!travel.getDriver().equals(user)) {
-                model.addAttribute("errorMessage", "Unauthorized access to update travel");
+                model.addAttribute("status", "Unauthorized access to update travel");
                 return "404-page";
             }
 
@@ -211,7 +211,7 @@ public class TravelMvcController {
             model.addAttribute("updateTravel", travelDto);
             return "updateTravel";
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error finding travel: " + e.getMessage());
+            model.addAttribute("status", "Error finding travel: " + e.getMessage());
             return "404-page";
         }
     }
@@ -227,7 +227,7 @@ public class TravelMvcController {
             Travel existingTravel = travelService.getById(id);
 
             if (!existingTravel.getDriver().equals(user)) {
-                model.addAttribute("errorMessage", "Unauthorized attempt to update travel");
+                model.addAttribute("status", "Unauthorized attempt to update travel");
                 return "404-page";
             }
 
@@ -241,7 +241,7 @@ public class TravelMvcController {
 
             return "redirect:/travels/search-travels";
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error updating travel: " + e.getMessage());
+            model.addAttribute("status", "Error updating travel: " + e.getMessage());
             return "updateTravel";
         }
     }

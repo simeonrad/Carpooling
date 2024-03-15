@@ -381,8 +381,8 @@
                     <tr th:each="travel : ${userTravels} ">
                         <td th:href="@{/travels/{id}(id=${travel.id})}" th:text="${travel.startPoint}"></td>
                         <td th:text="${travel.endPoint}"></td>
-                        <td th:text="${travel.getDepartureTime()}"></td>
-                        <td th:text="${travel.getStatus().getStatus().name()}"></td>
+                        <td th:text="${#temporals.format(travel.departureTime, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="${travel.getStatus().getStatus().name().toLowerCase()}"></td>
                         <td>
                             <form action="/" th:action="@{/travels/applications/{id}(id=${travel.id})}" >
                             <button type="submit" class="button button-sm button-primary button-winona"
