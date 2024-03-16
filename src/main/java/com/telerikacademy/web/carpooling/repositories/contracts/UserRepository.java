@@ -19,6 +19,8 @@ public interface UserRepository {
     void update(User user);
 
     List<User> get(FilterUserOptions filterOptions);
+    List<User> getTop10Passengers();
+    List<User> getTop10Organisers();
     Page<User> get(FilterUserOptions filterOptions, Pageable pageable);
     User getById(int id);
 

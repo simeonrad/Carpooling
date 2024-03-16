@@ -101,6 +101,10 @@ public class TravelMvcController {
         try {
             User user = authenticationHelper.tryGetUser(session);
             userService.checkIfVerified(user);
+            if (user.isBlocked()) {
+                model.addAttribute("status", "Blocked users cannot create travels!");
+                return "404-page";
+            }
             model.addAttribute("createTravel", new TravelDto());
             model.addAttribute("userCars", user.getCars());
             return "createTravel";
@@ -126,7 +130,7 @@ public class TravelMvcController {
             travelCommentService.addOrUpdateComment(travel.getId(), travelDto.getComment());
             return "redirect:/travels/search-travels";
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error creating travel: " + e.getMessage());
+            model.addAttribute("404-page", "Error creating travel: " + e.getMessage());
             return "createTravel";
         }
     }
@@ -145,7 +149,7 @@ public class TravelMvcController {
     }
 
     @PostMapping("/car/create")
-    public String createCar(@ModelAttribute(name = "carDto") CarDto carDto, HttpSession session) {
+    public String createCar(@ModelAttribute(name = "carDto") CarDto carDto, HttpSession session, Model model) {
         try {
             User user = authenticationHelper.tryGetUser(session);
             Car car = new Car();
@@ -161,8 +165,10 @@ public class TravelMvcController {
             return "redirect:/travels/create";
         } catch (AuthenticationFailureException e) {
             return "redirect:/auth/login";
+        } catch (UnauthorizedOperationException e) {
+            model.addAttribute("status", e.getMessage());
+            return "404-page";
         }
-
     }
 
     @GetMapping("/{id}")
@@ -335,6 +341,10 @@ public class TravelMvcController {
         TravelApplicationDto applicationDto = new TravelApplicationDto();
         try {
             User currentUser = authenticationHelper.tryGetUser(session);
+            if (currentUser.isBlocked()) {
+                model.addAttribute("status", "Blocked users cannot apply for travels!");
+                return "404-page";
+            }
             userService.checkIfVerified(currentUser);
             Travel travel = travelService.getById(travelId);
 
@@ -393,7 +403,7 @@ public class TravelMvcController {
             model.addAttribute("travel", travel);
             return "updateTravelApplication";
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error retrieving application: " + e.getMessage());
+            model.addAttribute("status", "Error retrieving application: " + e.getMessage());
             return "404-page";
         }
     }

@@ -16,6 +16,8 @@ public interface UserService {
     void update(User user, User updatedBy);
     void update(User user);
     List<User> get(FilterUserOptions filterUserOptions, User user);
+    List<User> getTop10Passengers();
+    List<User> getTop10Organisers();
     Page<User> get(FilterUserOptions filterUserOptions, User user, Pageable pageable);
     List<User> get(FilterUserOptions filterUserOptions);
     void blockUser(String username, User admin);

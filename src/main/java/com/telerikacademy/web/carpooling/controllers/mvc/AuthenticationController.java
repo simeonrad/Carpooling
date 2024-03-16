@@ -98,7 +98,11 @@ public class AuthenticationController {
         } catch (DuplicatePhoneNumberExists e) {
             bindingResult.rejectValue("phoneNumber", "phoneNumber-error", e.getMessage());
             return "register";
-        } catch (InvalidPasswordException e) {
+        } catch (InvalidPhoneNumberException e) {
+            bindingResult.rejectValue("phoneNumber", "phoneNumber-error", e.getMessage());
+            return "register";
+        }
+        catch (InvalidPasswordException e) {
             bindingResult.rejectValue("password", "password-error", e.getMessage());
             return "register";
         }
