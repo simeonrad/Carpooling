@@ -31,19 +31,6 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public void update(Car car, User user){
-        if (!car.getOwner().equals(user) && !user.isAdmin()){
-            throw new UnauthorizedOperationException("Only owners and admins can edit a car!");
-        }
-        if (!user.isBlocked()) {
-            car.setOwner(user);
-            carRepository.update(car);
-        }
-        else {
-            throw new UnauthorizedOperationException("Blocked users cannot edit cars!");
-        }
-    }
-    @Override
     public void delete(Car car, User user){
         if (!car.getOwner().equals(user) && !user.isAdmin()){
             throw new UnauthorizedOperationException("Only owners and admins can delete a car!");

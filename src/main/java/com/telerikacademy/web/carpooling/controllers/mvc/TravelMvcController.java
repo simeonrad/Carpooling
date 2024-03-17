@@ -264,6 +264,7 @@ public class TravelMvcController {
                 } catch (EntityNotFoundException ignored) {
                 }
                 model.addAttribute("applications", applications);
+                model.addAttribute("now", LocalDateTime.now());
                 return "travel-applications-view";
             }
         } catch (AuthenticationFailureException e) {
@@ -433,6 +434,7 @@ public class TravelMvcController {
             Travel travel = application.getTravel();
 
             if (!application.getPassenger().equals(currentUser)) {
+                model.addAttribute("status", "Only authors can edit applications!");
                 return "404-page";
             }
 
