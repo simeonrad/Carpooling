@@ -35,10 +35,8 @@
                             </p>
                             <div class="box-shadow-1-main">
                                 <!-- RD Mailform -->
-                                <form th:action="@{/travels/update/{id}(id=${updateTravel.id})}" th:object="${updateTravel}" method="post">
+                                <form th:action="@{/travels/update/{id}(id=${id})}" th:object="${updateTravel}" method="post">
                                     <!-- Hidden ID Field -->
-                                    <input type="hidden" th:field="*{id}">
-
                                     <!-- Free Spots Field -->
                                     <div class="form-group">
                                         <label for="freeSpots">Free Spots</label>

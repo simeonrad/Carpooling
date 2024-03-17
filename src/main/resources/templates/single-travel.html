@@ -12,10 +12,64 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <style>
-    .button.button-secondary.button-winona.wow.clipInLeft{
+    .button.button-secondary.button-winona.wow.clipInLeft {
         padding: 5px;
         margin: 5px;
     }
+
+    .comment-preview {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 250px; /* Adjust based on your layout */
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    /* Full comment style (initially hidden) */
+    .full-comment {
+        display: none; /* Keeps it hidden initially */
+        white-space: pre-wrap; /* This will allow for natural breaks and spaces */
+        word-wrap: break-word; /* Ensures long words do not extend past the container width */
+        cursor: pointer;
+    }
+    .buttons-container{
+        display: flex;
+        justify-content: space-between;
+        padding: 0;
+    }
+    .action-buttons .button-link {
+        background-color: #007bff; /* Bootstrap primary color, or choose your own */
+        color: white;
+        padding: 10px 15px; /* Adjust padding as needed */
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 0 5px; /* Spacing between buttons, adjust as needed */
+        display: inline-block; /* Helps in applying the width and height properly */
+        min-width: 120px; /* Ensures all buttons have at least this width, adjust as needed */
+        box-sizing: border-box; /* Ensures padding and border are included in the total width and height */
+    }
+
+    /* Ensuring consistent margin around action buttons container */
+    .action-buttons {
+        margin: 20px;
+        display: flex;
+        justify-content: space-around; /* This can be adjusted to 'flex-start' for left alignment or 'center' for center alignment */
+    }
+
+    /* Optional: Adjust button sizes responsively */
+    @media (max-width: 600px) {
+        .action-buttons .button-link {
+            min-width: 100%; /* Makes buttons full-width on smaller screens */
+            margin-bottom: 10px; /* Adds space between vertically stacked buttons */
+        }
+
+        .action-buttons {
+            flex-direction: column; /* Stack buttons vertically on smaller screens */
+        }
+    }
+
 </style>
 <body>
 <div class="preloader" id="loading">
@@ -33,14 +87,26 @@
     <header class="section page-header page-header-4">
         <!-- RD Navbar-->
         <div class="rd-navbar-wrap">
-            <nav class="rd-navbar rd-navbar-modern" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed" data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed" data-lg-layout="rd-navbar-fixed" data-lg-device-layout="rd-navbar-fixed" data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static" data-xxl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static" data-lg-stick-up-offset="10px" data-xl-stick-up-offset="10px" data-xxl-stick-up-offset="10px" data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
+            <nav class="rd-navbar rd-navbar-modern" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed"
+                 data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed"
+                 data-lg-layout="rd-navbar-fixed" data-lg-device-layout="rd-navbar-fixed"
+                 data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static"
+                 data-xxl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static"
+                 data-lg-stick-up-offset="10px" data-xl-stick-up-offset="10px" data-xxl-stick-up-offset="10px"
+                 data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
                 <div class="rd-navbar-main">
                     <!-- RD Navbar Panel-->
                     <div class="rd-navbar-panel">
                         <!-- RD Navbar Toggle-->
-                        <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
+                        <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span>
+                        </button>
                         <!-- RD Navbar Brand-->
-                        <div class="rd-navbar-brand"> <a class="brand" href="/"><img class="brand-logo-dark" src="/images/cut-logo-carpool.jpg" alt="" width="111" height="72" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a></div>
+                        <div class="rd-navbar-brand"><a class="brand" href="/"><img class="brand-logo-dark"
+                                                                                    src="/images/cut-logo-carpool.jpg"
+                                                                                    alt="" width="111" height="72"
+                                                                                    loading="lazy"
+                                                                                    srcset="/images/logo-222x66.png 2x"/></a>
+                        </div>
                     </div>
                     <div class="rd-navbar-nav-wrap">
                         <!-- RD Navbar Nav-->
@@ -54,22 +120,30 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="rd-navbar-element"><a class="button button-sm button-default-outline button-winona" href="/auth/logout">Log out</a>
-                        <button class="rd-navbar-aside-open-toggle" data-multitoggle="#rd-navbar-aside" aria-label="Sidebar toggle"> <span></span><span></span><span></span></button>
+                    <div class="rd-navbar-element"><a class="button button-sm button-default-outline button-winona"
+                                                      href="/auth/logout">Log out</a>
+                        <button class="rd-navbar-aside-open-toggle" data-multitoggle="#rd-navbar-aside"
+                                aria-label="Sidebar toggle"><span></span><span></span><span></span></button>
                     </div>
                     <div class="rd-navbar-dummy"></div>
                 </div>
                 <div class="rd-navbar-aside" id="rd-navbar-aside">
                     <div class="rd-navbar-aside-header">
                         <p class="rd-navbar-aside-title">Navigation</p>
-                        <button class="rd-navbar-aside-close-toggle linearicons-cross2" data-multitoggle="#rd-navbar-aside" data-scope=".rd-navbar" aria-label="Sidebar toggle"></button>
+                        <button class="rd-navbar-aside-close-toggle linearicons-cross2"
+                                data-multitoggle="#rd-navbar-aside" data-scope=".rd-navbar"
+                                aria-label="Sidebar toggle"></button>
                     </div>
                     <div class="rd-navbar-aside-main">
-                        <div class="rd-navbar-aside-group navbar" data-navbar="{&quot;stuck&quot;: false, &quot;anchor&quot;: {&quot;offsetRef&quot;: &quot;.rd-navbar-main&quot;}}">
+                        <div class="rd-navbar-aside-group navbar"
+                             data-navbar="{&quot;stuck&quot;: false, &quot;anchor&quot;: {&quot;offsetRef&quot;: &quot;.rd-navbar-main&quot;}}">
                             <div class="navbar-inner">
-                                <a class="rd-navbar-aside-link" href="/profile/my-organised-travels">My Organised Travels</a>
-                                <a class="rd-navbar-aside-link" href="/profile/my-travels-as-passenger">My Travels As Passenger</a>
-                                <a class="rd-navbar-aside-link" href="/profile/my-travel-applications">My Applications</a>
+                                <a class="rd-navbar-aside-link" href="/profile/my-organised-travels">My Organised
+                                    Travels</a>
+                                <a class="rd-navbar-aside-link" href="/profile/my-travels-as-passenger">My Travels As
+                                    Passenger</a>
+                                <a class="rd-navbar-aside-link" href="/profile/my-travel-applications">My
+                                    Applications</a>
                                 <a class="rd-navbar-aside-link" href="/profile/my-feedbacks">My Feedbacks</a>
                             </div>
                         </div>
@@ -101,32 +175,80 @@
     <!-- Available Vacancies-->
     <section class="section section-md bg-gray-100">
         <div class="container">
-<!--            <h3 class="text-center">Travel details</h3>-->
+            <!--            <h3 class="text-center">Travel details</h3>-->
             <div class="row row-30">
                 <div class="col-md-6">
                     <!-- Post Vacancy--><a class="post-vacancy">
                     <p class="post-vacancy-title" th:text="'Made by ' + ${travel.driver.username}"></p>
                     <div class="post-vacancy-meta">
                         <ul class="list-objects-inline">
-                            <li><span class="icon text-primary mdi mdi-map-marker"></span><span th:text="'From ' +${travel.startPoint}"></span></li>
-                            <li><span class="icon text-primary mdi mdi-map-marker"></span><span th:text="'To ' +${travel.endPoint}"></span></li>
-                            <li><span class="icon text-primary mdi mdi-clock"></span><span  th:text="${travel.durationMinutes / 60} + 'h ' + ${travel.durationMinutes % 60} + 'm long drive'" ></span></li>
-                            <li><span class="icon text-primary mdi mdi-map-marker"></span><span th:text="${travel.distanceKm} + ' Km drive'"></span></li>
-                            <li><span class="icon text-primary mdi mdi-calendar"></span>
-                                <time datetime="2023-01-01" th:text="${#temporals.format(travel.departureTime, 'dd MMMM yyyy HH:mm')}"></time>
+                            <li><span class="icon text-primary mdi mdi-map-marker"></span><span
+                                    th:text="'From ' +${travel.startPoint}"></span></li>
+                            <li><span class="icon text-primary mdi mdi-map-marker"></span><span
+                                    th:text="'To ' +${travel.endPoint}"></span></li>
+                            <li><span class="icon text-primary mdi mdi-clock"></span><span
+                                    th:text="${travel.durationMinutes / 60} + 'h ' + ${travel.durationMinutes % 60} + 'm long drive'"></span>
                             </li>
-                            <li><span th:text="${travel.driver.firstName + ' will be driving a ' + travel.car.colour.name + ' ' + travel.car.make.name + ' with licence plate ' + travel.car.plate}"></span></li>
-
+                            <li><span class="icon text-primary mdi mdi-map-marker"></span><span
+                                    th:text="${travel.distanceKm} + ' Km drive'"></span></li>
+                            <li><span class="icon text-primary mdi mdi-calendar"></span>
+                                <time datetime="2023-01-01"
+                                      th:text="${#temporals.format(travel.departureTime, 'dd MMMM yyyy HH:mm')}"></time>
+                            </li>
+                            <li>
+                                <div class="buttons-container" style="display:flex; justify-content:space-around;">
+                                    <form class="action-button" action="#" th:action="@{/travels/complete/{id}(id=${travel.id})}" method="post">
+                                        <button type="submit" class="button button-secondary button-winona wow clipInLeft">Mark as completed</button>
+                                    </form>
+                                     <form class="action-button" action="#" th:action="@{/travels/cancel/{id}(id=${travel.id})}" method="post">
+                                        <button type="submit" class="button button-secondary button-winona wow clipInLeft">Cancel</button>
+                                    </form>
+                                     <form class="action-button" action="#" th:action="@{/travels/update/{id}(id=${travel.id})}" method="get" >
+                                        <button type="submit" class="button button-secondary button-winona wow clipInLeft">Edit</button>
+                                    </form>
+                                </div>
+                            </li>
+                            <li><span
+                                    th:text="${travel.driver.firstName + ' will be driving a ' + travel.car.colour.name + ' ' + travel.car.make.name + ' with licence plate ' + travel.car.plate}"></span>
+                            </li>
                         </ul>
                         <ul>
-                            <li th:unless="${travel.departureTime.isAfter(now)}" th:each="user : ${usersToGiveFeedback}">
+                            <li th:unless="${travel.departureTime.isAfter(now)}"
+                                th:each="user : ${usersToGiveFeedback}">
                                 <span>Give feedback to </span>
-                                <form th:action="@{/feedbacks/{recipientId}/travel/{travelId}(recipientId=${user.id}, travelId=${travel.id})}" method="get">
-                                    <button class="button button-secondary button-winona wow clipInLeft" type="submit" th:text="${user.username}"></button>
+                                <form th:action="@{/feedbacks/{recipientId}/travel/{travelId}(recipientId=${user.id}, travelId=${travel.id})}"
+                                      method="get">
+                                    <button class="button button-secondary button-winona wow clipInLeft" type="submit"
+                                            th:text="${user.username}"></button>
                                 </form>
                             </li>
                         </ul>
-                    </div></a>
+                        <!-- Truncated comment preview -->
+                        <span th:unless="${travel.comment} == null" class="comment-preview" onclick="toggleComment(this.nextElementSibling, this)">
+                            <p th:text="${travel.driver.firstName} + ' said about the travel:'"></p>
+                            <span th:text="${travel.comment.comment}"></span>
+                        </span>
+
+                        <!-- Full comment (hidden by default) -->
+                        <div th:unless="${travel.comment} == null" class="full-comment" onclick="toggleComment(this, this.previousElementSibling)">
+                            <span th:utext="${#strings.replace(travel.comment.comment, '\n', '<br>')}"></span>
+                        </div>
+
+                        <script>
+                            // Function to toggle between showing the preview and full comment
+                            function toggleComment(fullElem, previewElem) {
+                                if (fullElem.style.display === 'none') {
+                                    fullElem.style.display = 'block';
+                                    previewElem.style.display = 'none';
+                                } else {
+                                    fullElem.style.display = 'none';
+                                    previewElem.style.display = 'block';
+                                }
+                            }
+                        </script>
+
+                    </div>
+                </a>
                 </div>
             </div>
         </div>
@@ -138,7 +260,11 @@
         <div class="footer-classic-main">
             <div class="container">
                 <div class="row row-50 justify-content-lg-between">
-                    <div class="col-sm-7 col-lg-3 col-xl-2"><a class="brand" href="/"><img class="brand-logo-dark" src="/images/cut-logo-carpool.jpg" alt="" width="111" height="72" loading="lazy" srcset="/images/logo-222x66.png 2x"/></a>
+                    <div class="col-sm-7 col-lg-3 col-xl-2"><a class="brand" href="/"><img class="brand-logo-dark"
+                                                                                           src="/images/cut-logo-carpool.jpg"
+                                                                                           alt="" width="111"
+                                                                                           height="72" loading="lazy"
+                                                                                           srcset="/images/logo-222x66.png 2x"/></a>
                         <p><span style="max-width: 250px;">We provide the best taxi services for you.</span></p>
                     </div>
                     <div class="col-sm-5 col-lg-3 col-xl-2">
@@ -163,7 +289,8 @@
                         <div class="row row-20 row-sm-35">
                             <div class="col-6 col-sm-12 col-lg-8 col-xl-12">
                                 <div class="row row-10 text-black">
-                                    <div class="col-lg-6 col-xl-12"><a href="mailto:#">car.pooling.a56@gmail.com</a></div>
+                                    <div class="col-lg-6 col-xl-12"><a href="mailto:#">car.pooling.a56@gmail.com</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -173,7 +300,8 @@
         </div>
         <div class="footer-classic-aside">
             <div class="container">
-                <p class="rights"><span>&copy;&nbsp; </span><span class="copyright-year"></span><span>. All Rights Reserved</span><span>.</span><span> Design&nbsp;by&nbsp;Alex, Dani & Simo</span></p>
+                <p class="rights"><span>&copy;&nbsp; </span><span class="copyright-year"></span><span>. All Rights Reserved</span><span>.</span><span> Design&nbsp;by&nbsp;Alex, Dani & Simo</span>
+                </p>
             </div>
         </div>
     </footer>

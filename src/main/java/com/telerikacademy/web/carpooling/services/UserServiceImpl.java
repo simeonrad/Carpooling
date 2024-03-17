@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void checkIfVerified(User user) {
         if (userRepository.getNonVerifiedById(user.getId()) != null) {
-            throw new UnauthorizedOperationException("Unverified users cannot create travels.");
+            throw new UnauthorizedOperationException("Unverified users cannot create travels or apply for travels.");
         }
     }
 

@@ -1,5 +1,6 @@
 package com.telerikacademy.web.carpooling.services;
 
+import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
 import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.web.carpooling.models.FilterTravelOptions;
@@ -115,10 +116,12 @@ public class TravelServiceImpl implements TravelService {
     public void cancel(User user, Travel travel) {
         if (travel.getDriver().equals(user)) {
             travel.setStatus(statusRepository.getByValue(ApplicationStatus.CANCELLED));
-            for (TravelApplication application : travelApplicationService.getByTravelId(travel.getId())) {
-                application.setStatus(statusRepository.getByValue(ApplicationStatus.DECLINED));
-                travelApplicationService.update(application);
-            }
+            try {
+                for (TravelApplication application : travelApplicationService.getByTravelId(travel.getId())) {
+                    application.setStatus(statusRepository.getByValue(ApplicationStatus.DECLINED));
+                    travelApplicationService.update(application);
+                }
+            } catch (EntityNotFoundException ignored){}
             travelRepository.update(travel);
             if (travel.getDepartureTime().isBefore(LocalDateTime.now())) {
                 throw new ForbiddenOperationException("You cannot cancel a travel after the departure time");

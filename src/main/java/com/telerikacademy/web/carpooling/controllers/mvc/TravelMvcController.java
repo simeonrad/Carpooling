@@ -213,8 +213,8 @@ public class TravelMvcController {
             }
 
             TravelDto travelDto = travelMapper.toDto(travel);
-            travelDto.setId(travel.getId());
             model.addAttribute("updateTravel", travelDto);
+            model.addAttribute("travelId", id);
             return "updateTravel";
         } catch (Exception e) {
             model.addAttribute("status", "Error finding travel: " + e.getMessage());
@@ -236,7 +236,7 @@ public class TravelMvcController {
                 model.addAttribute("status", "Unauthorized attempt to update travel");
                 return "404-page";
             }
-
+            existingTravel.setFreeSpots(travelDto.getFreeSpots());
             travelService.update(existingTravel, user);
 
             if (travelDto.getComment() != null && !travelDto.getComment().trim().isEmpty()) {
@@ -326,6 +326,38 @@ public class TravelMvcController {
             TravelApplication travelApplication = travelApplicationService.getById(id);
             travelApplicationService.cancel(user, travelApplication);
             return "redirect:/profile/my-travel-applications";
+
+        } catch (AuthenticationFailureException e) {
+            return "redirect:/auth/login";
+        } catch (ForbiddenOperationException | UnauthorizedOperationException | EntityNotFoundException e) {
+            model.addAttribute("status", e.getMessage());
+            return "404-page";
+        }
+
+    }
+    @PostMapping("/complete/{id}")
+    public String completeTravel(@PathVariable int id, Model model, HttpSession session) {
+        try {
+            User user = authenticationHelper.tryGetUser(session);
+            Travel travel = travelService.getById(id);
+            travelService.complete(user, travel);
+            return "redirect:/travels/" + id;
+
+        } catch (AuthenticationFailureException e) {
+            return "redirect:/auth/login";
+        } catch (ForbiddenOperationException | UnauthorizedOperationException | EntityNotFoundException e) {
+            model.addAttribute("status", e.getMessage());
+            return "404-page";
+        }
+
+    }
+    @PostMapping("/cancel/{id}")
+    public String cancelTravel(@PathVariable int id, Model model, HttpSession session) {
+        try {
+            User user = authenticationHelper.tryGetUser(session);
+            Travel travel = travelService.getById(id);
+            travelService.cancel(user, travel);
+            return "redirect:/travels/" + id;
 
         } catch (AuthenticationFailureException e) {
             return "redirect:/auth/login";
