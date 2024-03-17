@@ -258,7 +258,11 @@ public class TravelMvcController {
         try {
             User user = authenticationHelper.tryGetUser(session);
             if (user.equals(travelService.getById(id).getDriver())) {
-                List<TravelApplication> applications = travelApplicationService.getByTravelId(id);
+                List<TravelApplication> applications = new ArrayList<>();
+                try {
+                    applications = travelApplicationService.getByTravelId(id);
+                } catch (EntityNotFoundException ignored) {
+                }
                 model.addAttribute("applications", applications);
                 return "travel-applications-view";
             }
@@ -335,6 +339,7 @@ public class TravelMvcController {
         }
 
     }
+
     @PostMapping("/complete/{id}")
     public String completeTravel(@PathVariable int id, Model model, HttpSession session) {
         try {
@@ -351,6 +356,7 @@ public class TravelMvcController {
         }
 
     }
+
     @PostMapping("/cancel/{id}")
     public String cancelTravel(@PathVariable int id, Model model, HttpSession session) {
         try {
