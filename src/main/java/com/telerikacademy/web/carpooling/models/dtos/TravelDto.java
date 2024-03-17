@@ -3,7 +3,7 @@ package com.telerikacademy.web.carpooling.models.dtos;
 import java.time.LocalDateTime;
 
 public class TravelDto {
-    private int id;
+
     private String driverUsername;
     private String startPoint;
     private String endPoint;
@@ -26,13 +26,6 @@ public class TravelDto {
         this.carId = carId;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getDriverUsername() {
         return driverUsername;

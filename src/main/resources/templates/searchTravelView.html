@@ -122,6 +122,10 @@
         justify-content: center;
         width: 100%;
     }
+    .travel-buttons{
+        justify-content: center;
+        margin-bottom: 33px;
+    }
 </style>
 
 <body>
@@ -384,6 +388,7 @@
                         <th>Departure Time</th>
                         <th>Travel Status</th>
                         <th>Apply</th>
+                        <th>Open</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -395,7 +400,7 @@
                         <td th:text="${#temporals.format(travel.departureTime, 'yyyy-MM-dd HH:mm')}"></td>
                         <td th:text="${travel.status.status.toString().toLowerCase()}"></td>
                           <td>  <!-- Conditional rendering for Admin -->
-                            <div th:if="${isAdmin}">
+                            <div class="travel-buttons" th:if="${isAdmin}">
                                 <form th:action="@{/travels/delete/{id}(id=${travel.id})}" method="post" style="display:inline;">
                                     <input type="hidden" name="_method" value="delete"/>
                                     <button type="submit" class="button button-gray-700 button-winona">Delete</button>
@@ -406,6 +411,11 @@
                             <!-- Non-admin users see only the Apply button -->
                             <a th:if="${travel.departureTime.isAfter(now)}" th:unless="${isAdmin}" th:href="@{/travels/applications/create/{id}(id=${travel.id})}" class="button button-sm button-primary button-winona">Apply</a>
                         </td>
+                            <td>
+                                <form th:action="@{/travels/{travelId}(travelId=${travel.id})}" method="get">
+                                    <button class="button button-secondary button-winona wow clipInLeft" type="submit">Open</button>
+                                </form>
+                            </td>
                         </th:block>
                     </tr>
                     </tbody>
