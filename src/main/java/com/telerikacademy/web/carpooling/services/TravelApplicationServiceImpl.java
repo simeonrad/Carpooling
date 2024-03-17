@@ -42,9 +42,9 @@ public class TravelApplicationServiceImpl implements TravelApplicationService {
         if (application.getPassenger().equals(application.getTravel().getDriver())) {
             throw new ForbiddenOperationException("Travel organizer cannot apply for his own travel!");
         }
-//        if (application.getTravel().getDepartureTime().isBefore(LocalDateTime.now())) {
-//            throw ne
-//        }
+        if (application.getTravel().getDepartureTime().isBefore(LocalDateTime.now())) {
+            throw new ForbiddenOperationException("A travel with departure date already passed cannot be created");
+        }
         application.setStatus(statusRepository.getByValue(ApplicationStatus.PENDING));
         applicationRepository.create(application);
     }

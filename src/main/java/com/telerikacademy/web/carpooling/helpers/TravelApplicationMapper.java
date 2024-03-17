@@ -19,7 +19,7 @@ public class TravelApplicationMapper {
         this.travelApplicationService = travelApplicationService;
     }
     public TravelApplication fromDto(TravelApplicationDto travelApplicationDto, User author) {
-        TravelApplication travelApplication = new TravelApplication();
+        TravelApplication travelApplication;
         if (travelApplicationDto.getId() > 0) {
             // If ID is present, fetch the existing TravelApplication to update
             travelApplication = travelApplicationService.getById(travelApplicationDto.getId());
