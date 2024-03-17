@@ -807,6 +807,7 @@ public class UserServiceTests {
         doNothing().when(validationHelper).emailValidator(anyString());
         doNothing().when(validationHelper).passwordValidator(anyString());
         doNothing().when(emailSenderHelper).sendVerificationEmail(any(User.class), anyString());
+        doNothing().when(emailSenderHelper).sendVerificationEmail(any(User.class), anyString());
 
         // Act
         userService.create(newUser);
@@ -832,6 +833,71 @@ public class UserServiceTests {
         // Act & Assert
         assertThrows(DuplicateExistsException.class, () -> userService.create(existingUser));
     }
+
+    @Test
+    public void testGetTop10Passengers() {
+        List<User> expectedUsers = List.of(new User(), new User());
+        when(userRepository.getTop10Passengers()).thenReturn(expectedUsers);
+
+        List<User> result = userService.getTop10Passengers();
+
+        assertEquals(expectedUsers, result);
+        verify(userRepository, times(1)).getTop10Passengers();
+    }
+
+    @Test
+    public void testGetTop10Organisers() {
+        List<User> expectedUsers = List.of(new User(), new User());
+        when(userRepository.getTop10Organisers()).thenReturn(expectedUsers);
+
+        List<User> result = userService.getTop10Organisers();
+
+        assertEquals(expectedUsers, result);
+        verify(userRepository, times(1)).getTop10Organisers();
+    }
+
+    @Test
+    public void testGetAllNotDeleted() {
+        List<User> expectedUsers = List.of(new User(), new User());
+
+        when(userRepository.getAllNotDeleted()).thenReturn(expectedUsers);
+
+        List<User> result = userService.getAllNotDeleted();
+
+        // Assertions
+        assertEquals(expectedUsers, result, "The returned list of users should match the expected list");
+        verify(userRepository, times(1)).getAllNotDeleted();
+    }
+
+    @Test
+    public void testGetByUI() {
+        String ui = "uniqueIdentifier";
+        User expectedUser = new User();
+
+        when(userRepository.getByUI(ui)).thenReturn(expectedUser);
+
+        User resultUser = userService.getByUI(ui);
+
+        assertEquals(expectedUser, resultUser, "The returned user should match the expected user from the repository");
+        verify(userRepository, times(1)).getByUI(ui);
+    }
+
+    @Test
+    public void testIsUIExisting() {
+        String ui = "uniqueIdentifier";
+        boolean expectedResult = true;
+
+        when(userRepository.isUIExisting(ui)).thenReturn(expectedResult);
+
+        boolean result = userService.isUIExisting(ui);
+
+        assertEquals(expectedResult, result, "The isUIExisting method should return true when the UI exists in the repository");
+        verify(userRepository, times(1)).isUIExisting(ui);
+    }
+
+
+
+
 
 
 
