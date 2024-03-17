@@ -1,4 +1,5 @@
 package com.telerikacademy.web.carpooling.services;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -13,9 +14,10 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 @Service
-    public class DistanceAndDurationImpl implements DistanceAndDuration {
-        private static final String BING_MAPS_API_KEY = "Aq6tiRQgJzcgn1579PCo-aG7cIkC6TA6mCi4Z0Wn4tQvDqUtBrn5qYGHwx7MdWG_";
-        public int[] getRouteDetails(String startPoint, String endPoint) {
+public class DistanceAndDurationImpl implements DistanceAndDuration {
+    private static final String BING_MAPS_API_KEY = "Aq6tiRQgJzcgn1579PCo-aG7cIkC6TA6mCi4Z0Wn4tQvDqUtBrn5qYGHwx7MdWG_";
+
+    public int[] getRouteDetails(String startPoint, String endPoint) {
         try {
             String encodedStart = URLEncoder.encode(startPoint, StandardCharsets.UTF_8);
             String encodedEnd = URLEncoder.encode(endPoint, StandardCharsets.UTF_8);

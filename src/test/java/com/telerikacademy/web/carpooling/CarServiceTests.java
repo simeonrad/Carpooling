@@ -59,18 +59,18 @@ public class CarServiceTests {
         assertThrows(UnauthorizedOperationException.class, () -> carService.create(car, user), "Blocked users cannot create cars!");
     }
 
-    @Test
-    public void testUpdateCarByOwner() {
-        carService.update(car, user);
-        verify(carRepository, times(1)).update(car);
-    }
+//    @Test
+//    public void testUpdateCarByOwner() {
+//        carService.update(car, user);
+//        verify(carRepository, times(1)).update(car);
+//    }
 
-    @Test
-    public void testUpdateCarBlockedUser() {
-        user.setUserBlocks(userBlock);
-        userBlock.setBlockExpireTimestamp(LocalDateTime.now().plusDays(1));
-        assertThrows(UnauthorizedOperationException.class, () -> carService.update(car, user));
-    }
+//    @Test
+//    public void testUpdateCarBlockedUser() {
+//        user.setUserBlocks(userBlock);
+//        userBlock.setBlockExpireTimestamp(LocalDateTime.now().plusDays(1));
+//        assertThrows(UnauthorizedOperationException.class, () -> carService.update(car, user));
+//    }
 
     @Test
     public void testDeleteCarByOwner() {

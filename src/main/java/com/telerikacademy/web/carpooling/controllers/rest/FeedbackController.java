@@ -11,8 +11,14 @@ import com.telerikacademy.web.carpooling.models.dtos.FeedbackDto;
 import com.telerikacademy.web.carpooling.repositories.contracts.FeedbackRepository;
 import com.telerikacademy.web.carpooling.repositories.contracts.UserRepository;
 import com.telerikacademy.web.carpooling.services.contracts.FeedbackService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -39,6 +45,19 @@ public class FeedbackController {
     }
 
     @GetMapping
+    @Operation(
+            summary = "Get feedbacks for user",
+            description = "This method is used for getting feedbacks associated with a user.",
+            parameters = {@Parameter(name = "author", description = "This is the username of the author of the feedback"),
+                    @Parameter(name = "recipient", description = "This is the username of the recipient of the feedback"),
+                    @Parameter(name = "sortBy", description = "This is the the sorting for the feedbacks"),
+                    @Parameter(name = "sortOrder", description = "This is the sort order for the feedbacks")},
+                    responses = {@ApiResponse(responseCode = "200",
+            content = @Content(schema = @Schema(implementation = FeedbackDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE),
+            description = "Successful got feedbacks"),
+            @ApiResponse(responseCode = "404",
+                    description = "There is no such feedback or no feedbacks associated with the author/recipient")}
+    )
     public List<FeedbackDto> getFeedbacksForUser(@RequestParam(required = false) String author,
                                                  @RequestParam(required = false) String recipient,
                                                  @RequestParam(required = false) String sortBy,
@@ -55,6 +74,21 @@ public class FeedbackController {
     }
 
     @PostMapping
+    @Operation(
+            summary = "Creating a feedback",
+            description = "This method is used for creating feedback",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            schema = @Schema(implementation = FeedbackDto.class),
+                            mediaType = MediaType.APPLICATION_JSON_VALUE
+                    )),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful creation of a feedback", content = @Content(schema = @Schema(implementation = FeedbackDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE)),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized access - wrong username or password."),
+                    @ApiResponse(responseCode = "404", description = "Travel not found"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden - user cannot give feedback to him/herself.")
+            }
+    )
     public FeedbackDto create(@RequestBody FeedbackDto feedbackDto, @RequestHeader HttpHeaders headers) {
         try {
             User author = authenticationHelper.tryGetUser(headers);
@@ -73,6 +107,19 @@ public class FeedbackController {
     }
 
     @PutMapping
+    @Operation(
+            summary = "Updating a feedback",
+            description = "This method is used for updating feedback",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            schema = @Schema(implementation = FeedbackDto.class),
+                            mediaType = MediaType.APPLICATION_JSON_VALUE
+                    )),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful updating of a feedback", content = @Content(schema = @Schema(implementation = FeedbackDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE)),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized access - wrong username or password."),
+            }
+    )
     public FeedbackDto update(@RequestBody FeedbackDto feedbackDto, @RequestHeader HttpHeaders headers) {
         User author = authenticationHelper.tryGetUser(headers);
         int recipientId = userRepository.getByUsername(feedbackDto.getRecipient()).getId();
@@ -90,6 +137,19 @@ public class FeedbackController {
     }
 
     @DeleteMapping
+    @Operation(
+            summary = "Deleting a feedback",
+            description = "This method is used for deleting feedback",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                            schema = @Schema(implementation = FeedbackDto.class),
+                            mediaType = MediaType.APPLICATION_JSON_VALUE
+                    )),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful creation of a feedback", content = @Content(schema = @Schema(implementation = FeedbackDto.class), mediaType = MediaType.APPLICATION_JSON_VALUE)),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized access - wrong username or password."),
+                    }
+    )
     public String delete(@RequestBody FeedbackDto feedbackDto, @RequestHeader HttpHeaders headers) {
         User author = authenticationHelper.tryGetUser(headers);
         int recipientId = userRepository.getByUsername(feedbackDto.getRecipient()).getId();
