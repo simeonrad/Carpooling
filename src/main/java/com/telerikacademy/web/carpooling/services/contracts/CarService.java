@@ -8,8 +8,6 @@ import java.util.List;
 public interface CarService {
     void create(Car car, User user);
 
-    void update(Car car, User user);
-
     void delete(Car car, User user);
 
     Car getById(int id);

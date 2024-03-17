@@ -372,13 +372,14 @@
                         <th>Driver</th>
                         <th>Status</th>
                         <th>Cancel</th>
+                        <th>Edit</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="travelApplication : ${userTravelApplications}">
                         <td th:href="@{/travels/{id}(id=${travelApplication.travel.id})}" th:text="${travelApplication.travel.startPoint}"></td>
                         <td th:text="${travelApplication.travel.endPoint}"></td>
-                        <td th:text="${travelApplication.travel.departureTime}"></td>
+                        <td th:text="${#temporals.format(travelApplication.travel.departureTime, 'yyyy-MM-dd HH:mm')}"></td>
                         <td>
                             <a th:href="@{/users/{id}(id=${travelApplication.travel.driver.id})}" th:text="${travelApplication.travel.driver.username}"></a>
                         </td>
@@ -386,6 +387,11 @@
                         <td>
                             <form th:unless="${travelApplication.status.status.toString() == 'CANCELLED'}" th:action="@{/travels/applications/cancel/{id}(id=${travelApplication.id})}" method="post" style="display:inline;">
                                 <button type="submit" class="button button-gray-700 button-winona" th:text="Cancel"></button>
+                            </form>
+                        </td>
+                        <td >
+                            <form th:if="${travelApplication.travel.departureTime.isAfter(now)}" th:unless="${travelApplication.status.status.toString() == 'CANCELLED'}" th:action="@{/travels/applications/update/{id}(id=${travelApplication.id})}" method="get" style="display:inline;">
+                                <button type="submit" class="button button-gray-700 button-winona" th:text="Edit"></button>
                             </form>
                         </td>
                     </tr>

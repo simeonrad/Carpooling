@@ -19,6 +19,13 @@ create table engine_types
     type           varchar(15) not null
 );
 
+create table locations
+(
+    location_id int auto_increment
+        primary key,
+    value       varchar(45) not null
+);
+
 create table roles
 (
     role_id   int auto_increment
@@ -136,7 +143,8 @@ create table applications
     luggage        tinyint(1) default 0 not null,
     pet            tinyint(1) default 0 not null,
     constraint applications_ibfk_1
-        foreign key (travel_id) references travels (travel_id),
+        foreign key (travel_id) references travels (travel_id)
+            on update cascade on delete cascade,
     constraint applications_ibfk_2
         foreign key (passenger_id) references users (user_id),
     constraint applications_statuses_status_id_fk
@@ -214,3 +222,4 @@ create table user_blocks
         foreign key (user_id) references users (user_id)
             on delete cascade
 );
+

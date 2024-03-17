@@ -17,6 +17,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
+
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
@@ -347,6 +349,7 @@ public class ProfileController {
 
         model.addAttribute("userTravelApplications", userTravelApplications);
         model.addAttribute("profileUser", currentUser);
+        model.addAttribute("now", LocalDateTime.now());
 
         return "my-travel-applications-dashboard";
     }

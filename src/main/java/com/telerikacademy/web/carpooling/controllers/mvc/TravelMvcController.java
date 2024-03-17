@@ -258,8 +258,13 @@ public class TravelMvcController {
         try {
             User user = authenticationHelper.tryGetUser(session);
             if (user.equals(travelService.getById(id).getDriver())) {
-                List<TravelApplication> applications = travelApplicationService.getByTravelId(id);
+                List<TravelApplication> applications = new ArrayList<>();
+                try {
+                    applications = travelApplicationService.getByTravelId(id);
+                } catch (EntityNotFoundException ignored) {
+                }
                 model.addAttribute("applications", applications);
+                model.addAttribute("now", LocalDateTime.now());
                 return "travel-applications-view";
             }
         } catch (AuthenticationFailureException e) {
@@ -335,6 +340,7 @@ public class TravelMvcController {
         }
 
     }
+
     @PostMapping("/complete/{id}")
     public String completeTravel(@PathVariable int id, Model model, HttpSession session) {
         try {
@@ -351,6 +357,7 @@ public class TravelMvcController {
         }
 
     }
+
     @PostMapping("/cancel/{id}")
     public String cancelTravel(@PathVariable int id, Model model, HttpSession session) {
         try {
@@ -427,6 +434,7 @@ public class TravelMvcController {
             Travel travel = application.getTravel();
 
             if (!application.getPassenger().equals(currentUser)) {
+                model.addAttribute("status", "Only authors can edit applications!");
                 return "404-page";
             }
 

@@ -162,8 +162,8 @@
     <section class="section section-md">
         <div class="container">
         </div>
-        <div th:if="${applications.isEmpty()}">
-            <h2>No Applications Found</h2>
+        <div class="container" th:if="${applications.isEmpty()}">
+            <center> <h2>No Applications Found</h2></center>
         </div>
     </section>
     <section th:unless="${applications.isEmpty()}" class="section section-md">
@@ -174,6 +174,9 @@
                     <tr>
                         <th>Username</th>
                         <th>Status</th>
+                        <th>Smoker</th>
+                        <th>Has luggage</th>
+                        <th>Has a pet</th>
                         <th>Approve</th>
                         <th>Decline</th>
                     </tr>
@@ -183,6 +186,9 @@
                         <td th:href="@{/applications/{id}(id=${applicationObject.id})}"
                             th:text="${applicationObject.passenger.username}"></td>
                         <td th:text="${applicationObject.status.status.toString().toLowerCase()}"></td>
+                        <td th:text="${applicationObject.smoke ? 'Yes' : 'No'}">Smoke</td>
+                        <td th:text="${applicationObject.luggage ? 'Yes' : 'No'}">Luggage</td>
+                        <td th:text="${applicationObject.pet ? 'Yes' : 'No'}">Pet</td>
                         <td>
                                 <form th:unless="${applicationObject.status.status.toString() == 'APPROVED'}" th:action="@{/travels/applications/approve/{id}(id=${applicationObject.id})}" method="post" style="display:inline;">
                                     <button type="submit" class="button button-sm button-primary button-winona">Approve</button>
