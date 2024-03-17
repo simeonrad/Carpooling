@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 public class FeedbackMapper {
     private final TravelRepository travelRepository;
     private final UserRepository userRepository;
-    public FeedbackMapper(TravelRepository travelRepository, UserRepository userRepository){
+
+    public FeedbackMapper(TravelRepository travelRepository, UserRepository userRepository) {
         this.travelRepository = travelRepository;
         this.userRepository = userRepository;
     }
@@ -23,15 +24,16 @@ public class FeedbackMapper {
         feedback.setAuthor(author);
         feedback.setRecipient(userRepository.getByUsername(feedbackDto.getRecipient()));
         feedback.setRating(feedbackDto.getRating());
-        if (feedbackDto.getComment() != null){
+        if (feedbackDto.getComment() != null && !feedbackDto.getComment().isBlank()) {
             FeedbackComment feedbackComment = new FeedbackComment();
             feedbackComment.setComment(feedbackDto.getComment());
-        feedback.setComment(feedbackComment);
+            feedbackComment.setFeedback(feedback);
+            feedback.setComment(feedbackComment);
         }
         return feedback;
     }
 
-    public FeedbackDto toDto (Feedback feedback, FeedbackDto feedbackDtoNew) {
+    public FeedbackDto toDto(Feedback feedback, FeedbackDto feedbackDtoNew) {
         FeedbackDto feedbackDto = new FeedbackDto();
         feedbackDto.setTravelId(feedback.getTravel().getId());
         feedbackDto.setRecipient(feedback.getRecipient().getUsername());

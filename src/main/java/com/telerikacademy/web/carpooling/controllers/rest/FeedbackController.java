@@ -107,7 +107,7 @@ public class FeedbackController {
 
     public FeedbackDto convertToDto(Feedback feedback) {
         String recipientName = feedback.getRecipient().getFirstName() + " " + feedback.getRecipient().getLastName();
-        String comment = feedback.getComment().getComment();
+        String comment = feedback.getComment() != null ? feedback.getComment().getComment() : "-";
         return new FeedbackDto(feedback.getTravel().getId(), recipientName, feedback.getRating(), comment);
     }
 }
