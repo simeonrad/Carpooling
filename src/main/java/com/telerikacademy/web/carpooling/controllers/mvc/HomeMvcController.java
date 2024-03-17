@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import java.util.List;
 
 @Controller
 @RequestMapping("/")
@@ -58,5 +59,19 @@ public class HomeMvcController {
     @GetMapping("/about-us")
     public String showAboutUsPage() {
         return "about-us-page";
+    }
+
+    @GetMapping("/top-10-passengers")
+    public String showTop10PassengersPage(Model model) {
+        List<User> top10Passengers = userService.getTop10Passengers();
+        model.addAttribute("top10Passengers", top10Passengers);
+        return "top-10-passengers-page";
+    }
+
+    @GetMapping("/top-10-organisers")
+    public String showTop10OrganisersPage(Model model) {
+        List<User> top10Organisers = userService.getTop10Organisers();
+        model.addAttribute("top10Organisers", top10Organisers);
+        return "top-10-organisers-page";
     }
 }

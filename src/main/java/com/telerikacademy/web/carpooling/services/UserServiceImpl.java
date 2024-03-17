@@ -10,21 +10,13 @@ import com.telerikacademy.web.carpooling.repositories.contracts.RoleRepository;
 import com.telerikacademy.web.carpooling.repositories.contracts.UserRepository;
 import com.telerikacademy.web.carpooling.services.contracts.UserBlockService;
 import com.telerikacademy.web.carpooling.services.contracts.UserService;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import jakarta.validation.Valid;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
-import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -200,6 +192,16 @@ public class UserServiceImpl implements UserService {
             throw new UnauthorizedOperationException(REGULAR_USERS_UNAUTHORIZED_OPERATION);
         }
         return userRepository.get(filterUserOptions);
+    }
+
+    @Override
+    public List<User> getTop10Passengers() {
+        return userRepository.getTop10Passengers();
+    }
+
+    @Override
+    public List<User> getTop10Organisers() {
+        return userRepository.getTop10Organisers();
     }
 
     @Override

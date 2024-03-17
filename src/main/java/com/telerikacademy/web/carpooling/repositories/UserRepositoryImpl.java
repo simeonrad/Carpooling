@@ -154,6 +154,51 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public List<User> getTop10Passengers() {
+        try (Session session = sessionFactory.openSession()) {
+            Query<User> query = session.createQuery(
+                    "SELECT u " +
+                            "FROM User u " +
+                            "JOIN Feedback f ON u.id = f.recipient.id " +
+                            "JOIN TravelApplication a ON u.id = a.passenger.id " +
+                            "JOIN Travel t ON a.travel.id = t.id " +
+                            "WHERE u.id != t.driver.id " +
+                            "GROUP BY u.id " +
+                            "ORDER BY AVG(f.rating) DESC",
+                    User.class
+            );
+            query.setMaxResults(10);
+            List<User> result = query.list();
+
+            if (result.isEmpty()) {
+                throw new EntityNotFoundException("No passengers found with ratings");
+            }
+            return result;
+        }
+    }
+
+    @Override
+    public List<User> getTop10Organisers() {
+        try (Session session = sessionFactory.openSession()) {
+            Query<User> query = session.createQuery(
+                    "SELECT u " +
+                            "FROM User u, Feedback f, Travel t " +
+                            "WHERE u.id = f.recipient.id AND t.driver.id = u.id " +
+                            "GROUP BY u.id " +
+                            "ORDER BY AVG(f.rating) DESC",
+                    User.class
+            );
+            query.setMaxResults(10);
+            List<User> result = query.list();
+
+            if (result.isEmpty()) {
+                throw new EntityNotFoundException("No drivers found with ratings");
+            }
+            return result;
+        }
+    }
+
+    @Override
     public Page<User> get(FilterUserOptions filterOptions, Pageable pageable) {
         try (Session session = sessionFactory.openSession()) {
             List<String> filters = new ArrayList<>();

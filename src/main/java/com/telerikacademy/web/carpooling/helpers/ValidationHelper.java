@@ -37,7 +37,7 @@ public class ValidationHelper {
 
 
     public String passwordValidator(String password) {
-        String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[+\\-*&^._|\\\\]).{8,}$";
+        String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[+\\-*&^.!_|\\\\]).{8,}$";
         Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEX);
 
         Matcher matcher = PASSWORD_PATTERN.matcher(password);

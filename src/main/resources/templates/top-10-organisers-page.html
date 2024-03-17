@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html class="wide wow-animation" lang="en">
+<head>
+    <title>Top 10 Organisers</title>
+    <meta name="viewport" content="width=device-width height=device-height initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/userSectionStyle.css">
+</head>
+<style>
+    .flex-container {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .button {
+        height: 38px;
+        align-content: center;
+    }
+
+    .button {
+        padding: 5px 15px;
+        font-size: 14px;
+    }
+
+    .button {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        font-size: smaller;
+        line-height: 1;
+    }
+
+    .form-wrap, .form-wrap.form-button {
+        flex: 1;
+        min-width: 90px;
+    }
+
+    .form-wrap {
+        margin: 10px;
+    }
+
+    .travel-is-empty {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        text-align: center;
+    }
+
+    .form-button {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+</style>
+<body>
+<div class="preloader" id="loading">
+    <div class="preloader-body">
+        <div id="loading-center-object">
+            <div class="object" id="object_four"></div>
+            <div class="object" id="object_three"></div>
+            <div class="object" id="object_two"></div>
+            <div class="object" id="object_one"></div>
+        </div>
+    </div>
+</div>
+<div class="page">
+    <header class="section page-header page-header-4">
+        <!-- RD Navbar-->
+        <div class="rd-navbar-wrap">
+            <nav class="rd-navbar rd-navbar-modern" data-layout="rd-navbar-fixed" data-sm-layout="rd-navbar-fixed"
+                 data-md-layout="rd-navbar-fixed" data-md-device-layout="rd-navbar-fixed"
+                 data-lg-layout="rd-navbar-fixed" data-lg-device-layout="rd-navbar-fixed"
+                 data-xl-layout="rd-navbar-static" data-xl-device-layout="rd-navbar-static"
+                 data-xxl-layout="rd-navbar-static" data-xxl-device-layout="rd-navbar-static"
+                 data-lg-stick-up-offset="10px" data-xl-stick-up-offset="10px" data-xxl-stick-up-offset="10px"
+                 data-lg-stick-up="true" data-xl-stick-up="true" data-xxl-stick-up="true">
+                <div class="rd-navbar-main">
+                    <!-- RD Navbar Panel-->
+                    <div class="rd-navbar-panel">
+                        <!-- RD Navbar Toggle-->
+                        <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span>
+                        </button>
+                        <!-- RD Navbar Brand-->
+                        <div class="rd-navbar-brand"><a class="brand" href="/"><img class="brand-logo-dark"
+                                                                                    src="/images/cut-logo-carpool.jpg"
+                                                                                    alt="" width="111" height="72"
+                                                                                    loading="lazy"
+                                                                                    srcset="/images/logo-111x33.png 2x"/></a>
+                        </div>
+                    </div>
+                    <div class="rd-navbar-nav-wrap">
+                        <!-- RD Navbar Nav-->
+                        <ul class="rd-navbar-nav">
+                            <li class="rd-nav-item"><a class="rd-nav-link" href="/travels/create">Create a travel</a>
+                            </li>
+                            <li class="rd-nav-item"><a class="rd-nav-link" href="/travels/search-travels">Travels</a>
+                            </li>
+                            <li th:if="${isAuthenticated}"><a class="rd-nav-link" href="/profile">Profile</a></li>
+                            <!-- RD Navbar Megamenu-->
+                            <div class="rd-menu rd-navbar-megamenu">
+                                <ul class="rd-navbar-megamenu-inner">
+                                    <li class="rd-megamenu-item">
+                                        <ul class="rd-megamenu-list">
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="typography.html">Typography</a>
+                                            </li>
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="buttons.html">Buttons</a>
+                                            </li>
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="forms.html">Forms</a></li>
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="tabs-and-accordions.html">Tabs
+                                                and Accordions</a></li>
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="progress-bars.html">Progress
+                                                bars</a></li>
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="tables.html">Tables</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="rd-megamenu-item">
+                                        <ul class="rd-megamenu-list">
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="gallery.html">Gallery</a>
+                                            </li>
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="services.html">Services</a>
+                                            </li>
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="services-2.html">Services
+                                                2</a></li>
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="pricing.html">Pricing</a>
+                                            </li>
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="careers.html">Careers</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="rd-megamenu-item">
+                                        <ul class="rd-megamenu-list">
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="grid-system.html">Grid
+                                                system</a></li>
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="privacy-policy.html">Privacy
+                                                policy</a></li>
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="404-page.html">404 Page</a>
+                                            </li>
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="coming-soon.html">Coming
+                                                Soon</a></li>
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="search-results.html">Search
+                                                results</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="rd-megamenu-item">
+                                        <ul class="rd-megamenu-list">
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="contact-us.html">Contact
+                                                Us</a></li>
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="login.html">Login</a></li>
+                                            <li class="rd-megamenu-list-item"><a class="rd-megamenu-list-link"
+                                                                                 href="../templates/register.html">Register</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="rd-navbar-element">
+                        <div th:if="${!isAuthenticated}">
+                            <a class="button button-sm button-default-outline button-winona" href="/auth/login">Log
+                                in</a>
+                        </div>
+                        <div th:if="${isAuthenticated}">
+                            <a class="button button-sm button-default-outline button-winona" href="/auth/logout">Log
+                                out</a>
+                        </div>
+                        <button class="rd-navbar-aside-open-toggle" data-multitoggle="#rd-navbar-aside"
+                                aria-label="Sidebar toggle"><span></span><span></span><span></span></button>
+                    </div>
+                    <div class="rd-navbar-dummy"></div>
+                </div>
+                <div class="rd-navbar-aside" id="rd-navbar-aside">
+                    <div class="rd-navbar-aside-header">
+                        <p class="rd-navbar-aside-title">Navigation</p>
+                        <button class="rd-navbar-aside-close-toggle linearicons-cross2"
+                                data-multitoggle="#rd-navbar-aside" data-scope=".rd-navbar"
+                                aria-label="Sidebar toggle"></button>
+                    </div>
+                    <div class="rd-navbar-aside-main">
+                        <div class="rd-navbar-aside-group navbar"
+                             data-navbar="{&quot;stuck&quot;: false, &quot;anchor&quot;: {&quot;offsetRef&quot;: &quot;.rd-navbar-main&quot;}}">
+                            <div class="navbar-inner">
+                                <a th:if="${isAuthenticated}" class="rd-navbar-aside-link" href="/profile/my-organised-travels">My Organised Travels</a>
+                                <a th:if="${isAuthenticated}" class="rd-navbar-aside-link" href="/profile/my-travels-as-passenger">My Travels As Passenger</a>
+                                <a th:if="${isAuthenticated}" class="rd-navbar-aside-link" href="/profile/my-travel-applications">My Applications</a>
+                                <a th:if="${isAuthenticated}" class="rd-navbar-aside-link" href="/profile/my-feedbacks">My Feedbacks</a>
+                                <a th:unless="${isAuthenticated}" class="rd-navbar-aside-link" href="/auth/register">Register</a>
+                                <a class="rd-navbar-aside-link" href="/top-10-passengers">Top 10 Passengers</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <section class="breadcrumbs-custom">
+        <div class="breadcrumbs-custom-main context-dark">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-9">
+                        <h2 class="breadcrumbs-custom-title">Top 10 Organiser</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="breadcrumbs-custom-aside">
+            <div class="container">
+                <ul class="breadcrumbs-custom-path">
+                    <li><a href="/">Home</a></li>
+                    <li class="active">Top 10 Organisers</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+
+    <!--    <h3 style="text-align: center; margin-top: 20px;">My Applications</h3>-->
+
+
+    <section th:unless="${top10Organisers.isEmpty()}" class="section section-mdDashboard">
+        <div class="container">
+            <div class="table-outer table-rounded table-responsive-lg">
+                <table class="table-custom table-custom-primary">
+                    <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Rating</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="organiser : ${top10Organisers}">
+                        <td>
+                            <a th:href="@{/users/{id}(id=${organiser.id})}" th:text="${organiser.username}"></a>
+                        </td>
+                        <td th:text="${#numbers.formatDecimal(organiser.feedback, 1, 2)}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Page Footer-->
+    <footer class="section footer-classic">
+        <div class="footer-classic-main">
+            <div class="container">
+                <div class="row row-50 justify-content-lg-between">
+                    <div class="col-sm-7 col-lg-3 col-xl-2"><a class="brand" href="/"><img class="brand-logo-dark"
+                                                                                           src="/images/cut-logo-carpool.jpg"
+                                                                                           alt="" width="111"
+                                                                                           height="72" loading="lazy"
+                                                                                           srcset="/images/logo-222x66.png 2x"/></a>
+                        <p><span style="max-width: 250px;">We provide the best taxi services for you.</span></p>
+                    </div>
+                    <div class="col-sm-5 col-lg-3 col-xl-2">
+                        <h5 class="footer-classic-title">About</h5>
+                        <ul class="list footer-classic-list">
+                            <li><a href="/about-us">About Us</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-7 col-lg-5 col-xl-3">
+                        <h5 class="footer-classic-title">Quick Links</h5>
+                        <ul class="list footer-classic-list footer-classic-list_2-cols">
+                            <li th:unless="${isAuthenticated}"><a href="/auth/register">Register</a></li>
+                            <li th:unless="${isAuthenticated}"><a href="/auth/login">Log in</a></li>
+                            <li th:unless="${isAuthenticated}"><a href="/travels/search-travels">All Travels</a></li>
+                            <li th:if="${isAuthenticated}"><a href="/travels/create">Create A Travel</a></li>
+                            <li th:if="${isAuthenticated}"><a href="/travels/search-travels">All Travels</a></li>
+                            <li th:if="${isAuthenticated}"><a href="/profile">Profile</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-5 col-lg-9 col-xl-2">
+                        <h5 class="footer-classic-title">Contacts</h5>
+                        <div class="row row-20 row-sm-35">
+                            <div class="col-6 col-sm-12 col-lg-8 col-xl-12">
+                                <div class="row row-10 text-black">
+                                    <div class="col-lg-6 col-xl-12"><a href="mailto:#">car.pooling.a56@gmail.com</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-classic-aside">
+            <div class="container">
+                <p class="rights"><span>&copy;&nbsp; </span><span class="copyright-year"></span><span>. All Rights Reserved</span><span>.</span><span> Design&nbsp;by&nbsp;Alex, Dani & Simo</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+</div>
+<div class="snackbars" id="form-output-global"></div>
+<script src="/js/core.min.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

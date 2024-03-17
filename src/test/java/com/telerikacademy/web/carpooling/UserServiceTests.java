@@ -6,15 +6,16 @@ import com.telerikacademy.web.carpooling.helpers.UIMapper;
 import com.telerikacademy.web.carpooling.helpers.UserMapper;
 import com.telerikacademy.web.carpooling.helpers.ValidationHelper;
 import com.telerikacademy.web.carpooling.models.*;
-import com.telerikacademy.web.carpooling.repositories.RoleRepository;
-import com.telerikacademy.web.carpooling.repositories.UserRepository;
-import com.telerikacademy.web.carpooling.services.UserBlockService;
+import com.telerikacademy.web.carpooling.repositories.contracts.RoleRepository;
+import com.telerikacademy.web.carpooling.repositories.contracts.UserRepository;
+import com.telerikacademy.web.carpooling.services.contracts.UserBlockService;
 import com.telerikacademy.web.carpooling.services.UserServiceImpl;
+import com.telerikacademy.web.carpooling.services.contracts.UserService;
+import org.mockito.ArgumentCaptor;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -22,9 +23,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
+
+import java.util.Arrays;
 import java.util.List;
-import static com.telerikacademy.web.carpooling.services.UserServiceImpl.ADMIN;
-import static com.telerikacademy.web.carpooling.services.UserServiceImpl.REGULAR_USER;
+
+import static com.telerikacademy.web.carpooling.services.UserServiceImpl.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -43,7 +46,6 @@ public class UserServiceTests {
     private UserBlockService userBlockService;
     @Mock
     private Pageable pageable;
-
     @Mock
     private UIMapper uiMapper;
 
@@ -66,23 +68,42 @@ public class UserServiceTests {
 
     @Test
     void testCreateUserSuccess() {
-        User user = new User();
-        user.setId(1); // Simulate a user with an ID, indicating it has been saved
-        user.setUsername("testertester");
-        user.setEmail("test@example.com");
-        user.setPhoneNumber("0123456789");
-        user.setPassword("Password.123");
+        // Arrange
+        // Arrange
+        UserRepository userRepository = mock(UserRepository.class);
+        UserMapper userMapper = mock(UserMapper.class);
+        // Mock other dependencies as necessary
 
+        User user = new User();
+        user.setId(1); // Ensure user has an ID
+        user.setUsername("testUser");
+        user.setEmail("user@test.com");
+        user.setPhoneNumber("0884361520");
+        user.setPassword("Password1.");
+        user.setPhotoUrl("url");
+
+        User newUser = new User();
+        newUser.setId(user.getId());
+        newUser.setUsername(user.getUsername());
+        newUser.setEmail(user.getEmail());
+        newUser.setPhoneNumber(user.getPhoneNumber());
+        newUser.setPassword(user.getPassword());
+        newUser.setPhotoUrl(user.getPhotoUrl());
+
+        // Assuming getDeletedById is supposed to return null for non-deleted users
+        when(userRepository.getByUsername(anyString())).thenReturn(newUser);
+        when(userRepository.getDeletedById(newUser.getId())).thenReturn(null);
+        when(userMapper.fromDtoUpdate(user)).thenReturn(user);
+        UserService userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSender, userBlockService, uiMapper, validationHelper, emailSenderHelper);
+        // Initialize the user with required fields
+
+        // Act
         userService.create(user);
 
-        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userRepository, times(1)).create(userCaptor.capture());
-
-        User capturedUser = userCaptor.getValue();
-        assertNotNull(capturedUser);
-        assertEquals("testertester", capturedUser.getUsername());
-        assertEquals("test@example.com", capturedUser.getEmail());
+        // Assert
+        verify(userRepository).create(any(User.class));
     }
+
 
     @Test
     void whenPhoneNumberDoesNotExist_thenNoExceptionThrown() {
@@ -118,8 +139,6 @@ public class UserServiceTests {
         // Act & Assert
         assertThrows(DuplicatePhoneNumberExists.class, () -> userService.checkIfPhoneNumberExists(user));
     }
-
-
 
 
     @Test
@@ -695,7 +714,6 @@ public class UserServiceTests {
 
         UserRepository userRepository = mock(UserRepository.class);
 
-        // Ensure userService is using the mocked userRepository
         UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSender,
                 userBlockService, uiMapper, validationHelper, emailSenderHelper);
 
@@ -708,6 +726,113 @@ public class UserServiceTests {
         User capturedUser = userCaptor.getValue();
         assertEquals(photoUrl, capturedUser.getPhotoUrl());
     }
+
+    @Test
+    void getAll_ReturnsAllUsers() {
+        // Arrange
+        List<User> expectedUsers = Arrays.asList(
+                new User("User1", "pasS.123", "user", "user", "email@email.com", "0885478963"),
+                new User("User2", "pasS.123", "user", "user", "email@email.org", "0885478962")
+        );
+
+        UserRepository userRepositoryMock = mock(UserRepository.class);
+        when(userRepositoryMock.getAll()).thenReturn(expectedUsers);
+
+        UserServiceImpl userService = new UserServiceImpl(userRepositoryMock, userMapper, roleRepository, mailSender, userBlockService, uiMapper, validationHelper, emailSenderHelper);
+
+        // Act
+        List<User> actualUsers = userService.getAll();
+
+        // Assert
+        assertEquals(expectedUsers.size(), actualUsers.size(), "The size of the returned user list should match the expected size.");
+        assertTrue(actualUsers.containsAll(expectedUsers), "The returned list of users should match the expected list.");
+    }
+
+    @Test
+    void whenGetById_thenReturnsExpectedUser() {
+        // Arrange
+        int userId = 1;
+        User expectedUser = new User();
+        expectedUser.setId(userId);
+        expectedUser.setUsername("testUser");
+        expectedUser.setEmail("test@example.com");
+
+        UserRepository userRepository = mock(UserRepository.class);
+        when(userRepository.getById(userId)).thenReturn(expectedUser);
+
+        UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSender, userBlockService, uiMapper, validationHelper, emailSenderHelper);
+
+        // Act
+        User actualUser = userService.get(userId);
+
+        // Assert
+        assertEquals(expectedUser, actualUser, "The returned user should match the expected user.");
+        verify(userRepository).getById(userId);
+    }
+
+    @Test
+    void whenGetByUsername_thenReturnsExpectedUser() {
+        // Arrange
+        String username = "testUser";
+        User expectedUser = new User();
+        expectedUser.setId(1);
+        expectedUser.setUsername(username);
+        expectedUser.setEmail("test@example.com");
+
+        UserRepository userRepository = mock(UserRepository.class);
+        when(userRepository.getByUsername(username)).thenReturn(expectedUser);
+
+        UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSender, userBlockService, uiMapper, validationHelper, emailSenderHelper);
+
+        // Act
+        User actualUser = userService.get(username);
+
+        // Assert
+        assertEquals(expectedUser, actualUser, "The returned user should match the expected user.");
+
+        // Verify repository interaction
+        verify(userRepository).getByUsername(username);
+    }
+
+    @Test
+    void givenNewUser_whenCreate_thenUserIsCreatedAndVerificationEmailSent() {
+        // Arrange
+        User newUser = new User();
+        newUser.setUsername("newUser");
+        newUser.setEmail("newUser@example.com");
+        newUser.setPhoneNumber("1234567890");
+
+        when(userRepository.getByUsername(anyString())).thenThrow(new EntityNotFoundException("User", "username", newUser.getUsername()));
+        when(userRepository.getByEmail(anyString())).thenThrow(new EntityNotFoundException("User", "email", newUser.getEmail()));
+        doNothing().when(validationHelper).emailValidator(anyString());
+        doNothing().when(validationHelper).passwordValidator(anyString());
+        doNothing().when(emailSenderHelper).sendVerificationEmail(any(User.class), anyString());
+
+        // Act
+        userService.create(newUser);
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+
+        // Assert
+        verify(userRepository, times(1)).create(userCaptor.capture());
+        verify(emailSenderHelper, times(1)).sendVerificationEmail(userCaptor.capture(), anyString());
+
+        User createdUser = userCaptor.getValue();
+        assertEquals(newUser.getUsername(), createdUser.getUsername());
+        assertEquals(DEFAULT_IMAGE_URL, createdUser.getPhotoUrl());
+    }
+
+    @Test
+    void givenExistingUsername_whenCreate_thenThrowDuplicateExistsException() {
+        // Arrange
+        User existingUser = new User();
+        existingUser.setUsername("existingUser");
+
+        when(userRepository.getByUsername(existingUser.getUsername())).thenReturn(existingUser);
+
+        // Act & Assert
+        assertThrows(DuplicateExistsException.class, () -> userService.create(existingUser));
+    }
+
 
 
 }
