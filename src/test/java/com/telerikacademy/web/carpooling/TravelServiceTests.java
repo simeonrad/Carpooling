@@ -7,8 +7,6 @@ import com.telerikacademy.web.carpooling.repositories.contracts.StatusRepository
 import com.telerikacademy.web.carpooling.repositories.contracts.TravelRepository;
 import com.telerikacademy.web.carpooling.services.contracts.DistanceAndDuration;
 import com.telerikacademy.web.carpooling.services.TravelServiceImpl;
-import com.telerikacademy.web.carpooling.services.contracts.TravelApplicationService;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -19,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -46,10 +43,7 @@ public class TravelServiceTests {
     private DistanceAndDuration distanceAndDuration;
     @Mock
     private UserBlockService userBlockService;
-    @Mock
-    private TravelApplicationService travelApplicationService;
-    @Mock
-    private Page<Travel> travelPage;
+
 
     @Mock
     private Pageable pageable;
@@ -62,7 +56,6 @@ public class TravelServiceTests {
 
     private User user;
     private Travel travel;
-    private ApplicationStatus plannedStatusEnum;
     private Status plannedStatus;
 
 
@@ -72,6 +65,7 @@ public class TravelServiceTests {
         user.setId(1);
         travel = new Travel();
         plannedStatus = new Status();
+        ApplicationStatus plannedStatusEnum = ApplicationStatus.PLANNED;
         plannedStatus.setStatus(plannedStatusEnum);
 
         Mockito.lenient().when(statusRepository.getByValue(ApplicationStatus.PLANNED)).thenReturn(plannedStatus);
@@ -263,19 +257,6 @@ public class TravelServiceTests {
         assertEquals(expectedPage.getTotalElements(), result.getTotalElements(), "Total elements should match");
         assertFalse(result.getContent().isEmpty(), "Content should not be empty");
     }
-
-//    @Test
-//    void createTravel_WithValidUser_CreatesTravelSuccessfully() {
-//        travel.setStartPoint("Start");
-//        travel.setEndPoint("End");
-//
-//        travelService.create(travel, user);
-//
-//        verify(travelRepository).create(travel);
-//        assertEquals(plannedStatus, travel.getStatus());
-//        assertEquals(100, travel.getDistanceKm());
-//        assertEquals(60, travel.getDurationMinutes());
-//    }
 
     @Test
     void updateTravel_ByDriver_UpdatesTravelSuccessfully() {
