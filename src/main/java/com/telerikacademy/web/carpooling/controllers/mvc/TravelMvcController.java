@@ -80,20 +80,36 @@ public class TravelMvcController {
 
 
     @GetMapping("/search-travels")
-    public String filterUsers(@ModelAttribute("filterOptions") FilterTravelDto filterTravelDto, Model model,
+    public String filterTravels(@ModelAttribute("filterOptions") FilterTravelDto filterTravelDto, Model model,
                               @RequestParam(defaultValue = "0", name = "travelPage") int travelPage,
-                              @RequestParam(defaultValue = "5", name = "travelSize") int travelSize) {
-        FilterTravelOptions filterTravelOptions = new FilterTravelOptions(filterTravelDto.getAuthor(),
-                filterTravelDto.getStartPoint(), filterTravelDto.getEndPoint(),
-                filterTravelDto.getDepartureTime(), filterTravelDto.getFreeSpots(),
-                filterTravelDto.getTravelStatus(), filterTravelDto.getSortBy(),
-                filterTravelDto.getSortOrder());
-        Pageable travelsPageable = PageRequest.of(travelPage, travelSize);
-        Page<Travel> travels = travelService.getMyTravels(filterTravelOptions, travelsPageable);
-        model.addAttribute("filterOptions", filterTravelDto);
-        model.addAttribute("travels", travels);
-        model.addAttribute("now", LocalDateTime.now());
-        return "searchTravelView";
+                              @RequestParam(defaultValue = "5", name = "travelSize") int travelSize, HttpSession session) {
+        try {
+            User user = authenticationHelper.tryGetUser(session);
+            FilterTravelOptions filterTravelOptions = new FilterTravelOptions(filterTravelDto.getAuthor(),
+                    filterTravelDto.getStartPoint(), filterTravelDto.getEndPoint(),
+                    filterTravelDto.getDepartureTime(), filterTravelDto.getFreeSpots(),
+                    filterTravelDto.getTravelStatus(), filterTravelDto.getSortBy(),
+                    filterTravelDto.getSortOrder());
+            Pageable travelsPageable = PageRequest.of(travelPage, travelSize);
+            Page<Travel> travels = travelService.getMyTravels(filterTravelOptions, travelsPageable);
+            model.addAttribute("filterOptions", filterTravelDto);
+            model.addAttribute("travels", travels);
+            model.addAttribute("now", LocalDateTime.now());
+            model.addAttribute("currentUser", user);
+            return "searchTravelView";
+        } catch (AuthenticationFailureException e) {
+            FilterTravelOptions filterTravelOptions = new FilterTravelOptions(filterTravelDto.getAuthor(),
+                    filterTravelDto.getStartPoint(), filterTravelDto.getEndPoint(),
+                    filterTravelDto.getDepartureTime(), filterTravelDto.getFreeSpots(),
+                    filterTravelDto.getTravelStatus(), filterTravelDto.getSortBy(),
+                    filterTravelDto.getSortOrder());
+            Pageable travelsPageable = PageRequest.of(travelPage, travelSize);
+            Page<Travel> travels = travelService.getMyTravels(filterTravelOptions, travelsPageable);
+            model.addAttribute("filterOptions", filterTravelDto);
+            model.addAttribute("travels", travels);
+            model.addAttribute("now", LocalDateTime.now());
+            return "searchTravelView";
+        }
     }
 
     @GetMapping("/create")

@@ -108,6 +108,11 @@ public class TravelServiceImpl implements TravelService {
     }
 
     @Override
+    public Page<Travel> getAllMyTravels(FilterTravelOptions filterTravelOptions, Pageable page) {
+        return travelRepository.getAllMyTravels(filterTravelOptions, page);
+    }
+
+    @Override
     public Page<Travel> getTravelsIParticipatedIn(FilterTravelOptions filterTravelOptions, Pageable page, int currentUserId) {
         return travelRepository.getTravelsIParticipatedIn(filterTravelOptions, page, currentUserId);
     }

@@ -20,6 +20,7 @@ public interface TravelRepository {
     Page<Travel> get(FilterTravelOptions filterOptions, Pageable pageable);
 
     Page<Travel> getMyTravels(FilterTravelOptions filterOptions, Pageable pageable);
+    Page<Travel> getAllMyTravels(FilterTravelOptions filterOptions, Pageable pageable);
     Page<Travel> getTravelsIParticipatedIn(FilterTravelOptions filterOptions, Pageable pageable, int currentUserId);
     List<Travel> getAll();
 

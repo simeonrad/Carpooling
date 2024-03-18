@@ -388,7 +388,7 @@
                         <th>Departure Time</th>
                         <th>Travel Status</th>
                         <th>Apply</th>
-                        <th>Open</th>
+                        <th th:if="${isAuthenticated}">Open</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -405,13 +405,13 @@
                                     <input type="hidden" name="_method" value="delete"/>
                                     <button type="submit" class="button button-gray-700 button-winona">Delete</button>
                                 </form>
-                                <a th:unless="${travel.departureTime.isBefore(now)}" th:href="@{/travels/applications/create/{id}(id=${travel.id})}" class="button button-primary button-winona">Apply</a>
+                                <a th:if="${travel.departureTime.isAfter(now) and travel.status.status.name() != 'CANCELLED'}" th:href="@{/travels/applications/create/{id}(id=${travel.id})}" class="button button-primary button-winona">Apply</a>
                             </div>
 
                             <!-- Non-admin users see only the Apply button -->
-                            <a th:if="${travel.departureTime.isAfter(now)}" th:unless="${isAdmin}" th:href="@{/travels/applications/create/{id}(id=${travel.id})}" class="button button-sm button-primary button-winona">Apply</a>
+                            <a th:if="${travel.departureTime.isAfter(now) and travel.status.status.name() != 'CANCELLED'}" th:unless="${isAdmin}" th:href="@{/travels/applications/create/{id}(id=${travel.id})}" class="button button-sm button-primary button-winona">Apply</a>
                         </td>
-                            <td>
+                            <td th:if="${isAuthenticated}">
                                 <form th:action="@{/travels/{travelId}(travelId=${travel.id})}" method="get">
                                     <button class="button button-secondary button-winona wow clipInLeft" type="submit">Open</button>
                                 </form>

@@ -390,7 +390,8 @@
                             </form>
                         </td>
                         <td >
-                            <form th:if="${travelApplication.travel.departureTime.isAfter(now)}" th:unless="${travelApplication.status.status.toString() == 'CANCELLED'}" th:action="@{/travels/applications/update/{id}(id=${travelApplication.id})}" method="get" style="display:inline;">
+                            <form th:if="${travelApplication.travel.departureTime.isAfter(now)}" th:unless="${travelApplication.status.status.toString() == 'CANCELLED'}"
+                                  th:action="@{/travels/applications/update/{id}(id=${travelApplication.id})}" method="get" style="display:inline;">
                                 <button type="submit" class="button button-gray-700 button-winona" th:text="Edit"></button>
                             </form>
                         </td>

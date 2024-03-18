@@ -372,6 +372,7 @@
                         <th>End Point</th>
                         <th>Departure time</th>
                         <th>Driver</th>
+                        <th>Open</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -381,6 +382,11 @@
                         <td th:text="${travel.getDepartureTime()}"></td>
                         <td>
                             <a th:href="@{/users/{id}(id=${travel.driver.id})}" th:text="${travel.driver.username}"></a>
+                        </td>
+                        <td>
+                        <form th:action="@{/travels/{travelId}(travelId=${travel.id})}" method="get">
+                            <button class="button button-secondary button-winona wow clipInLeft" type="submit">Open</button>
+                        </form>
                         </td>
                     </tr>
                     </tbody>

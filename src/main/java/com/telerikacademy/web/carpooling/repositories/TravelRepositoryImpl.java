@@ -200,6 +200,88 @@ public class TravelRepositoryImpl implements TravelRepository {
     }
 
     @Override
+    public Page<Travel> getAllMyTravels(FilterTravelOptions filterOptions, Pageable pageable) {
+        try (Session session = sessionFactory.openSession()) {
+            List<String> filters = new ArrayList<>();
+            Map<String, Object> params = new HashMap<>();
+            filterOptions.getAuthor().ifPresent(author -> {
+                if (!author.isBlank()) {
+                    filters.add("driver.username like :author");
+                    params.put("author", "%" + author + "%");
+                }
+            });
+
+            filterOptions.getStartPoint().ifPresent(startPoint -> {
+                if (!startPoint.isBlank()) {
+                    filters.add("startPoint like :startPoint");
+                    params.put("startPoint", "%" + startPoint + "%");
+                }
+            });
+
+            filterOptions.getEndPoint().ifPresent(endPoint -> {
+                if (!endPoint.isBlank()) {
+                    filters.add("endPoint like :endPoint");
+                    params.put("endPoint", "%" + endPoint + "%");
+                }
+            });
+
+            filterOptions.getDepartureTime().ifPresent(departureTime -> {
+                filters.add("t.departureTime = :departureTime");
+                params.put("departureTime", departureTime);
+            });
+
+
+            filterOptions.getFreeSpots().ifPresent(freeSpots -> {
+                filters.add("freeSpots = :freeSpots");
+                params.put("freeSpots", freeSpots);
+            });
+
+            filterOptions.getTravelStatus()
+                    .filter(travelStatus -> !travelStatus.isBlank())
+                    .ifPresent(travelStatus -> {
+                        ApplicationStatus travelStatusEnum = ApplicationStatus.valueOf(travelStatus.toUpperCase());
+                        filters.add("status.status = :travelStatus");
+                        params.put("travelStatus", travelStatusEnum);
+                    });
+
+            StringBuilder queryString = new StringBuilder("from Travel t ");
+            StringBuilder countQueryString = new StringBuilder("select count(t) from Travel t ");
+
+            if (!filters.isEmpty()) {
+                String whereClause = "where " + String.join(" and ", filters);
+                queryString.append(whereClause);
+                countQueryString.append(whereClause);
+            }
+
+            filterOptions.getSortBy().ifPresent(sortBy -> {
+                List<String> validSortProperties = List.of("departureTime", "freeSpots", "startPoint", "endPoint");
+                String sortOrder = filterOptions.getSortOrder().orElse("asc").toLowerCase();
+
+                if (!sortOrder.equals("asc") && !sortOrder.equals("desc")) {
+                    sortOrder = "asc";
+                }
+
+                if (validSortProperties.contains(sortBy)) {
+                    queryString.append(" order by t.").append(sortBy).append(" ").append(sortOrder);
+                }
+            });
+
+            Query<Long> countQuery = session.createQuery(countQueryString.toString(), Long.class);
+            params.forEach(countQuery::setParameter);
+            long total = countQuery.uniqueResult();
+
+            Query<Travel> query = session.createQuery(queryString.toString(), Travel.class);
+            params.forEach(query::setParameter);
+
+            query.setFirstResult((int) pageable.getOffset());
+            query.setMaxResults(pageable.getPageSize());
+
+            List<Travel> travels = query.list();
+            return new PageImpl<>(travels, pageable, total);
+        }
+    }
+
+    @Override
     public Page<Travel> getTravelsIParticipatedIn(FilterTravelOptions filterOptions, Pageable pageable, int currentUserId) {
         try (Session session = sessionFactory.openSession()) {
             Map<String, Object> params = new HashMap<>();

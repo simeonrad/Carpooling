@@ -287,7 +287,7 @@ public class ProfileController {
 
         Pageable travelPageable = PageRequest.of(travelPage, travelSize);
 
-        Page<Travel> userTravels = travelService.getMyTravels(
+        Page<Travel> userTravels = travelService.getAllMyTravels(
                 new FilterTravelOptions(filterTravelDto.getAuthor(),
                         filterTravelDto.getStartPoint(), filterTravelDto.getEndPoint(),
                         filterTravelDto.getDepartureTime(), filterTravelDto.getFreeSpots(),
