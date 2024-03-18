@@ -31,7 +31,8 @@ public class FeedbackServiceImpl implements FeedbackService {
                 !feedback.getAuthor().equals(feedback.getTravel().getDriver())) {
             throw new UnauthorizedOperationException("You cannot give feedback to this user!");
         }
-        if (isRecipientAParticipantInTravel(feedback.getRecipient().getId(), feedback.getTravel().getId())) {
+        if (isRecipientAParticipantInTravel(feedback.getRecipient().getId(), feedback.getTravel().getId()) &&
+                !feedback.getRecipient().equals(feedback.getTravel().getDriver())) {
             throw new UnauthorizedOperationException("This recipient was not part of the travel!");
         }
         if (feedback.getRecipient().equals(author)) {

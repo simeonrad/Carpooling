@@ -1,6 +1,5 @@
 package com.telerikacademy.web.carpooling;
 
-import com.telerikacademy.web.carpooling.exceptions.ForbiddenOperationException;
 import com.telerikacademy.web.carpooling.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.web.carpooling.models.Feedback;
 import com.telerikacademy.web.carpooling.models.Role;
