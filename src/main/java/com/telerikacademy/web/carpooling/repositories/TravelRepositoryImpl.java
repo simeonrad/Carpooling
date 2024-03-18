@@ -206,8 +206,8 @@ public class TravelRepositoryImpl implements TravelRepository {
             Map<String, Object> params = new HashMap<>();
             filterOptions.getAuthor().ifPresent(author -> {
                 if (!author.isBlank()) {
-                    filters.add("driver.username like :author");
-                    params.put("author", "%" + author + "%");
+                    filters.add("driver.username = :author");
+                    params.put("author",  author);
                 }
             });
 

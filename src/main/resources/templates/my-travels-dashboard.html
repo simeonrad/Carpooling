@@ -375,6 +375,7 @@
                         <th>Departure time</th>
                         <th>Status</th>
                         <th>Manage applications</th>
+                        <th>Open</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -387,6 +388,11 @@
                             <form action="/" th:action="@{/travels/applications/{id}(id=${travel.id})}" >
                             <button type="submit" class="button button-sm button-primary button-winona"
                                     th:text="'Manage applications'"></button>
+                            </form>
+                        </td>
+                        <td>
+                            <form th:action="@{/travels/{travelId}(travelId=${travel.id})}" method="get">
+                                <button class="button button-secondary button-winona wow clipInLeft" type="submit">Open</button>
                             </form>
                         </td>
                     </tr>

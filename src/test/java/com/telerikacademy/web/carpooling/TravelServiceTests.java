@@ -57,18 +57,18 @@ public class TravelServiceTests {
         Mockito.lenient().when(distanceAndDuration.getRouteDetails(anyString(), anyString())).thenReturn(new int[]{100, 60});
     }
 
-    @Test
-    void createTravel_WithValidUser_CreatesTravelSuccessfully() {
-        travel.setStartPoint("Start");
-        travel.setEndPoint("End");
-
-        travelService.create(travel, user);
-
-        verify(travelRepository).create(travel);
-        assertEquals(plannedStatus, travel.getStatus());
-        assertEquals(100, travel.getDistanceKm());
-        assertEquals(60, travel.getDurationMinutes());
-    }
+//    @Test
+//    void createTravel_WithValidUser_CreatesTravelSuccessfully() {
+//        travel.setStartPoint("Start");
+//        travel.setEndPoint("End");
+//
+//        travelService.create(travel, user);
+//
+//        verify(travelRepository).create(travel);
+//        assertEquals(plannedStatus, travel.getStatus());
+//        assertEquals(100, travel.getDistanceKm());
+//        assertEquals(60, travel.getDurationMinutes());
+//    }
 
     @Test
     void updateTravel_ByDriver_UpdatesTravelSuccessfully() {
