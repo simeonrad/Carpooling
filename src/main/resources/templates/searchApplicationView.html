@@ -299,8 +299,8 @@
                     </thead>
                     <tbody>
                     <tr th:each="travel : ${travels} ">
-                        <td th:href="@{/travels/{id}(id=${travel.id})}" th:text="${travel.startPoint}"></td>
-                        <td th:text="${travel.endPoint}"></td>
+                        <td th:href="@{/travels/{id}(id=${travel.id})}" th:text="${travel.startPoint.value}"></td>
+                        <td th:text="${travel.endPoint.value}"></td>
                         <td th:text="${travel.freeSpots}"></td>
                         <td>
                             <button class="button button-sm button-primary button-winona" th:text="Apply"></button>

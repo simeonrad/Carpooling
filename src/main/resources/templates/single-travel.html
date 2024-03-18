@@ -183,9 +183,9 @@
                     <div class="post-vacancy-meta">
                         <ul class="list-objects-inline">
                             <li><span class="icon text-primary mdi mdi-map-marker"></span><span
-                                    th:text="'From ' +${travel.startPoint}"></span></li>
+                                    th:text="'From ' +${travel.startPoint.value}"></span></li>
                             <li><span class="icon text-primary mdi mdi-map-marker"></span><span
-                                    th:text="'To ' +${travel.endPoint}"></span></li>
+                                    th:text="'To ' +${travel.endPoint.value}"></span></li>
                             <li><span class="icon text-primary mdi mdi-clock"></span><span
                                     th:text="${travel.durationMinutes / 60} + 'h ' + ${travel.durationMinutes % 60} + 'm long drive'"></span>
                             </li>

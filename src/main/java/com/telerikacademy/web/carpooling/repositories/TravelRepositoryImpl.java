@@ -132,14 +132,14 @@ public class TravelRepositoryImpl implements TravelRepository {
 
             filterOptions.getStartPoint().ifPresent(startPoint -> {
                 if (!startPoint.isBlank()) {
-                    filters.add("startPoint like :startPoint");
+                    filters.add("startPoint.value like :startPoint");
                     params.put("startPoint", "%" + startPoint + "%");
                 }
             });
 
             filterOptions.getEndPoint().ifPresent(endPoint -> {
                 if (!endPoint.isBlank()) {
-                    filters.add("endPoint like :endPoint");
+                    filters.add("endPoint.value like :endPoint");
                     params.put("endPoint", "%" + endPoint + "%");
                 }
             });

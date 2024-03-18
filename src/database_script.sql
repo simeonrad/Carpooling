@@ -116,8 +116,8 @@ create table travels
     travel_id        int auto_increment
         primary key,
     organizer_id     int           not null,
-    start_point      varchar(255)  not null,
-    end_point        varchar(255)  not null,
+    start_point      int           not null,
+    end_point        int           not null,
     departure_time   datetime      not null,
     free_spots       int           not null,
     travel_status    int default 1 null,
@@ -128,6 +128,10 @@ create table travels
         foreign key (car_id) references cars (car_id),
     constraint travels_ibfk_1
         foreign key (organizer_id) references users (user_id),
+    constraint travels_locations_location_id_fk
+        foreign key (start_point) references locations (location_id),
+    constraint travels_locations_location_id_fk2
+        foreign key (end_point) references locations (location_id),
     constraint travels_travel_statuses_status_id_fk
         foreign key (travel_status) references statuses (status_id)
 );

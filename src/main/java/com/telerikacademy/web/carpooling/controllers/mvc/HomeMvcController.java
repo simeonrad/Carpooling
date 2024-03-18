@@ -1,5 +1,6 @@
 package com.telerikacademy.web.carpooling.controllers.mvc;
 
+import com.telerikacademy.web.carpooling.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.carpooling.models.User;
 import com.telerikacademy.web.carpooling.services.contracts.TravelApplicationService;
 import com.telerikacademy.web.carpooling.services.contracts.TravelService;
@@ -47,12 +48,15 @@ public class HomeMvcController {
 
     @GetMapping
     public String showHomePage(Model model) {
-        int totalUsers = userService.getAllNotDeleted().size();
-        int totalTravels = travelService.getAll().size();
-        int totalApplications = travelApplicationService.getAll().size();
-        model.addAttribute("totalUsers", totalUsers);
-        model.addAttribute("totalTravels", totalTravels);
-        model.addAttribute("totalApplications", totalApplications);
+        try {
+            int totalUsers = userService.getAllNotDeleted().size();
+            int totalTravels = travelService.getAll().size();
+            int totalApplications = travelApplicationService.getAll().size();
+            model.addAttribute("totalUsers", totalUsers);
+            model.addAttribute("totalTravels", totalTravels);
+            model.addAttribute("totalApplications", totalApplications);
+
+        }catch (EntityNotFoundException ignored){}
         return "index";
     }
 
