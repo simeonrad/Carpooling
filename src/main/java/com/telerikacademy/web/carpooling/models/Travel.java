@@ -15,10 +15,13 @@ public class Travel {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "organizer_id")
     private User driver;
-    @Column(name = "start_point", nullable = false, length = 255)
-    private String startPoint;
-    @Column(name = "end_point", nullable = false, length = 255)
-    private String endPoint;
+
+    @OneToOne
+    @JoinColumn(name = "start_point", nullable = false)
+    private Location startPoint;
+    @OneToOne
+    @JoinColumn(name = "end_point", nullable = false)
+    private Location endPoint;
     @Column(name = "departure_time", nullable = false)
     private LocalDateTime departureTime;
     @Column(name = "free_spots", nullable = false)
@@ -75,19 +78,19 @@ public class Travel {
         this.driver = driver;
     }
 
-    public String getStartPoint() {
+    public Location getStartPoint() {
         return startPoint;
     }
 
-    public void setStartPoint(String startPoint) {
+    public void setStartPoint(Location startPoint) {
         this.startPoint = startPoint;
     }
 
-    public String getEndPoint() {
+    public Location getEndPoint() {
         return endPoint;
     }
 
-    public void setEndPoint(String endPoint) {
+    public void setEndPoint(Location endPoint) {
         this.endPoint = endPoint;
     }
 

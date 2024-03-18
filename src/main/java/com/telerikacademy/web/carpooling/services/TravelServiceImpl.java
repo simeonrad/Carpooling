@@ -45,7 +45,7 @@ public class TravelServiceImpl implements TravelService {
             ApplicationStatus statusValue = ApplicationStatus.valueOf("PLANNED");
             travel.setStatus(statusRepository.getByValue(statusValue));
             travel.setStatus(statusRepository.getByValue(ApplicationStatus.PLANNED));
-            int[] travelDetails = distanceAndDuration.getRouteDetails(travel.getStartPoint(), travel.getEndPoint());
+            int[] travelDetails = distanceAndDuration.getRouteDetails(travel.getStartPoint().getValue(), travel.getEndPoint().getValue());
             travel.setDistanceKm(travelDetails[0]);
             travel.setDurationMinutes(travelDetails[1]);
             if (!travel.getDriver().equals(travel.getCar().getOwner())) {

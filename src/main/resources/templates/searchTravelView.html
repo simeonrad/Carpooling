@@ -394,8 +394,8 @@
                     <tbody>
                     <tr th:each="travel : ${travels}">
                         <th:block th:if="${travel.freeSpots > 0}">
-                        <td th:text="${travel.startPoint}"></td>
-                        <td th:text="${travel.endPoint}"></td>
+                        <td th:text="${travel.startPoint.value}"></td>
+                        <td th:text="${travel.endPoint.value}"></td>
                         <td th:text="${travel.freeSpots}"></td>
                         <td th:text="${#temporals.format(travel.departureTime, 'yyyy-MM-dd HH:mm')}"></td>
                         <td th:text="${travel.status.status.toString().toLowerCase()}"></td>

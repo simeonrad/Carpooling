@@ -379,8 +379,8 @@
                     </thead>
                     <tbody>
                     <tr th:each="travel : ${userTravels} ">
-                        <td th:href="@{/travels/{id}(id=${travel.id})}" th:text="${travel.startPoint}"></td>
-                        <td th:text="${travel.endPoint}"></td>
+                        <td th:href="@{/travels/{id}(id=${travel.id})}" th:text="${travel.startPoint.value}"></td>
+                        <td th:text="${travel.endPoint.value}"></td>
                         <td th:text="${#temporals.format(travel.departureTime, 'yyyy-MM-dd HH:mm')}"></td>
                         <td th:text="${travel.getStatus().getStatus().name().toLowerCase()}"></td>
                         <td>

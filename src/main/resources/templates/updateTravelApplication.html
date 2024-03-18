@@ -38,8 +38,8 @@
                 <form th:action="@{/travels/applications/update/{applicationId}(applicationId=${applicationDto.id})}" method="post" th:object="${applicationDto}">
                   <div>
                     <label>Travel Details:</label>
-                    <p>Start Point: <span th:text="${travel.startPoint}"></span></p>
-                    <p>End Point: <span th:text="${travel.endPoint}"></span></p>
+                    <p>Start Point: <span th:text="${travel.startPoint.value}"></span></p>
+                    <p>End Point: <span th:text="${travel.endPoint.value}"></span></p>
                     <p>Departure Time: <span th:text="${#temporals.format(travel.departureTime, 'dd/MM/yyyy HH:mm')}"></span></p>
                   </div>
                   <div>
