@@ -57,4 +57,10 @@ public class FeedbackMapper {
         }
         return feedback;
     }
+
+    public FeedbackDto convertToDto(Feedback feedback) {
+        String recipientName = feedback.getRecipient().getFirstName() + " " + feedback.getRecipient().getLastName();
+        String comment = feedback.getComment() != null ? feedback.getComment().getComment() : "-";
+        return new FeedbackDto(feedback.getTravel().getId(), recipientName, feedback.getRating(), comment);
+    }
 }
