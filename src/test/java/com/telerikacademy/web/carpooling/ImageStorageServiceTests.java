@@ -44,7 +44,7 @@ public class ImageStorageServiceTests {
         String result = service.saveImage(multipartFile);
 
         // Assert
-        assertEquals("https://i.ibb.co/5vKybCw/dummy.webp", result);
+        assertEquals("https://i.ibb.co/Bq4jMN3/dummy.webp", result);
     }
 
 

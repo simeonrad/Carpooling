@@ -145,24 +145,22 @@
                 <!-- RD Mailform-->
                 <form class="rd-form rd-mailform form-style-1" id="searchTravelsForm">
                   <div class="form-wrap">
-                    <input class="form-input" id="start-point" type="text" name="pickup-address" data-constraints="@Required">
-                    <label class="form-label" for="start-point">Start Point</label><span class="form-icon mdi mdi-map-marker"></span>
+                    <input class="form-input" id="start-point" type="text" name="pickup-address" required>
+                    <label class="form-label" for="start-point">Start Point</label>
                   </div>
                   <div class="form-wrap">
-                    <input class="form-input" id="end-point" type="text" name="destination-address" data-constraints="@Required">
-                    <label class="form-label" for="end-point">End Point</label><span class="form-icon mdi mdi-map-marker"></span>
+                    <input class="form-input" id="end-point" type="text" name="destination-address" required>
+                    <label class="form-label" for="end-point">End Point</label>
                   </div>
+                  <button class="button button-sm button-default-outline button-winona" type="submit">Search Travel</button>
                 </form>
 
                 <script>
                   document.getElementById('searchTravelsForm').addEventListener('submit', function(event) {
                     event.preventDefault();
-
                     var startPoint = document.getElementById('start-point').value;
                     var endPoint = document.getElementById('end-point').value;
-
                     var searchUrl = '/travels/search-travels?author=&startPoint=' + encodeURIComponent(startPoint) + '&endPoint=' + encodeURIComponent(endPoint) + '&freeSpots=&sortBy=&sortOrder=&filter=*.html';
-
                     window.location.href = searchUrl;
                   });
                 </script>

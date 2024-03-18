@@ -59,7 +59,7 @@ public class UserServiceTests {
     private EmailSenderHelper emailSenderHelper;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSender,
                 userBlockService, uiMapper, validationHelper, emailSenderHelper);
@@ -67,7 +67,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void testCreateUserSuccess() {
+    public void testCreateUserSuccess() {
         // Arrange
         // Arrange
         UserRepository userRepository = mock(UserRepository.class);
@@ -106,7 +106,7 @@ public class UserServiceTests {
 
 
     @Test
-    void whenPhoneNumberDoesNotExist_thenNoExceptionThrown() {
+    public void whenPhoneNumberDoesNotExist_thenNoExceptionThrown() {
         // Arrange
         User user = new User();
         user.setId(1);
@@ -122,7 +122,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenPhoneNumberExists_thenThrowDuplicatePhoneNumberExistsException() {
+    public void whenPhoneNumberExists_thenThrowDuplicatePhoneNumberExistsException() {
         // Arrange
         User user = new User();
         user.setId(1);
@@ -142,7 +142,7 @@ public class UserServiceTests {
 
 
     @Test
-    void whenEmailDoesNotExist_thenReturnOriginalUser() {
+    public void whenEmailDoesNotExist_thenReturnOriginalUser() {
         // Arrange
         User user = new User();
         user.setEmail("test@example.com");
@@ -161,7 +161,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenEmailExists_thenThrowDuplicateEmailExistsException() {
+    public void whenEmailExists_thenThrowDuplicateEmailExistsException() {
         // Arrange
         User user = new User();
         user.setEmail("existing@example.com");
@@ -176,7 +176,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenVerifiedUser_whenCheckIfVerified_thenNoExceptionThrown() {
+    public void givenVerifiedUser_whenCheckIfVerified_thenNoExceptionThrown() {
         // Arrange
         User user = new User();
         user.setId(1);
@@ -188,7 +188,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenNonVerifiedUser_whenCheckIfVerified_thenThrowUnauthorizedOperationException() {
+    public void givenNonVerifiedUser_whenCheckIfVerified_thenThrowUnauthorizedOperationException() {
         // Arrange
         User user = new User();
         user.setId(1);
@@ -201,7 +201,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenValidUser_whenSendVerificationEmail_thenNonVerifiedUserCreated() {
+    public void givenValidUser_whenSendVerificationEmail_thenNonVerifiedUserCreated() {
         // Arrange
         User user = new User();
         user.setUsername("john.doe");
@@ -223,7 +223,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenAdminUser_whenDeleteNotAlreadyDeletedUser_thenSuccess() {
+    public void givenAdminUser_whenDeleteNotAlreadyDeletedUser_thenSuccess() {
         // Arrange
         User userToBeDeleted = new User();
         userToBeDeleted.setUsername("userToDelete");
@@ -250,7 +250,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenRegularUser_whenDeleteAnotherUser_thenUnauthorized() {
+    public void givenRegularUser_whenDeleteAnotherUser_thenUnauthorized() {
         // Arrange
         User targetUser = new User();
         targetUser.setUsername("targetUser");
@@ -273,7 +273,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenValidUser_whenDelete_thenUserIsMarkedAsDeleted() {
+    public void givenValidUser_whenDelete_thenUserIsMarkedAsDeleted() {
         // Arrange
         int userId = 1;
         User mockUser = mock(User.class);
@@ -293,7 +293,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenUserWithUI_whenDeleteUI_thenUIIsDeleted() {
+    public void givenUserWithUI_whenDeleteUI_thenUIIsDeleted() {
         // Arrange
         ForgottenPasswordUI mockForgottenPasswordUI = mock(ForgottenPasswordUI.class);
         User mockUser = mock(User.class);
@@ -311,7 +311,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenValidUserAndUpdatedBySameUser_whenUpdate_thenUserIsUpdated() {
+    public void givenValidUserAndUpdatedBySameUser_whenUpdate_thenUserIsUpdated() {
         // Arrange
         UserRepository userRepositoryMock = mock(UserRepository.class);
         UserServiceImpl userService = new UserServiceImpl(userRepositoryMock, userMapper, roleRepository, mailSender,
@@ -333,7 +333,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenValidUser_whenUpdate_thenSuccess() {
+    public void givenValidUser_whenUpdate_thenSuccess() {
         // Arrange
         UserRepository userRepositoryMock = mock(UserRepository.class);
         UserServiceImpl userService = new UserServiceImpl(userRepositoryMock, userMapper, roleRepository, mailSender,
@@ -358,7 +358,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenUserId_whenMarkUserAsDeleted_thenUserIsMarkedAsDeleted() {
+    public void givenUserId_whenMarkUserAsDeleted_thenUserIsMarkedAsDeleted() {
         // Arrange
         int userId = 1;
         User user = new User();
@@ -378,7 +378,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenAdminUser_whenGetUsers_thenReturnListOfUsers() {
+    public void givenAdminUser_whenGetUsers_thenReturnListOfUsers() {
         // Arrange
         User adminUser = new User();
         adminUser.setRole(new Role(ADMIN));
@@ -395,7 +395,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenNonAdminUser_whenGetUsers_thenThrowUnauthorizedOperationException() {
+    public void givenNonAdminUser_whenGetUsers_thenThrowUnauthorizedOperationException() {
         // Arrange
         User regularUser = new User();
         regularUser.setRole(new Role("REGULAR_USER"));
@@ -406,7 +406,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenAdminUser_whenGetUsersWithPagination_thenReturnUserPage() {
+    public void givenAdminUser_whenGetUsersWithPagination_thenReturnUserPage() {
         // Arrange
         User adminUser = new User();
         adminUser.setRole(new Role(ADMIN)); // Adjust based on your role management
@@ -423,7 +423,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenNonAdminUser_whenGetUsersWithPagination_thenThrowUnauthorizedOperationException() {
+    public void givenNonAdminUser_whenGetUsersWithPagination_thenThrowUnauthorizedOperationException() {
         // Arrange
         User regularUser = new User();
         regularUser.setRole(new Role("REGULAR_USER"));
@@ -434,7 +434,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenGetUsersWithFilterOptions_thenReturnFilteredUserList() {
+    public void whenGetUsersWithFilterOptions_thenReturnFilteredUserList() {
         // Arrange
         FilterUserOptions filterUserOptions = new FilterUserOptions("testUsername", null, null, "username", "asc");
         List<User> expectedUsers = List.of(new User());
@@ -448,7 +448,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenBlockUserAsAdmin_thenBlockUserSuccessfully() {
+    public void whenBlockUserAsAdmin_thenBlockUserSuccessfully() {
         // Arrange
         User admin = new User();
         admin.setRole(new Role(ADMIN));
@@ -469,7 +469,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenBlockUserAsNonAdmin_thenThrowUnauthorizedOperationException() {
+    public void whenBlockUserAsNonAdmin_thenThrowUnauthorizedOperationException() {
         User nonAdmin = new User();
         nonAdmin.setRole(new Role(REGULAR_USER));
 
@@ -478,7 +478,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenBlockUserThatDoesNotExist_thenThrowEntityNotFoundException() {
+    public void whenBlockUserThatDoesNotExist_thenThrowEntityNotFoundException() {
         // Arrange
         User admin = new User();
         admin.setRole(new Role(ADMIN));
@@ -490,7 +490,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenBlockAlreadyBlockedUser_thenThrowUserIsAlreadyBlockedException() {
+    public void whenBlockAlreadyBlockedUser_thenThrowUserIsAlreadyBlockedException() {
         // Arrange
         User admin = new User();
         admin.setRole(new Role(ADMIN));
@@ -507,7 +507,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenUnblockUserAsAdmin_thenUnblockUserSuccessfully() {
+    public void whenUnblockUserAsAdmin_thenUnblockUserSuccessfully() {
         // Arrange
         User admin = new User();
         admin.setRole(new Role(ADMIN));
@@ -527,7 +527,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenUnblockUserAsNonAdmin_thenThrowUnauthorizedOperationException() {
+    public void whenUnblockUserAsNonAdmin_thenThrowUnauthorizedOperationException() {
         // Arrange
         User nonAdmin = new User();
         nonAdmin.setRole(new Role(REGULAR_USER));
@@ -537,7 +537,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenUnblockUserThatDoesNotExist_thenThrowEntityNotFoundException() {
+    public void whenUnblockUserThatDoesNotExist_thenThrowEntityNotFoundException() {
         // Arrange
         User admin = new User();
         admin.setRole(new Role(ADMIN));
@@ -549,7 +549,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenMakeAdminByAdmin_thenSuccess() {
+    public void whenMakeAdminByAdmin_thenSuccess() {
         // Arrange
         User admin = new User();
         admin.setRole(new Role(ADMIN));
@@ -569,7 +569,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenUnmakeAdminByAdmin_thenSuccess() {
+    public void whenUnmakeAdminByAdmin_thenSuccess() {
         // Arrange
         User admin = new User();
         admin.setRole(new Role(ADMIN));
@@ -589,7 +589,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenMakeAdminByNonAdmin_thenThrowUnauthorizedOperationException() {
+    public void whenMakeAdminByNonAdmin_thenThrowUnauthorizedOperationException() {
         // Arrange
         User nonAdmin = new User();
         nonAdmin.setRole(new Role(REGULAR_USER));
@@ -599,7 +599,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenUnmakeAdminByNonAdmin_thenThrowUnauthorizedOperationException() {
+    public void whenUnmakeAdminByNonAdmin_thenThrowUnauthorizedOperationException() {
         // Arrange
         User nonAdmin = new User();
         nonAdmin.setRole(new Role(REGULAR_USER));
@@ -609,7 +609,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenMakeAdminOnNonExistingUser_thenThrowEntityNotFoundException() {
+    public void whenMakeAdminOnNonExistingUser_thenThrowEntityNotFoundException() {
         // Arrange
         User admin = new User();
         admin.setRole(new Role(ADMIN));
@@ -620,7 +620,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenUnmakeAdminOnNonExistingUser_thenThrowEntityNotFoundException() {
+    public void whenUnmakeAdminOnNonExistingUser_thenThrowEntityNotFoundException() {
         // Arrange
         User admin = new User();
         admin.setRole(new Role(ADMIN));
@@ -631,7 +631,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenAdminUserAndRegularUser_whenMakeAdmin_thenSucceeds() {
+    public void givenAdminUserAndRegularUser_whenMakeAdmin_thenSucceeds() {
         // Set up
         User admin = new User();
         admin.setRole(new Role(ADMIN));
@@ -657,7 +657,7 @@ public class UserServiceTests {
 
 
     @Test
-    void givenAdminUserAndDeletedUser_whenMakeAdmin_thenThrowsEntityNotFoundException() {
+    public void givenAdminUserAndDeletedUser_whenMakeAdmin_thenThrowsEntityNotFoundException() {
         User admin = new User();
         admin.setRole(new Role(ADMIN));
 
@@ -671,7 +671,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenRegularUserTryingToMakeAdmin_whenMakeAdmin_thenThrowsUnauthorizedOperationException() {
+    public void givenRegularUserTryingToMakeAdmin_whenMakeAdmin_thenThrowsUnauthorizedOperationException() {
         User regularUser = new User();
         regularUser.setRole(new Role(REGULAR_USER));
 
@@ -679,7 +679,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenUsername_whenVerifyUser_thenUserVerified() {
+    public void givenUsername_whenVerifyUser_thenUserVerified() {
         // Arrange
         String username = "testUser";
         User mockUser = new User();
@@ -705,7 +705,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenPhotoUrlAndUser_whenAddProfilePhoto_thenPhotoUrlIsUpdated() {
+    public void givenPhotoUrlAndUser_whenAddProfilePhoto_thenPhotoUrlIsUpdated() {
         // Arrange
         String photoUrl = "http://example.com/photo.jpg";
         User user = new User();
@@ -728,7 +728,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void getAll_ReturnsAllUsers() {
+    public void getAll_ReturnsAllUsers() {
         // Arrange
         List<User> expectedUsers = Arrays.asList(
                 new User("User1", "pasS.123", "user", "user", "email@email.com", "0885478963"),
@@ -749,7 +749,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenGetById_thenReturnsExpectedUser() {
+    public void whenGetById_thenReturnsExpectedUser() {
         // Arrange
         int userId = 1;
         User expectedUser = new User();
@@ -771,7 +771,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void whenGetByUsername_thenReturnsExpectedUser() {
+    public void whenGetByUsername_thenReturnsExpectedUser() {
         // Arrange
         String username = "testUser";
         User expectedUser = new User();
@@ -795,7 +795,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenNewUser_whenCreate_thenUserIsCreatedAndVerificationEmailSent() {
+    public void givenNewUser_whenCreate_thenUserIsCreatedAndVerificationEmailSent() {
         // Arrange
         User newUser = new User();
         newUser.setUsername("newUser");
@@ -823,7 +823,7 @@ public class UserServiceTests {
     }
 
     @Test
-    void givenExistingUsername_whenCreate_thenThrowDuplicateExistsException() {
+    public void givenExistingUsername_whenCreate_thenThrowDuplicateExistsException() {
         // Arrange
         User existingUser = new User();
         existingUser.setUsername("existingUser");
@@ -894,11 +894,4 @@ public class UserServiceTests {
         assertEquals(expectedResult, result, "The isUIExisting method should return true when the UI exists in the repository");
         verify(userRepository, times(1)).isUIExisting(ui);
     }
-
-
-
-
-
-
-
 }
