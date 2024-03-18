@@ -28,6 +28,9 @@ public class FilterTravelOptions {
         this.sortOrder = Optional.ofNullable(sortOrder);
     }
 
+    public FilterTravelOptions() {
+    }
+
     public Optional<String> getAuthor() {
         return author;
     }
