@@ -15,6 +15,18 @@ import java.util.Random;
 
 @Component
 public class EmailSenderHelper {
+    public static final String VERIFICATION_SUBJECT = "Please verify your registration";
+    public static final String SENDER_NAME = "Carpooling A56";
+    public static final String SENDER_EMAIL = "car.pooling.a56@gmail.com";
+    public static final String VERIFICATION_CONTENT = "<p>Please click the link below to verify your registration:</p>";
+    public static final String VERIFICATION_ENDPOINT = "/users/verify-email?username=";
+    public static final String EMAIL_ENDING = "<p>Thank you<br>The Carpooling A56 Team</p>";
+    public static final String VERIFICATION_FAILURE_MESSAGE = "Sending verification email was not possible! Please try again!";
+    public static final String UNIQUE_SYMBOLS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!-_+";
+    public static final String FORGOTTEN_PASS_SUBJECT = "Forgotten Password";
+    public static final String FORGOTTEN_PASS_CONTENT = "<p>Please click the link below to change your password:</p>";
+    public static final String FORGOTTEN_PASS_ENDPOINT = "/auth/recover_password/";
+    public static final String PASSWORD_FAILIRE_MESSAGE = "Sending email was not possible! Please try again!";
     private final JavaMailSender mailSender;
     private final UserRepository userRepository;
     private final UIMapper UIMapper;
@@ -26,35 +38,30 @@ public class EmailSenderHelper {
     }
 
     public void sendVerificationEmail(User user, String siteURL) {
-        String subject = "Please verify your registration";
-        String senderName = "Carpooling A56";
-
-        String senderEmail = "car.pooling.a56@gmail.com";
-
         String mailContent = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>";
-        mailContent += "<p>Please click the link below to verify your registration:</p>";
+        mailContent += EmailSenderHelper.VERIFICATION_CONTENT;
 
-        String verifyURL = siteURL + "/users/verify-email?username=" + user.getUsername();
+        String verifyURL = siteURL + VERIFICATION_ENDPOINT + user.getUsername();
 
         mailContent += "<h3><a href=\"" + verifyURL + "\">VERIFY</a></h3>";
-        mailContent += "<p>Thank you<br>The Carpooling A56 Team</p>";
+        mailContent += EMAIL_ENDING;
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
         try {
-            helper.setFrom(senderEmail, senderName);
+            helper.setFrom(SENDER_EMAIL, SENDER_NAME);
             helper.setTo(user.getEmail());
-            helper.setSubject(subject);
+            helper.setSubject(VERIFICATION_SUBJECT);
             helper.setText(mailContent, true);
         } catch (MessagingException | UnsupportedEncodingException e) {
-            throw new UnsupportedOperationException("Sending verification email was not possible! Please try again!");
+            throw new UnsupportedOperationException(VERIFICATION_FAILURE_MESSAGE);
         }
         mailSender.send(message);
     }
 
     public String generateUI() {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!-_+";
+        String characters = UNIQUE_SYMBOLS;
         StringBuilder result = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < 20; i++) {
@@ -75,29 +82,24 @@ public class EmailSenderHelper {
     }
 
     public void sendForgottenPasswordEmail(User user, String siteURL, String endpoint) {
-        String subject = "Forgotten Password";
-        String senderName = "Carpooling A56";
-
-        String senderEmail = "car.pooling.a56@gmail.com";
-
         String mailContent = "<p>Dear " + user.getFirstName() + " " + user.getLastName() + ",</p>";
-        mailContent += "<p>Please click the link below to change your password:</p>";
+        mailContent += FORGOTTEN_PASS_CONTENT;
 
-        String forgottenPassURL = siteURL + "/auth/recover_password/" + endpoint;
+        String forgottenPassURL = siteURL + FORGOTTEN_PASS_ENDPOINT + endpoint;
 
         mailContent += "<h3><a href=\"" + forgottenPassURL + "\">FORGOTTEN PASSWORD CHANGE</a></h3>";
-        mailContent += "<p>Thank you<br>The Carpooling A56 Team</p>";
+        mailContent += EMAIL_ENDING;
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
         try {
-            helper.setFrom(senderEmail, senderName);
+            helper.setFrom(SENDER_EMAIL, SENDER_NAME);
             helper.setTo(user.getEmail());
-            helper.setSubject(subject);
+            helper.setSubject(FORGOTTEN_PASS_SUBJECT);
             helper.setText(mailContent, true);
         } catch (MessagingException | UnsupportedEncodingException e) {
-            throw new UnsupportedOperationException("Sending email was not possible! Please try again!");
+            throw new UnsupportedOperationException(PASSWORD_FAILIRE_MESSAGE);
         }
         mailSender.send(message);
     }

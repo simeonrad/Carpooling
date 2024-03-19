@@ -67,7 +67,7 @@ public class FeedbackController {
             User currentUser = authenticationHelper.tryGetUser(headers);
             FilterFeedbackOptions filterFeedbackOptions = new FilterFeedbackOptions(author, recipient, sortBy, sortOrder);
             List<Feedback> feedbacks = feedbackService.getForUser(filterFeedbackOptions, currentUser);
-            return feedbacks.stream().map(this::convertToDto).collect(Collectors.toList());
+            return feedbacks.stream().map(feedbackMapper::convertToDto).collect(Collectors.toList());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -163,11 +163,5 @@ public class FeedbackController {
         Feedback feedback = feedbackRepository.getByTravelId(feedbackDto.getTravelId(), author.getId(), recipientId);
         feedbackService.delete(feedback, author);
         return String.format(FEEDBACK_DELETED_SUCCESS_MESSAGE, feedback.getId());
-    }
-
-    public FeedbackDto convertToDto(Feedback feedback) {
-        String recipientName = feedback.getRecipient().getFirstName() + " " + feedback.getRecipient().getLastName();
-        String comment = feedback.getComment() != null ? feedback.getComment().getComment() : "-";
-        return new FeedbackDto(feedback.getTravel().getId(), recipientName, feedback.getRating(), comment);
     }
 }

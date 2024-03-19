@@ -55,6 +55,7 @@ public class FeedbackServiceTests {
         feedbackService.create(feedback, author);
 
         verify(feedbackRepository).create(feedback);
+
     }
 
     @Test
