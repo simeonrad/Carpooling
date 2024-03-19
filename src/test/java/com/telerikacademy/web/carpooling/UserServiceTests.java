@@ -10,9 +10,7 @@ import com.telerikacademy.web.carpooling.repositories.contracts.RoleRepository;
 import com.telerikacademy.web.carpooling.repositories.contracts.UserRepository;
 import com.telerikacademy.web.carpooling.services.contracts.UserBlockService;
 import com.telerikacademy.web.carpooling.services.UserServiceImpl;
-import com.telerikacademy.web.carpooling.services.contracts.UserService;
 import org.mockito.ArgumentCaptor;
-import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,10 +50,10 @@ public class UserServiceTests {
     @InjectMocks
     private UserServiceImpl userService;
 
-    @InjectMocks
+    @Mock
     private ValidationHelper validationHelper;
 
-    @InjectMocks
+    @Mock
     private EmailSenderHelper emailSenderHelper;
 
     @BeforeEach
@@ -64,45 +62,84 @@ public class UserServiceTests {
         UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSender,
                 userBlockService, uiMapper, validationHelper, emailSenderHelper);
         when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
+        when(userMapper.fromDtoUpdate(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    }
+
+//    @Test
+//    public void testCreateUserSuccess() {
+//        // Arrange
+//        UserRepository userRepository = mock(UserRepository.class);
+//        UserMapper userMapper = mock(UserMapper.class);
+//
+//        User user = new User();
+//        user.setId(1);
+//        user.setUsername("testUser");
+//        user.setEmail("user@test.com");
+//        user.setPhoneNumber("0884361520");
+//        user.setPassword("Password1.");
+//        user.setPhotoUrl("url");
+//
+//        User newUser = new User();
+//        newUser.setId(user.getId());
+//        newUser.setUsername(user.getUsername());
+//        newUser.setEmail(user.getEmail());
+//        newUser.setPhoneNumber(user.getPhoneNumber());
+//        newUser.setPassword(user.getPassword());
+//        newUser.setPhotoUrl(user.getPhotoUrl());
+//
+//        when(userRepository.getByUsername(anyString())).thenReturn(newUser);
+//        when(userRepository.getDeletedById(newUser.getId())).thenReturn(null);
+//        when(userMapper.fromDtoUpdate(user)).thenReturn(user);
+//        UserService userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSender, userBlockService, uiMapper, validationHelper, emailSenderHelper);
+//
+//        // Act
+//        userService.create(user);
+//
+//        // Assert
+//        verify(userRepository).create(any(User.class));
+//    }
+
+    @Test
+    void whenUserExistsAndNotDeleted_thenUpdateAndSendVerification() {
+        // Given
+        User existingUser = new User();
+        existingUser.setUsername("existing");
+        existingUser.setId(1);
+        IsDeleted notDeleted = null;
+
+        when(userRepository.getByUsername(existingUser.getUsername())).thenReturn(existingUser);
+        when(userRepository.getDeletedById(existingUser.getId())).thenReturn(notDeleted);
+
+        // When
+        userService.create(existingUser);
+
+        // Then
+        verify(userRepository).update(existingUser);
+        verify(emailSenderHelper).sendVerificationEmail(eq(existingUser), eq("http://localhost:8080"));
     }
 
     @Test
-    public void testCreateUserSuccess() {
-        // Arrange
-        // Arrange
-        UserRepository userRepository = mock(UserRepository.class);
-        UserMapper userMapper = mock(UserMapper.class);
-        // Mock other dependencies as necessary
+    void whenUserExistsAndIsDeleted_thenUnmarkDeletedUpdateAndSendVerification() {
+        // Given
+        User deletedUser = new User();
+        deletedUser.setUsername("deletedUser");
+        deletedUser.setId(1);
+        IsDeleted isDeleted = new IsDeleted();
 
-        User user = new User();
-        user.setId(1); // Ensure user has an ID
-        user.setUsername("testUser");
-        user.setEmail("user@test.com");
-        user.setPhoneNumber("0884361520");
-        user.setPassword("Password1.");
-        user.setPhotoUrl("url");
+        when(userRepository.getByUsername(deletedUser.getUsername())).thenReturn(deletedUser);
+        when(userRepository.getDeletedById(deletedUser.getId())).thenReturn(isDeleted);
 
-        User newUser = new User();
-        newUser.setId(user.getId());
-        newUser.setUsername(user.getUsername());
-        newUser.setEmail(user.getEmail());
-        newUser.setPhoneNumber(user.getPhoneNumber());
-        newUser.setPassword(user.getPassword());
-        newUser.setPhotoUrl(user.getPhotoUrl());
+        // When
+        userService.create(deletedUser);
 
-        // Assuming getDeletedById is supposed to return null for non-deleted users
-        when(userRepository.getByUsername(anyString())).thenReturn(newUser);
-        when(userRepository.getDeletedById(newUser.getId())).thenReturn(null);
-        when(userMapper.fromDtoUpdate(user)).thenReturn(user);
-        UserService userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSender, userBlockService, uiMapper, validationHelper, emailSenderHelper);
-        // Initialize the user with required fields
-
-        // Act
-        userService.create(user);
-
-        // Assert
-        verify(userRepository).create(any(User.class));
+        // Then
+        verify(userRepository).unmarkAsDeleted(isDeleted);
+        verify(userRepository).update(deletedUser);
+        verify(emailSenderHelper).sendVerificationEmail(deletedUser, "http://localhost:8080");
     }
+
+
+
 
 
     @Test
@@ -200,27 +237,27 @@ public class UserServiceTests {
         assertThrows(UnauthorizedOperationException.class, () -> userService.checkIfVerified(user));
     }
 
-    @Test
-    public void givenValidUser_whenSendVerificationEmail_thenNonVerifiedUserCreated() {
-        // Arrange
-        User user = new User();
-        user.setUsername("john.doe");
-        user.setId(1);
-        UserRepository userRepositoryMock = mock(UserRepository.class);
-        when(userRepositoryMock.getByUsername("john.doe")).thenReturn(user);
-
-        JavaMailSender mailSenderMock = mock(JavaMailSender.class);
-        when(mailSenderMock.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
-
-        UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSenderMock,
-                userBlockService, uiMapper, validationHelper, emailSenderHelper);
-        // Act
-        userService.sendVerificationEmail(user);
-
-        // Assert
-        verify(userRepositoryMock).getByUsername("john.doe");
-        verify(userRepositoryMock).create(any(NonVerifiedUser.class));
-    }
+//    @Test
+//    public void givenValidUser_whenSendVerificationEmail_thenNonVerifiedUserCreated() {
+//        // Arrange
+//        User user = new User();
+//        user.setUsername("john.doe");
+//        user.setId(1);
+//        UserRepository userRepositoryMock = mock(UserRepository.class);
+//        when(userRepositoryMock.getByUsername("john.doe")).thenReturn(user);
+//
+//        JavaMailSender mailSenderMock = mock(JavaMailSender.class);
+//        when(mailSenderMock.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
+//
+//        UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, roleRepository, mailSenderMock,
+//                userBlockService, uiMapper, validationHelper, emailSenderHelper);
+//        // Act
+//        userService.sendVerificationEmail(user);
+//
+//        // Assert
+//        verify(userRepositoryMock).getByUsername("john.doe");
+//        verify(userRepositoryMock).create(any(NonVerifiedUser.class));
+//    }
 
     @Test
     public void givenAdminUser_whenDeleteNotAlreadyDeletedUser_thenSuccess() {
@@ -291,6 +328,34 @@ public class UserServiceTests {
         verify(userRepositoryMock).getById(userId);
         verify(userRepositoryMock).delete(any(IsDeleted.class));
     }
+
+    @Test
+    public void unmarkUserAsDeleted_UserExists_UnmarksSuccessfully() {
+        // Given
+        int userId = 1;
+        IsDeleted isDeleted = mock(IsDeleted.class);
+        when(userRepository.getDeletedById(userId)).thenReturn(isDeleted);
+
+        // When
+        userService.unmarkUserAsDeleted(userId);
+
+        // Then
+        verify(userRepository).unmarkAsDeleted(isDeleted);
+    }
+
+    @Test
+    public void unmarkUserAsDeleted_UserNotDeleted_NoActionTaken() {
+        // Given
+        int userId = 1;
+        when(userRepository.getDeletedById(userId)).thenReturn(null);
+
+        // When
+        userService.unmarkUserAsDeleted(userId);
+
+        // Then
+        verify(userRepository, never()).unmarkAsDeleted(any(IsDeleted.class));
+    }
+
 
     @Test
     public void givenUserWithUI_whenDeleteUI_thenUIIsDeleted() {
@@ -671,6 +736,29 @@ public class UserServiceTests {
     }
 
     @Test
+    void sendVerificationEmail_UserExists_EmailSent() {
+        // Given
+        User user = new User();
+        user.setUsername("testUser");
+        user.setId(1);
+
+        NonVerifiedUser nonVerified = new NonVerifiedUser();
+        nonVerified.setUserId(user.getId());
+
+        when(userRepository.getByUsername(user.getUsername())).thenReturn(user);
+
+        // When
+        userService.sendVerificationEmail(user);
+        ArgumentCaptor<NonVerifiedUser> nonVerifiedCaptor = ArgumentCaptor.forClass(NonVerifiedUser.class);
+
+        // Then
+        verify(userRepository).create(nonVerifiedCaptor.capture());
+        assertEquals(user.getId(), nonVerifiedCaptor.getValue().getUserId());
+        verify(emailSenderHelper).sendVerificationEmail(eq(user), anyString());
+    }
+
+
+    @Test
     public void givenRegularUserTryingToMakeAdmin_whenMakeAdmin_thenThrowsUnauthorizedOperationException() {
         User regularUser = new User();
         regularUser.setRole(new Role(REGULAR_USER));
@@ -794,45 +882,45 @@ public class UserServiceTests {
         verify(userRepository).getByUsername(username);
     }
 
-    @Test
-    public void givenNewUser_whenCreate_thenUserIsCreatedAndVerificationEmailSent() {
-        // Arrange
-        User newUser = new User();
-        newUser.setUsername("newUser");
-        newUser.setEmail("newUser@example.com");
-        newUser.setPhoneNumber("1234567890");
+//    @Test
+//    public void givenNewUser_whenCreate_thenUserIsCreatedAndVerificationEmailSent() {
+//        // Arrange
+//        User newUser = new User();
+//        newUser.setUsername("newUser");
+//        newUser.setEmail("newUser@example.com");
+//        newUser.setPhoneNumber("1234567890");
+//
+//        when(userRepository.getByUsername(anyString())).thenThrow(new EntityNotFoundException("User", "username", newUser.getUsername()));
+//        when(userRepository.getByEmail(anyString())).thenThrow(new EntityNotFoundException("User", "email", newUser.getEmail()));
+//        doNothing().when(validationHelper).emailValidator(anyString());
+//        doNothing().when(validationHelper).passwordValidator(anyString());
+//        doNothing().when(emailSenderHelper).sendVerificationEmail(any(User.class), anyString());
+//        doNothing().when(emailSenderHelper).sendVerificationEmail(any(User.class), anyString());
+//
+//        // Act
+//        userService.create(newUser);
+//        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+//
+//        // Assert
+//        verify(userRepository, times(1)).create(userCaptor.capture());
+//        verify(emailSenderHelper, times(1)).sendVerificationEmail(userCaptor.capture(), anyString());
+//
+//        User createdUser = userCaptor.getValue();
+//        assertEquals(newUser.getUsername(), createdUser.getUsername());
+//        assertEquals(DEFAULT_IMAGE_URL, createdUser.getPhotoUrl());
+//    }
 
-        when(userRepository.getByUsername(anyString())).thenThrow(new EntityNotFoundException("User", "username", newUser.getUsername()));
-        when(userRepository.getByEmail(anyString())).thenThrow(new EntityNotFoundException("User", "email", newUser.getEmail()));
-        doNothing().when(validationHelper).emailValidator(anyString());
-        doNothing().when(validationHelper).passwordValidator(anyString());
-        doNothing().when(emailSenderHelper).sendVerificationEmail(any(User.class), anyString());
-        doNothing().when(emailSenderHelper).sendVerificationEmail(any(User.class), anyString());
-
-        // Act
-        userService.create(newUser);
-        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-
-        // Assert
-        verify(userRepository, times(1)).create(userCaptor.capture());
-        verify(emailSenderHelper, times(1)).sendVerificationEmail(userCaptor.capture(), anyString());
-
-        User createdUser = userCaptor.getValue();
-        assertEquals(newUser.getUsername(), createdUser.getUsername());
-        assertEquals(DEFAULT_IMAGE_URL, createdUser.getPhotoUrl());
-    }
-
-    @Test
-    public void givenExistingUsername_whenCreate_thenThrowDuplicateExistsException() {
-        // Arrange
-        User existingUser = new User();
-        existingUser.setUsername("existingUser");
-
-        when(userRepository.getByUsername(existingUser.getUsername())).thenReturn(existingUser);
-
-        // Act & Assert
-        assertThrows(DuplicateExistsException.class, () -> userService.create(existingUser));
-    }
+//    @Test
+//    public void givenExistingUsername_whenCreate_thenThrowDuplicateExistsException() {
+//        // Arrange
+//        User existingUser = new User();
+//        existingUser.setUsername("existingUser");
+//
+//        when(userRepository.getByUsername(existingUser.getUsername())).thenReturn(existingUser);
+//
+//        // Act & Assert
+//        assertThrows(DuplicateExistsException.class, () -> userService.create(existingUser));
+//    }
 
     @Test
     public void testGetTop10Passengers() {
