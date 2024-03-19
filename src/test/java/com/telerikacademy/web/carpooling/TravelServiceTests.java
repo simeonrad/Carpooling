@@ -10,6 +10,8 @@ import com.telerikacademy.web.carpooling.services.TravelServiceImpl;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import com.telerikacademy.web.carpooling.services.contracts.TravelApplicationService;
 import com.telerikacademy.web.carpooling.services.contracts.UserBlockService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +37,8 @@ public class TravelServiceTests {
 
     @Mock
     private TravelRepository travelRepository;
+    @Mock
+    private TravelApplicationService travelApplicationService;
 
     @Mock
     private StatusRepository statusRepository;
@@ -145,10 +149,10 @@ public class TravelServiceTests {
     @Test
     public void completeTravel_updatesTravelStatusToCompletedForDriver() {
         // Setup
-        User user = new User(); // Assuming there's a way to set up a User.
-        Travel travel = new Travel(); // Assuming there's a Travel class you can directly instantiate.
+        User user = new User();
+        Travel travel = new Travel();
         travel.setDriver(user);
-        Status plannedStatus = new Status(); // Assuming there's a Status class.
+        Status plannedStatus = new Status();
         ApplicationStatus plannedStatusEnum = ApplicationStatus.PLANNED;
         plannedStatus.setStatus(plannedStatusEnum);
         travel.setStatus(plannedStatus);
@@ -171,7 +175,7 @@ public class TravelServiceTests {
     public void completeTravel_throwsExceptionForNonDriver() {
         // Setup
         User notDriver = new User();
-        notDriver.setId(2); // Different user
+        notDriver.setId(2);
         travel.setDriver(user);
         travel.setStatus(plannedStatus);
 
@@ -183,29 +187,28 @@ public class TravelServiceTests {
 
     @Test
     public void cancelTravel_updatesTravelStatusToCanceledForDriver() {
-        // Assuming User, Travel, and Status are your domain classes
         // Setup
-        User user = new User(); // Example setup, adjust as necessary
-        Travel travel = new Travel(); // Assuming direct instantiation
+        User user = new User();
+        Travel travel = new Travel();
         travel.setDriver(user);
-        Status plannedStatus = new Status(); // Set up initial planned status
-        plannedStatus.setStatus(ApplicationStatus.PLANNED); // Assuming setStatus takes an ApplicationStatus
+        Status plannedStatus = new Status();
+        plannedStatus.setStatus(ApplicationStatus.PLANNED);
         travel.setStatus(plannedStatus);
         travel.setDepartureTime(LocalDateTime.MAX);
 
-        Status canceledStatus = new Status(); // This should represent the canceled status
+        Status canceledStatus = new Status();
         canceledStatus.setStatus(ApplicationStatus.CANCELLED);
         when(statusRepository.getByValue(ApplicationStatus.CANCELLED)).thenReturn(canceledStatus);
 
-        int travelId = 1; // Example ID, ensure this matches your scenario
-        travel.setId(travelId); // Assuming Travel has an setId method
+        int travelId = 1;
+        travel.setId(travelId);
 
         // Execute
         travelService.cancel(user,travel);
 
         // Verify outcome
         assertEquals(ApplicationStatus.CANCELLED, travel.getStatus().getStatus(), "Travel status should be CANCELED.");
-        verify(travelRepository).update(travel); // Verifies that travelRepository.update(travel) was indeed called.
+        verify(travelRepository).update(travel);
     }
 
 
@@ -213,7 +216,7 @@ public class TravelServiceTests {
     public void cancelTravel_throwsExceptionForNonDriver() {
         // Setup
         User notDriver = new User();
-        notDriver.setId(2); // Different user
+        notDriver.setId(2);
         travel.setDriver(user);
         travel.setStatus(plannedStatus);
         travel.setDepartureTime(LocalDateTime.MAX);
@@ -224,8 +227,8 @@ public class TravelServiceTests {
 
     @Test
     void whenGetWithValidFilter_thenReturnsNonEmptyList() {
-        FilterTravelOptions filter = new FilterTravelOptions(); // Assume this is your filtering criteria class
-        List<Travel> expectedTravels = List.of(new Travel()); // Assume Travel has a no-arg constructor
+        FilterTravelOptions filter = new FilterTravelOptions();
+        List<Travel> expectedTravels = List.of(new Travel());
         when(travelRepository.get(filter)).thenReturn(expectedTravels);
 
         List<Travel> result = travelService.get(filter);
@@ -247,8 +250,8 @@ public class TravelServiceTests {
     @Test
     void whenGetWithPageable_thenReturnsPage() {
         FilterTravelOptions filter = new FilterTravelOptions();
-        Pageable pageable = PageRequest.of(0, 10); // Example pageable
-        Page<Travel> expectedPage = new PageImpl<>(List.of(new Travel())); // Mocked page response
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Travel> expectedPage = new PageImpl<>(List.of(new Travel()));
 
         when(travelRepository.get(filter, pageable)).thenReturn(expectedPage);
 
