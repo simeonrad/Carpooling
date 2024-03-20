@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -55,7 +56,6 @@ public class FeedbackServiceTests {
         feedbackService.create(feedback, author);
 
         verify(feedbackRepository).create(feedback);
-
     }
 
     @Test
@@ -81,13 +81,11 @@ public class FeedbackServiceTests {
 
     @Test
     public void updateFeedback_ThrowsUnauthorizedWhenUserNotAuthorOrAdmin() {
-        // Setup
         Feedback feedback = setupFeedbackForUpdateScenario();
         User nonAuthorNonAdminUser = new User();
         nonAuthorNonAdminUser.setId(3);
         nonAuthorNonAdminUser.setRole(new Role("User"));
 
-        // Expect the exception
         assertThrows(UnauthorizedOperationException.class, () -> feedbackService.update(feedback, nonAuthorNonAdminUser));
     }
 
@@ -149,8 +147,94 @@ public class FeedbackServiceTests {
         return feedback;
     }
 
+    private Feedback setupFeedbackForDeleteScenario() {
+        User author = new User();
+        author.setId(1);
+        author.setUsername("authorUser");
+        author.setRole(new Role("User"));
+
+        User recipient = new User();
+        recipient.setId(2);
+        recipient.setUsername("recipientUser");
+        recipient.setRole(new Role("User"));
+
+        Travel travel = new Travel();
+        travel.setId(3);
+
+        Feedback feedback = new Feedback();
+        feedback.setId(1);
+        feedback.setAuthor(author);
+        feedback.setRecipient(recipient);
+        feedback.setTravel(travel);
+
+        return feedback;
+    }
+
+    @Test
+    public void deleteFeedback_AuthorizedUser_Success() {
+        Feedback feedback = setupFeedbackForDeleteScenario();
+        User authorOrAdmin = feedback.getAuthor();
+
+        feedbackService.delete(feedback, authorOrAdmin);
+
+        verify(feedbackRepository).delete(feedback);
+    }
+
+    @Test
+    public void createFeedback_SelfFeedback_ThrowsForbiddenOperationException() {
+        Feedback feedback = setupFeedbackScenario(true, true, true, false, false); // isSelfFeedback set to true
+
+        assertThrows(UnauthorizedOperationException.class, () -> feedbackService.create(feedback, feedback.getAuthor()));
+    }
+
+    @Test
+    public void updateFeedback_AuthorizedUser_Success() {
+        User author = new User();
+        author.setId(1);
+        author.setRole(new Role("User"));
+
+        User recipient = new User();
+        recipient.setId(2);
+
+        Travel travel = new Travel();
+        travel.setId(3);
+        travel.setDriver(recipient);
+
+        Feedback feedback = new Feedback();
+        feedback.setAuthor(author);
+        feedback.setRecipient(recipient);
+        feedback.setTravel(travel);
+
+        when(travelRepository.isRecipientAParticipantInTravel(recipient.getId(), travel.getId())).thenReturn(true);
+
+        feedbackService.update(feedback, author);
+
+        verify(feedbackRepository).update(feedback);
+    }
 
 
+    @Test
+    public void deleteFeedback_AdminUser_Success() {
+        Feedback feedback = setupFeedbackForDeleteScenario();
+        User adminUser = new User();
+        adminUser.setRole(new Role("Admin"));
+
+        feedbackService.delete(feedback, adminUser);
+
+        verify(feedbackRepository).delete(feedback);
+    }
+
+    @Test
+    public void getFeedbackByTravelId_ValidIds_ReturnsFeedback() {
+        Feedback expectedFeedback = new Feedback();
+        int travelId = 1, authorId = 1, recipientId = 2;
+
+        when(feedbackRepository.getByTravelId(travelId, authorId, recipientId)).thenReturn(expectedFeedback);
+
+        Feedback actualFeedback = feedbackService.getByTravelId(travelId, authorId, recipientId);
+
+        assertEquals(expectedFeedback, actualFeedback);
+    }
 
 
 }
