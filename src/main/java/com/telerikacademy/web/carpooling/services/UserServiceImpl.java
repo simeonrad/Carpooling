@@ -179,12 +179,12 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(isDeleted);
     }
 
-//    public void unmarkUserAsDeleted(int userId) {
-//        IsDeleted isDeleted = userRepository.getDeletedById(userId);
-//        if (isDeleted != null) {
-//            userRepository.unmarkAsDeleted(isDeleted);
-//        }
-//    }
+    public void unmarkUserAsDeleted(int userId) {
+        IsDeleted isDeleted = userRepository.getDeletedById(userId);
+        if (isDeleted != null) {
+            userRepository.unmarkAsDeleted(isDeleted);
+        }
+    }
 
     @Override
     public List<User> get(FilterUserOptions filterUserOptions, User user) {
