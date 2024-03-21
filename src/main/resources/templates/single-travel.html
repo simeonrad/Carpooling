@@ -195,12 +195,12 @@
                                 <time datetime="2023-01-01"
                                       th:text="${#temporals.format(travel.departureTime, 'dd MMMM yyyy HH:mm')}"></time>
                             </li>
-                            <li>
+                            <li th:if="${currentUser == travel.driver}">
                                 <div class="buttons-container" style="display:flex; justify-content:space-around;">
-                                    <form class="action-button" action="#" th:action="@{/travels/complete/{id}(id=${travel.id})}" method="post">
+                                    <form th:unless="${travel.status.status.toString()=='COMPLETED'}" class="action-button" action="#" th:action="@{/travels/complete/{id}(id=${travel.id})}" method="post">
                                         <button type="submit" class="button button-secondary button-winona wow clipInLeft">Mark as completed</button>
                                     </form>
-                                     <form class="action-button" action="#" th:action="@{/travels/cancel/{id}(id=${travel.id})}" method="post">
+                                     <form th:unless="${travel.status.status.toString()=='CANCELLED'}" class="action-button" action="#" th:action="@{/travels/cancel/{id}(id=${travel.id})}" method="post">
                                         <button type="submit" class="button button-secondary button-winona wow clipInLeft">Cancel</button>
                                     </form>
                                      <form class="action-button" action="#" th:action="@{/travels/update/{id}(id=${travel.id})}" method="get" >

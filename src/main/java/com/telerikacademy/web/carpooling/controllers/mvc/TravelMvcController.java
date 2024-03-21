@@ -211,6 +211,7 @@ public class TravelMvcController {
             model.addAttribute("travel", travel);
             model.addAttribute("now", LocalDateTime.now());
             model.addAttribute("usersToGiveFeedback", usersToFeedback);
+            model.addAttribute("currentUser", user);
             return "single-travel";
         } catch (AuthenticationFailureException e) {
             return "redirect:/auth/login";
